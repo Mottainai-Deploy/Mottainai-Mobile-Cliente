@@ -93,35 +93,14 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Testar validação de commits
+        run: python3 .github/scripts/test_check_commit_messages.py
+
       - name: Verificar padrão de commits
-        run: |
-          set -e
-          echo "Verificando convenção de commits..."
-
-          # Padrão de commits aceitos
-          PATTERN="^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\([A-Za-z0-9][A-Za-z0-9._/-]*\))?: .+"
-
-          # Obter commits do PR
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            COMMITS=$(git log --oneline ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
-          else
-            COMMITS=$(git log --oneline -10)
-          fi
-
-          echo "Commits encontrados:"
-          echo "$COMMITS"
-
-          # Verificar cada commit
-          echo "$COMMITS" | while read -r line; do
-            COMMIT_MSG=$(echo "$line" | cut -d' ' -f2-)
-            if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
-              echo "ERRO: Commit não segue o padrão: $COMMIT_MSG"
-              echo "Padrão esperado: feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert: mensagem"
-              exit 1
-            fi
-          done
-
-          echo "Convenção de commits OK"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 .github/scripts/check_commit_messages.py "$BASE_SHA" "$HEAD_SHA"
 
   # ============================================================
   # JOB 5: Idioma dos Comentários
