@@ -15,7 +15,7 @@ public class LoyaltyPresentationTest {
 
     @Test public void legacyBalanceDoesNotInventAStatus() {
         LoyaltyAccount account = new Gson().fromJson("{\"pointsBalance\":5000}", LoyaltyAccount.class);
-        assertEquals("Nível ainda não informado pela API", LoyaltyPresentation.status(account));
+        assertEquals("Seu status sustentável aparecerá aqui.", LoyaltyPresentation.status(account));
         assertEquals("", LoyaltyPresentation.nextStatus(account));
     }
 
@@ -27,12 +27,12 @@ public class LoyaltyPresentationTest {
     }
 
     @Test public void missingOrInvalidProgressDoesNotBecomeFakeMetrics() {
-        assertEquals("Nível ainda não informado pela API", LoyaltyPresentation.status(null));
+        assertEquals("Seu status sustentável aparecerá aqui.", LoyaltyPresentation.status(null));
         assertEquals("", LoyaltyPresentation.nextStatus(null));
         LoyaltyAccount account = new LoyaltyAccount();
         account.statusName = " ";
         account.pointsToNextStatus = -1;
-        assertEquals("Nível ainda não informado pela API", LoyaltyPresentation.status(account));
+        assertEquals("Seu status sustentável aparecerá aqui.", LoyaltyPresentation.status(account));
         assertEquals("", LoyaltyPresentation.nextStatus(account));
     }
 }
