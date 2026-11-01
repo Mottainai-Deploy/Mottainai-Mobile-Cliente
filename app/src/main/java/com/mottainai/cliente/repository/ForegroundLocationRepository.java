@@ -17,7 +17,6 @@ import com.mottainai.cliente.utils.GeoCoordinates;
 import java.util.List;
 import java.util.function.Consumer;
 
-/** One foreground position request at a time. No tracking, stored coordinates or background job. */
 public final class ForegroundLocationRepository {
     private final Context context;
     private final Handler handler = new Handler(Looper.getMainLooper());

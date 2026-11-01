@@ -35,7 +35,7 @@ public final class AssistantRepository {
             try {
                 configured = ApiClient.create(this.context, url, AssistantService.class, false);
             } catch (IllegalArgumentException invalidConfiguration) {
-                // Expose no configured URL or credentials in the UI/logs.
+                // Não expõe URL configurada nem credenciais na interface ou nos logs.
             }
         }
         service = configured;
@@ -67,7 +67,7 @@ public final class AssistantRepository {
 
     private <T> boolean ready(Consumer<LoadState<T>> result) {
         if (service == null) {
-            result.accept(LoadState.error("O endereço do assistente ainda não foi configurado para este aplicativo.", 0));
+            result.accept(LoadState.error("O assistente não está disponível no momento.", 0));
             return false;
         }
         if (!isOwnerActive()) {
@@ -92,7 +92,7 @@ public final class AssistantRepository {
                     result.accept(LoadState.success(response.body()));
                 } else {
                     String message = response.code() == 401 || response.code() == 403
-                            ? "O serviço ainda não autorizou o assistente para esta conta."
+                            ? "O assistente não está disponível para esta conta no momento."
                             : response.code() == 429 ? "Muitas mensagens. Aguarde antes de tentar novamente."
                             : "Não foi possível concluir a consulta ao assistente.";
                     result.accept(LoadState.error(message, response.code()));

@@ -3,7 +3,6 @@ package com.mottainai.cliente.utils;
 import com.mottainai.cliente.network.dto.CatalogPromotion;
 import java.net.URI;
 
-/** Uses API references only; never guesses a product image or authenticates a CDN request. */
 public final class ProductImageSource {
     private ProductImageSource() {}
 
@@ -16,6 +15,13 @@ public final class ProductImageSource {
         } catch (Exception invalid) {
             return null;
         }
+    }
+
+    public static String searchName(CatalogPromotion promotion) {
+        if (promotion == null || promotion.items == null || promotion.items.size() != 1
+                || promotion.items.get(0) == null) return null;
+        String name = promotion.items.get(0).name;
+        return name == null || name.trim().isEmpty() ? null : name.trim();
     }
 
     public static String forPromotion(CatalogPromotion promotion) {

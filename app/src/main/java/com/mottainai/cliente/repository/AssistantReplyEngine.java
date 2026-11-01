@@ -6,11 +6,6 @@ import com.mottainai.cliente.models.UserProfile;
 
 import java.util.Locale;
 
-/**
- * Small keyword-based reply generator standing in for the real assistant
- * backend. Good enough to make the chat screen feel alive while there is no
- * language model wired up yet.
- */
 public class AssistantReplyEngine {
 
     private final MockOfferRepository offerRepository;

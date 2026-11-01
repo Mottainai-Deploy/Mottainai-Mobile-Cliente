@@ -30,7 +30,6 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/** Factory for authenticated REST clients. Base URLs are supplied by environment configuration, never hard-coded. */
 public final class ApiClient {
 
     private ApiClient() {
@@ -47,7 +46,6 @@ public final class ApiClient {
         return create(context, baseUrl, serviceClass, true);
     }
 
-    /** A separately authorized service must not invalidate the SQL session on its own 401. */
     @NonNull
     public static <T> T create(@NonNull Context context, @NonNull String baseUrl,
                                @NonNull Class<T> serviceClass, boolean invalidateAppSessionOnUnauthorized) {
@@ -64,7 +62,7 @@ public final class ApiClient {
                 .connectTimeout(profileService ? 5 : 10, TimeUnit.SECONDS)
                 .readTimeout(profileService ? 10 : 20, TimeUnit.SECONDS)
                 .callTimeout(profileService ? 20 : 40, TimeUnit.SECONDS)
-                // Never transparently resend profile writes after an ambiguous connection failure.
+                // Nunca reenvia silenciosamente escritas de perfil após falha ambígua de conexão.
                 .retryOnConnectionFailure(!profileService)
                 .build();
         Gson gson = new GsonBuilder().create();
@@ -148,7 +146,7 @@ public final class ApiClient {
                 return null;
             }
             try {
-                // All API services share this lock so concurrent 401s reuse a refreshed token.
+                // Todos os serviços de API compartilham este bloqueio para que 401 simultâneos reutilizem um token renovado.
                 synchronized (FirebaseTokenAuthenticator.class) {
                     FirebaseUser current = auth.getCurrentUser();
                     if (current == null || !current.getUid().equals(user.getUid())) return null;

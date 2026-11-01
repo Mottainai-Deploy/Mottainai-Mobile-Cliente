@@ -40,6 +40,18 @@ public class ProductImageSourceTest {
         assertEquals(promotion.imageUrl, ProductImageSource.forPromotion(promotion));
     }
 
+    @Test public void nameLookupUsesOnlyOneKnownProduct() {
+        CatalogPromotion promotion = new CatalogPromotion();
+        CatalogPromotion.Item item = new CatalogPromotion.Item();
+        item.name = " Café em pó ";
+        promotion.name = "Ofertas imperdíveis";
+        promotion.items = Collections.singletonList(item);
+        assertEquals("Café em pó", ProductImageSource.searchName(promotion));
+        promotion.items = Arrays.asList(item, new CatalogPromotion.Item());
+        assertNull(ProductImageSource.searchName(promotion));
+        assertNull(ProductImageSource.searchName(null));
+    }
+
     @Test public void missingItemDoesNotCrash() {
         CatalogPromotion promotion = new CatalogPromotion();
         promotion.items = Collections.singletonList(null);

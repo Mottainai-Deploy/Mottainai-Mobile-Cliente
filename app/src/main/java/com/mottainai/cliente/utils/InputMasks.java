@@ -10,7 +10,6 @@ import java.util.concurrent.CompletableFuture;
 public final class InputMasks {
     private InputMasks() {}
 
-    /** The native formatter loads phone metadata off the UI thread. Attach and format on the view thread. */
     public static void applyPhone(EditText field) {
         CompletableFuture.supplyAsync(() -> new PhoneNumberFormattingTextWatcher("BR"))
                 .thenAccept(watcher -> field.post(() -> {

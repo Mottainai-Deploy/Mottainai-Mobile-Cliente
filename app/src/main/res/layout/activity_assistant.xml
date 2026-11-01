@@ -1,153 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_beige">
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/surface_card"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="12dp"
-        app:layout_constraintTop_toTopOf="parent">
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back"
-            android:rotation="180"
-            android:src="@drawable/ic_chevron_right"
-            app:tint="@color/text_primary" />
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/bg_circle_light_green"
-            android:contentDescription="@null"
-            android:padding="8dp"
-            android:src="@drawable/ic_leaf"
-            app:tint="@color/primary_green" />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lô"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/assistant_availability"
-                android:accessibilityLiveRegion="polite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Verificando disponibilidade…"
-                android:textColor="@color/text_grey"
-                android:textSize="11sp" />
+<?xml version='1.0' encoding='utf-8'?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#f6f7fa">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingTop="32dp">
+        <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical" android:layout_width="match_parent" android:minHeight="48dp" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2615:53784&quot;, &quot;name&quot;: &quot;Cabeçalho&quot;}" android:layout_marginBottom="24dp">
+            <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical|center_horizontal" android:layout_width="48dp" android:minHeight="48dp" android:layout_height="wrap_content" android:background="@drawable/design_9afb8e060892" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_37278736f8f2" android:tag="{&quot;id&quot;: &quot;2615:53785&quot;, &quot;name&quot;: &quot;Voltar ao início&quot;, &quot;action&quot;: &quot;&quot;}">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/0b5d8935-f645-421e-bd11-275cbf730454.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;2615:53786&quot;, &quot;name&quot;: &quot;Ícone / back&quot;}" />
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_weight="252.0" android:layout_width="0dp" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2615:53788&quot;, &quot;name&quot;: &quot;Identificação da assistente&quot;}" android:layout_marginStart="12dp">
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="18sp" android:textColor="#132b50" android:lineSpacingMultiplier="1.4" android:minHeight="25.2sp" android:gravity="start|center_vertical" android:textStyle="bold" android:text="@string/design_a346ea239e4a" android:tag="{&quot;id&quot;: &quot;2615:53789&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.4" android:minHeight="16.8sp" android:gravity="start|center_vertical" android:text="@string/design_96eed8857fe8" android:tag="{&quot;id&quot;: &quot;2615:53790&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 400, &quot;fontOpticalSize&quot;: 14}" />
+            </LinearLayout>
         </LinearLayout>
-        <ImageButton
-            android:id="@+id/btn_more"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Opções da conversa"
-            android:src="@drawable/ic_more_vert"
-            app:tint="@color/text_primary" />
-    </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_messages"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@id/chip_group_quick_actions"
-        app:layout_constraintTop_toBottomOf="@id/header" />
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group_quick_actions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/input_bar"
-        app:singleLine="false">
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_offers"
-            style="@style/Widget.Material3.Chip.Assist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ofertas" />
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_points"
-            style="@style/Widget.Material3.Chip.Assist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pontos" />
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_impact"
-            style="@style/Widget.Material3.Chip.Assist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Impacto" />
-    </com.google.android.material.chip.ChipGroup>
-    <LinearLayout
-        android:id="@+id/input_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/surface_card"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_input_field"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="14dp">
-            <EditText
-                android:id="@+id/et_message"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:hint="Pergunte algo à Lô"
-                android:imeOptions="actionSend"
-                android:inputType="text"
-                android:maxLines="1"
-                android:maxLength="4096"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                style="@style/Widget.Client.Input" />
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_mic"
-                android:visibility="gone"
-                app:tint="@color/text_grey" />
+        <androidx.core.widget.NestedScrollView android:id="@+id/design_scroll" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="false" android:clipToPadding="false" android:scrollbars="none">
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:minHeight="590dp" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70304&quot;, &quot;name&quot;: &quot;Conteúdo / Principal&quot;}">
+                <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="end" android:layout_width="match_parent" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70305&quot;, &quot;name&quot;: &quot;Conversa / Histórico&quot;}">
+                    <com.mottainai.cliente.design.DesignBoundedLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical|center_horizontal" app:designMaxWidth="172dp" android:layout_width="match_parent" android:minHeight="48dp" android:layout_height="wrap_content" android:paddingLeft="16dp" android:paddingRight="16dp" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_8bbcb056a45e" android:tag="{&quot;id&quot;: &quot;2227:11600&quot;, &quot;name&quot;: &quot;Maré / Botão de texto / Neutro&quot;, &quot;action&quot;: &quot;Minhas conversas&quot;}">
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="15sp" android:textColor="#0b5ea8" android:lineSpacingMultiplier="1.4" android:minHeight="21sp" android:gravity="center" android:text="@string/design_8bbcb056a45e" android:tag="{&quot;id&quot;: &quot;2227:11601&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 500, &quot;fontOpticalSize&quot;: 14}" />
+                    </com.mottainai.cliente.design.DesignBoundedLayout>
+                </LinearLayout>
+                <Space android:layout_width="1dp" android:layout_height="0dp" android:layout_weight="1" />
+                <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70309&quot;, &quot;name&quot;: &quot;Lô / Boas-vindas&quot;}">
+                    <com.mottainai.cliente.design.DesignArtLayout app:designWidth="96.0" app:designHeight="96.0" android:layout_width="96dp" android:layout_height="wrap_content" android:background="@drawable/design_1bc9bdeb088c" android:clipChildren="true" android:clipToOutline="true" android:tag="{&quot;id&quot;: &quot;2539:30710&quot;, &quot;name&quot;: &quot;Cliente / Avatar da Lô&quot;}">
+                        <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/b9b604dd-d3ca-438e-9ffe-7b7af8323c3c.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="match_parent" android:layout_height="match_parent" android:tag="{&quot;id&quot;: &quot;2539:30682&quot;, &quot;name&quot;: &quot;Group&quot;}" app:designX="-124.00319999999999" app:designY="4.0032" app:designChildWidth="220.0032" app:designChildHeight="86.63040000000001" />
+                    </com.mottainai.cliente.design.DesignArtLayout>
+                    <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70362&quot;, &quot;name&quot;: &quot;&quot;}" android:layout_marginTop="12dp">
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="25sp" android:textColor="#132b50" android:lineSpacingMultiplier="1.4" android:minHeight="35sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_c8b65007b99d" android:tag="{&quot;id&quot;: &quot;&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14, &quot;binding&quot;: &quot;greeting&quot;}" />
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="25sp" android:textColor="#132b50" android:lineSpacingMultiplier="1.4" android:minHeight="35sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_8a027d7cae06" android:tag="{&quot;id&quot;: &quot;&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" />
+                    </LinearLayout>
+                    <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70363&quot;, &quot;name&quot;: &quot;&quot;}" android:layout_marginTop="12dp">
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="15sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.4" android:minHeight="21sp" android:gravity="center" android:text="@string/design_4c6fa8828c1e" android:tag="{&quot;id&quot;: &quot;&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 400, &quot;fontOpticalSize&quot;: 14}" />
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="15sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.4" android:minHeight="21sp" android:gravity="center" android:text="@string/design_18ef9063ec51" android:tag="{&quot;id&quot;: &quot;&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 400, &quot;fontOpticalSize&quot;: 14}" />
+                    </LinearLayout>
+                </LinearLayout>
+                <Space android:layout_width="1dp" android:layout_height="0dp" android:layout_weight="1" />
+                <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:tag="{&quot;id&quot;: &quot;2619:70364&quot;, &quot;name&quot;: &quot;Conversa / Sugestões opcionais&quot;}">
+                    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.4" android:minHeight="16.8sp" android:gravity="start|center_vertical" android:text="@string/design_be339a0cd3d8" android:tag="{&quot;id&quot;: &quot;2619:70365&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 400, &quot;fontOpticalSize&quot;: 14}" />
+                    <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:minHeight="48dp" android:contentDescription="@string/design_72acce791452" android:tag="{&quot;id&quot;: &quot;2619:70366&quot;, &quot;name&quot;: &quot;Sugestões&quot;, &quot;action&quot;: &quot;Ofertas por perto Lojas próximas&quot;}" android:layout_marginTop="8dp">
+                        <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical|center_horizontal" android:layout_weight="198.0" android:layout_width="0dp" android:minHeight="48dp" android:layout_height="wrap_content" android:background="@drawable/design_58b4d17be794" android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="16dp" android:paddingBottom="16dp" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_6ae6432f4a04" android:tag="{&quot;id&quot;: &quot;2619:70367&quot;, &quot;name&quot;: &quot;Ação / Ofertas por perto&quot;, &quot;action&quot;: &quot;Ofertas por perto&quot;}">
+                            <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="14sp" android:textColor="#0b5ea8" android:lineSpacingMultiplier="1.4" android:minHeight="19.6sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_6ae6432f4a04" android:tag="{&quot;id&quot;: &quot;I2619:70367;2091:6411&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" />
+                        </LinearLayout>
+                        <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical|center_horizontal" android:layout_weight="158.0" android:layout_width="0dp" android:minHeight="48dp" android:layout_height="wrap_content" android:background="@drawable/design_58b4d17be794" android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="16dp" android:paddingBottom="16dp" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_00c724b498af" android:tag="{&quot;id&quot;: &quot;2619:70370&quot;, &quot;name&quot;: &quot;Ação / Lojas próximas&quot;, &quot;action&quot;: &quot;Lojas próximas&quot;}" android:layout_marginStart="8dp">
+                            <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="14sp" android:textColor="#0b5ea8" android:lineSpacingMultiplier="1.4" android:minHeight="19.6sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_00c724b498af" android:tag="{&quot;id&quot;: &quot;I2619:70370;2091:6411&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <com.mottainai.cliente.design.DesignBoundedLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical|center_horizontal" app:designMaxWidth="166dp" android:layout_width="match_parent" android:minHeight="48dp" android:layout_height="wrap_content" android:background="@drawable/design_58b4d17be794" android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="16dp" android:paddingBottom="16dp" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_cbc6498e30a7" android:tag="{&quot;id&quot;: &quot;2619:70373&quot;, &quot;name&quot;: &quot;Ação / Como retirar?&quot;, &quot;action&quot;: &quot;Como retirar?&quot;}" android:layout_marginTop="8dp">
+                        <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="14sp" android:textColor="#0b5ea8" android:lineSpacingMultiplier="1.4" android:minHeight="19.6sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_cbc6498e30a7" android:tag="{&quot;id&quot;: &quot;I2619:70373;2091:6411&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" />
+                    </com.mottainai.cliente.design.DesignBoundedLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/design_7f87d145d23a" android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingTop="16dp" android:paddingBottom="16dp" android:clickable="true" android:focusable="true" android:minHeight="48dp" android:contentDescription="@string/design_2541f20dce44" android:tag="{&quot;id&quot;: &quot;2619:70299&quot;, &quot;name&quot;: &quot;Mensagem / Escrever para a Lô&quot;, &quot;action&quot;: &quot;Pergunte à Lô… &quot;}" android:layout_marginTop="12dp">
+            <androidx.appcompat.widget.AppCompatEditText android:layout_weight="286.0" android:layout_width="0dp" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="16sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.4" android:minHeight="22.4sp" android:gravity="start|center_vertical" android:id="@+id/input_322085898310" android:contentDescription="@string/design_322085898310" android:hint="@string/design_4ec30f7ac179" android:textColorHint="#596a80" android:inputType="textCapSentences" android:imeOptions="actionSend" android:singleLine="true" android:background="@android:color/transparent" android:padding="0dp" android:saveEnabled="true" android:tag="{&quot;id&quot;: &quot;2619:70300:322085898310&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 400, &quot;fontOpticalSize&quot;: 14, &quot;field&quot;: &quot;Mensagem&quot;}" />
+            <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/c3b6782d-c4bb-44f7-9f0c-7c392ce94473.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="24dp" android:layout_height="24dp" android:tag="{&quot;id&quot;: &quot;2619:70301&quot;, &quot;name&quot;: &quot;Frame&quot;}" android:layout_marginStart="12dp" />
         </LinearLayout>
-        <ImageButton
-            android:id="@+id/btn_send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/bg_circle"
-            android:backgroundTint="@color/primary_green"
-            android:contentDescription="Enviar mensagem"
-            android:padding="12dp"
-            android:src="@drawable/ic_send"
-            app:tint="@color/on_primary" />
+        <LinearLayout android:orientation="horizontal" android:baselineAligned="false" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_vertical" android:layout_width="match_parent" android:minHeight="76dp" android:layout_height="wrap_content" android:background="@drawable/design_fb96898edaeb" android:paddingLeft="6dp" android:paddingRight="6dp" android:paddingTop="8dp" android:paddingBottom="8dp" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_a2fb9bb29e39" android:tag="{&quot;id&quot;: &quot;2615:53795&quot;, &quot;name&quot;: &quot;Navbar persistente / Cliente / 5 destinos&quot;, &quot;action&quot;: &quot; Início  Ofertas  Lojas  Pontos  Perfil&quot;}" android:layout_marginTop="28dp" android:layout_marginBottom="0dp">
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal|center_vertical" android:layout_width="0dp" android:minHeight="60dp" android:layout_height="wrap_content" android:background="@drawable/design_dd460e64bdd4" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_ebe9b3a44254" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6291&quot;, &quot;name&quot;: &quot;Destino / Início&quot;, &quot;action&quot;: &quot; Início&quot;}" android:layout_weight="1">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/aceade19-5b4b-45b4-a91f-1ded78ada6d8.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6292&quot;, &quot;name&quot;: &quot;Ícone / home&quot;}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#0b5ea8" android:lineSpacingMultiplier="1.3" android:minHeight="15.6sp" android:gravity="center" android:textStyle="bold" android:text="@string/design_325dfc37c9ba" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6294&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 700, &quot;fontOpticalSize&quot;: 14}" android:layout_marginTop="4dp" />
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal|center_vertical" android:layout_width="0dp" android:minHeight="60dp" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_f75ef7d4c42c" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6295&quot;, &quot;name&quot;: &quot;Destino / Ofertas&quot;, &quot;action&quot;: &quot; Ofertas&quot;}" android:layout_weight="1">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/c4995188-8446-4281-ae49-f1023a19df40.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6296&quot;, &quot;name&quot;: &quot;Ícone / search&quot;}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.3" android:minHeight="15.6sp" android:gravity="center" android:text="@string/design_2d9219ead0cf" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6298&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 500, &quot;fontOpticalSize&quot;: 14}" android:layout_marginTop="4dp" />
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal|center_vertical" android:layout_width="0dp" android:minHeight="60dp" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_775462c2352a" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6299&quot;, &quot;name&quot;: &quot;Destino / Lojas&quot;, &quot;action&quot;: &quot; Lojas&quot;}" android:layout_weight="1">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/6f531be6-69f8-406b-9f48-a19a0eda9c10.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6300&quot;, &quot;name&quot;: &quot;Ícone / store&quot;}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.3" android:minHeight="15.6sp" android:gravity="center" android:text="@string/design_f148495719a3" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6302&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 500, &quot;fontOpticalSize&quot;: 14}" android:layout_marginTop="4dp" />
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal|center_vertical" android:layout_width="0dp" android:minHeight="60dp" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_0a1ef9298119" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6307&quot;, &quot;name&quot;: &quot;Destino / Pontos&quot;, &quot;action&quot;: &quot; Pontos&quot;}" android:layout_weight="1">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/6964ec87-2078-45e9-9291-b0e9aa9cc24d.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6311&quot;, &quot;name&quot;: &quot;Ícone / Pontos&quot;}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.3" android:minHeight="15.6sp" android:gravity="center" android:text="@string/design_6ac2b76d12ad" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6310&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 500, &quot;fontOpticalSize&quot;: 14}" android:layout_marginTop="4dp" />
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:gravity="center_horizontal|center_vertical" android:layout_width="0dp" android:minHeight="60dp" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:contentDescription="@string/design_55f07fa6b47f" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6303&quot;, &quot;name&quot;: &quot;Destino / Perfil&quot;, &quot;action&quot;: &quot; Perfil&quot;}" android:layout_weight="1">
+                <com.mottainai.cliente.design.DesignImageView app:designAsset="figma/156b7a51-6eb7-479e-80d8-1489c02a7e08.svg" android:scaleType="fitCenter" android:importantForAccessibility="no" android:layout_width="22dp" android:layout_height="22dp" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6304&quot;, &quot;name&quot;: &quot;Ícone / user&quot;}" />
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/dm_sans" android:includeFontPadding="false" android:textSize="12sp" android:textColor="#596a80" android:lineSpacingMultiplier="1.3" android:minHeight="15.6sp" android:gravity="center" android:text="@string/design_00d551e63dd5" android:tag="{&quot;id&quot;: &quot;I2615:53795;2091:6306&quot;, &quot;name&quot;: &quot;&quot;, &quot;fontWeight&quot;: 500, &quot;fontOpticalSize&quot;: 14}" android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

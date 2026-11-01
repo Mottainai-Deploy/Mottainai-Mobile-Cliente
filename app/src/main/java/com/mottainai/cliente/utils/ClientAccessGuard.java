@@ -27,7 +27,6 @@ public final class ClientAccessGuard {
                 isLocationEnabled(context));
     }
 
-    /** Returns true when the caller must not initialize or display protected content. */
     public static boolean redirectIfRequired(Activity activity) {
         if (activity.isFinishing()) return true;
         ClientAccessState state = state(activity);

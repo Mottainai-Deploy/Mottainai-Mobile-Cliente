@@ -5,7 +5,6 @@ import com.mottainai.cliente.models.PartnerStore;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-/** Builds a Google Maps pin, without starting navigation or choosing a travel mode. */
 public final class GoogleMapsUrl {
     private GoogleMapsUrl() { }
 

@@ -1,6 +1,5 @@
 package com.mottainai.cliente.utils;
 
-/** UI access requirements; API authentication/authorization remains mandatory. */
 public enum ClientAccessState {
     LOGIN_REQUIRED, LOCATION_REQUIRED, READY;
 

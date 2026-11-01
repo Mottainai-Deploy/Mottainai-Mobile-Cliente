@@ -2,7 +2,6 @@ package com.mottainai.cliente.repository;
 
 import com.mottainai.cliente.network.dto.CustomerProfileResponse;
 
-/** Interprets the profile contract before allowing entry to authenticated screens. */
 public enum ProfileSyncStatus {
     READY, PROFILE_REQUIRED, INACTIVE, INVALID_RESPONSE, ERROR;
 

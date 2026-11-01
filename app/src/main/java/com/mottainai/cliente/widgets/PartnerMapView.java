@@ -47,6 +47,20 @@ public class PartnerMapView extends FrameLayout {
         }
         map = new MapView(context);
         addView(map, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        map.setOnTouchListener((view, event) -> {
+            if (getParent() != null) getParent().requestDisallowInterceptTouchEvent(
+                    event.getActionMasked() != android.view.MotionEvent.ACTION_UP
+                            && event.getActionMasked() != android.view.MotionEvent.ACTION_CANCEL);
+            return false;
+        });
+    }
+
+    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (getLayoutParams() != null && getLayoutParams().height == LayoutParams.WRAP_CONTENT) {
+            int width = MeasureSpec.getSize(widthMeasureSpec);
+            if (width > 0) heightMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public boolean isConfigured() {
@@ -81,6 +95,7 @@ public class PartnerMapView extends FrameLayout {
 
     public void setUserPosition(Double latitude, Double longitude) {
         userPosition = latitude == null || longitude == null ? null : new LatLng(latitude, longitude);
+        renderStores();
     }
 
     private void renderStores() {

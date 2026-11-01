@@ -5,7 +5,6 @@ import com.mottainai.cliente.models.PartnerStore;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Stand-in for the future /stores endpoint. See {@link MockOfferRepository}. */
 public class MockStoreRepository {
 
     private static final List<PartnerStore> STORES = buildStores();

@@ -23,4 +23,8 @@
     <string name="location_access_retry">Verificar novamente</string>
     <string name="location_access_logout">Sair da conta</string>
     <string name="location_access_settings_unavailable">Não foi possível abrir as configurações. Acesse manualmente as permissões do Mottainai nas configurações do aparelho.</string>
+    <string name="product_image_attribution">Imagem ilustrativa</string>
+    <string name="product_image_unavailable">Imagem indisponível: %1$s</string>
+    <string name="product_image_description">Imagem do produto: %1$s</string>
+    <string name="product_image_illustrative_description">Imagem de %1$s</string>
 </resources>

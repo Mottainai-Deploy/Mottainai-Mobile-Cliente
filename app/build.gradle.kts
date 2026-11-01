@@ -1,10 +1,27 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
-val apiBaseUrl = providers.gradleProperty("MOTTAINAI_API_BASE_URL").orElse("").get()
+val localSettings = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.isFile) localFile.inputStream().use { load(it) }
+}
+val apiBaseUrl = gradle.startParameter.projectProperties["MOTTAINAI_API_BASE_URL"]
+    ?: localSettings.getProperty("MOTTAINAI_API_BASE_URL")
+    ?: providers.gradleProperty("MOTTAINAI_API_BASE_URL").orElse("").get()
 val mapsApiKey = providers.gradleProperty("MOTTAINAI_MAPS_API_KEY").orElse("").get()
-val assistantBaseUrl = providers.gradleProperty("MOTTAINAI_ASSISTANT_BASE_URL").orElse("").get()
+val assistantBaseUrl = gradle.startParameter.projectProperties["MOTTAINAI_ASSISTANT_BASE_URL"]
+    ?: localSettings.getProperty("MOTTAINAI_ASSISTANT_BASE_URL")
+    ?: providers.gradleProperty("MOTTAINAI_ASSISTANT_BASE_URL").orElse("").get()
+val cloudinaryCloudName = gradle.startParameter.projectProperties["MOTTAINAI_CLOUDINARY_CLOUD_NAME"]
+    ?: localSettings.getProperty("MOTTAINAI_CLOUDINARY_CLOUD_NAME")
+    ?: providers.gradleProperty("MOTTAINAI_CLOUDINARY_CLOUD_NAME").orElse("").get()
+val cloudinaryUploadPreset = gradle.startParameter.projectProperties["MOTTAINAI_CLOUDINARY_UPLOAD_PRESET"]
+    ?: localSettings.getProperty("MOTTAINAI_CLOUDINARY_UPLOAD_PRESET")
+    ?: providers.gradleProperty("MOTTAINAI_CLOUDINARY_UPLOAD_PRESET").orElse("").get()
+
 
 if (file("google-services.json").exists()) {
     pluginManager.apply("com.google.gms.google-services")
@@ -27,6 +44,8 @@ android {
         buildConfigField("String", "API_BASE_URL", "\"${apiBaseUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         buildConfigField("String", "MAPS_API_KEY", "\"${mapsApiKey.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         buildConfigField("String", "ASSISTANT_BASE_URL", "\"${assistantBaseUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"${cloudinaryCloudName.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"${cloudinaryUploadPreset.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
@@ -50,6 +69,7 @@ android {
 }
 
 dependencies {
+    implementation("com.caverock:androidsvg-aar:1.4")
     implementation(libs.glide)
     implementation(libs.appcompat)
     implementation(libs.material)

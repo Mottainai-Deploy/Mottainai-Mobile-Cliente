@@ -7,7 +7,6 @@ public class CatalogPromotion {
     public String id;
     public String name;
     public String description;
-    /** Optional proposed public product image; older APIs may omit it. */
     public String imageUrl;
     public String promotionType;
     public String startsAt;

@@ -16,3 +16,6 @@ app/google-services*.json
 .externalNativeBuild
 .cxx
 local.properties
+node_modules/
+.design-cache/
+__pycache__/

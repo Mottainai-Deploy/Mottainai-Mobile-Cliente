@@ -6,7 +6,6 @@ import com.mottainai.cliente.models.PointsActivityEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Stand-in for the future /points/history endpoint. See {@link MockOfferRepository}. */
 public class MockPointsActivityRepository {
 
     public List<PointsActivityEntry> getRecentActivity() {

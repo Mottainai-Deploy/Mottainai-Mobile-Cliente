@@ -1,6 +1,5 @@
 package com.mottainai.cliente.utils;
 
-/** Local format/check-digit validation only; does not prove identity or registration status. */
 public final class CpfValidator {
     private CpfValidator() { }
 

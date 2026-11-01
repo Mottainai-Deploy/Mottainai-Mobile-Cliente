@@ -1,93 +1,75 @@
 package com.mottainai.cliente;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.mottainai.cliente.adapters.OfferAdapter;
-import com.mottainai.cliente.models.Offer;
-import com.mottainai.cliente.widgets.PartnerMapView;
-
+import com.mottainai.cliente.design.ClientContent;
+import com.mottainai.cliente.utils.SessionManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.*;
 
-/** Guards the existing controllers' contracts while their XML presentation changes. */
 @RunWith(AndroidJUnit4.class)
 public class UiIntegrationTest {
-    @Test public void screenBindingsSurviveInLightAndDarkThemes() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
-            for (int mode : new int[]{Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_YES}) {
-                Context context = themedContext(mode);
-                View home = inflate(context, R.layout.fragment_home);
-                assertTrue(home.findViewById(R.id.layout_featured_offers) instanceof RecyclerView);
-                assertTrue(home.findViewById(R.id.map_preview) instanceof PartnerMapView);
-                assertNotNull(home.findViewById(R.id.home_open_catalog));
-                View catalog = inflate(context, R.layout.fragment_catalog);
-                assertTrue(catalog.findViewById(R.id.et_search) instanceof EditText);
-                assertTrue(catalog.findViewById(R.id.rv_offers) instanceof RecyclerView);
-                assertNotNull(catalog.findViewById(R.id.catalog_retry));
-                View login = inflate(context, R.layout.activity_login_cliente);
-                assertTrue(login.findViewById(R.id.input_login_email) instanceof EditText);
-                assertTrue(login.findViewById(R.id.btn_login_google) instanceof Button);
-                assertTrue(login.findViewById(R.id.btn_retry_profile_sync) instanceof Button);
-                View registration = inflate(context, R.layout.activity_register_cliente);
-                assertTrue(registration.findViewById(R.id.input_register_cpf) instanceof EditText);
-                assertTrue(registration.findViewById(R.id.input_register_phone) instanceof EditText);
-                assertNotNull(registration.findViewById(R.id.register_pages));
-                View stores = inflate(context, R.layout.fragment_stores);
-                assertTrue(stores.findViewById(R.id.map_stores) instanceof PartnerMapView);
-                assertNotNull(stores.findViewById(R.id.stores_retry));
-                assertNotNull(inflate(context, R.layout.fragment_points).findViewById(R.id.rv_activity));
-                assertNotNull(inflate(context, R.layout.fragment_profile).findViewById(R.id.btn_logout));
-                assertNotNull(inflate(context, R.layout.fragment_impact).findViewById(R.id.impact_points));
-                assertNotNull(inflate(context, R.layout.activity_offer_detail).findViewById(R.id.btn_redeem));
-                assertNotNull(inflate(context, R.layout.activity_assistant).findViewById(R.id.rv_messages));
+    private Context context(){return InstrumentationRegistry.getInstrumentation().getTargetContext();}
+    @Test public void figmaCardsInflateInLightAndDarkModes() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{
+            for(int mode:new int[]{Configuration.UI_MODE_NIGHT_NO,Configuration.UI_MODE_NIGHT_YES}) {
+                Configuration config=new Configuration(context().getResources().getConfiguration());
+                config.uiMode=(config.uiMode&~Configuration.UI_MODE_NIGHT_MASK)|mode;
+                Context themed=new ContextThemeWrapper(context().createConfigurationContext(config),R.style.Theme_MottainaiCliente);
+                View home=LayoutInflater.from(themed).inflate(R.layout.fragment_home,null,false);
+                assertNotNull(ClientContent.find(home,"Ofertas / Lista compacta"));
+                View card=LayoutInflater.from(themed).inflate(R.layout.design_item_offer_compact,null,false);
+                assertNotNull(binding(card,"title"));assertNotNull(binding(card,"price"));
+                View grid=LayoutInflater.from(themed).inflate(R.layout.design_item_offer_grid,null,false);
+                assertNotNull(binding(grid,"title"));assertNotNull(binding(grid,"discount"));
+                View store=LayoutInflater.from(themed).inflate(R.layout.design_item_store,null,false);
+                assertNotNull(binding(store,"store"));assertNotNull(binding(store,"address"));
             }
         });
     }
-
-    @Test public void bothOfferPresentationsBindAndClearRecycledBadges() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
-            Context context = themedContext(Configuration.UI_MODE_NIGHT_NO);
-            Offer withBadge = new Offer("one", "Produto", "Mercado", 2.5, 40, "Hoje",
-                    null, R.color.thumb_green, "Últimas unidades", "");
-            Offer withoutBadge = new Offer("two", "Outro produto", "Outra loja", 1, 20, "Amanhã",
-                    null, R.color.thumb_green, null, "");
-            for (int layout : new int[]{R.layout.item_offer, R.layout.item_offer_compact}) {
-                View card = inflate(context, layout);
-                assertTrue(card.findViewById(R.id.view_offer_thumb) instanceof ImageView);
-                OfferAdapter.bind(card, withBadge);
-                assertEquals("Produto", ((TextView) card.findViewById(R.id.tv_offer_title)).getText().toString());
-                assertEquals(View.VISIBLE, card.findViewById(R.id.tv_offer_badge_label).getVisibility());
-                OfferAdapter.bind(card, withoutBadge);
-                assertEquals("Outro produto", ((TextView) card.findViewById(R.id.tv_offer_title)).getText().toString());
-                assertEquals(View.GONE, card.findViewById(R.id.tv_offer_badge_label).getVisibility());
+    @Test public void protectedFigmaRoutesCannotBypassFirebaseAndSqlSession() {
+        new SessionManager(context()).clearClientSession();
+        try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2005:3914"))) {
+            scenario.onActivity(a->assertEquals("2028:4492",a.currentScreen().getArguments().getString("screen")));
+            for(String screen:new String[]{"2005:4305","2093:6331","2005:4483","2005:4104"}) {
+                scenario.onActivity(a->a.showScreen(screen,true));
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+                scenario.onActivity(a->assertEquals("2028:4492",a.currentScreen().getArguments().getString("screen")));
             }
-        });
+        }
     }
-
-    private static Context themedContext(int nightMode) {
-        Context base = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        Configuration config = new Configuration(base.getResources().getConfiguration());
-        config.uiMode = (config.uiMode & ~Configuration.UI_MODE_NIGHT_MASK) | nightMode;
-        return new ContextThemeWrapper(base.createConfigurationContext(config), R.style.Theme_MottainaiCliente);
+    @Test public void registrationValidatesBeforeChangingStepsAndDoesNotPersistPersonalFields() {
+        new SessionManager(context()).clearClientSession();
+        try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2143:9435"))) {
+            scenario.onActivity(a->{
+                View root=a.currentScreen().requireView();
+                EditText name=field(root,"Nome completo"),cpf=field(root,"CPF");
+                assertNotNull(name);assertNotNull(cpf);
+                name.setText("Pessoa Teste");cpf.setText("11111111111");
+                assertEquals("111.111.111-11",cpf.getText().toString());
+                action(root,"Continuar").performClick();
+                assertEquals("2143:9435",a.currentScreen().getArguments().getString("screen"));
+                for(String key:a.getSharedPreferences("cliente_preferences",0).getAll().keySet())assertFalse(key,key.startsWith("field_"));
+            });
+        }
     }
-
-    private static View inflate(Context context, int layout) {
-        return LayoutInflater.from(context).inflate(layout, null, false);
+    @Test public void demoFlagDoesNotUnlockProtectedScreens() {
+        SessionManager session=new SessionManager(context());session.clearSession();session.enterDemoMode();
+        try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2005:3812"))) {
+            scenario.onActivity(a->assertEquals("2028:4492",a.currentScreen().getArguments().getString("screen")));
+        } finally {session.clearClientSession();}
     }
+    private View binding(View v,String key){if(ClientContent.tag(v).optString("binding").equals(key))return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View child=binding(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
+    private EditText field(View v,String key){if(v instanceof EditText&&ClientContent.tag(v).optString("field").equals(key))return (EditText)v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){EditText child=field(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
+    private View action(View v,String key){if(ClientContent.tag(v).optString("action").trim().equals(key))return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View child=action(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
 }

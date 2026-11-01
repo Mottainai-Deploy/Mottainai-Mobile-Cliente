@@ -9,10 +9,6 @@ import androidx.annotation.Nullable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mottainai.cliente.BuildConfig;
 
-/**
- * Stores the minimum local state needed to route the client through protected screens.
- * Passwords and other sensitive profile data must never be persisted here.
- */
 public class SessionManager {
 
     private static final String PREFS_NAME = Constants.SESSION_PREFERENCES_NAME;
@@ -60,7 +56,7 @@ public class SessionManager {
     }
 
     public boolean canBrowse() {
-        return isDemoMode() || isLoggedIn();
+        return isLoggedIn();
     }
 
     public void enterDemoMode() {
@@ -78,14 +74,12 @@ public class SessionManager {
         return preferences.getString(Constants.KEY_CLIENT_ID, null);
     }
 
-    /** Clears all authentication state in a single preferences transaction. */
     public void clearSession() {
         FirebaseAuth auth = FirebaseSupport.authIfConfigured(context);
         if (auth != null) auth.signOut();
         clearClientSession();
     }
 
-    /** Clears the SQL profile association without changing the Firebase identity. */
     public void clearClientSession() {
         preferences.edit()
                 .remove(Constants.KEY_CLIENT_ID)

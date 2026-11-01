@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 
-/** Brazilian display formats; business payloads keep digits and ISO dates. */
 public final class RegistrationFields {
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/uuuu", Locale.ROOT)
             .withResolverStyle(ResolverStyle.STRICT);

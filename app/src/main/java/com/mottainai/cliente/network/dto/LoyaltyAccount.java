@@ -4,7 +4,7 @@ public class LoyaltyAccount {
     public String id;
     public String customerId;
     public Integer pointsBalance;
-    // Optional mobile contract extension; missing values must not be calculated locally.
+    // Extensão opcional do contrato mobile; valores ausentes não podem ser calculados localmente.
     public String statusName;
     public Integer pointsToNextStatus;
 }
