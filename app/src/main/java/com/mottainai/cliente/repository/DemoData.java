@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Local fixtures used only while browsing the debug build without backend services. */
 public final class DemoData {
 
     private DemoData() { }
@@ -31,6 +30,9 @@ public final class DemoData {
     public static List<CatalogPromotion> promotions() {
         List<CatalogStore> stores = stores();
         List<CatalogPromotion> promotions = new ArrayList<>();
+        promotions.add(promotion("teste-foto-nutella", "Nutella · teste de imagem externa",
+                "Oferta fictícia de demonstração. A foto ilustrativa é consultada no Open Food Facts.",
+                stores.get(0), "Nutella", "25.00", "15.00"));
         promotions.add(promotion("leite-integral", "Leite integral",
                 "Produto próximo do vencimento, ainda próprio para consumo.", stores.get(0),
                 "Leite integral 1L", "8.99", "5.49"));

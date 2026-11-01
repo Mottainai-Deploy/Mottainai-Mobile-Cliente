@@ -1,0 +1,5 @@
+<resources>
+    <item name="design_field_error" type="id" />
+    <item name="design_chat_user" type="id" />
+    <item name="design_chat_reply" type="id" />
+</resources>

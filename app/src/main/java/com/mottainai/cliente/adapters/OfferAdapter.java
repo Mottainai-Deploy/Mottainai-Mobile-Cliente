@@ -62,11 +62,16 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
     }
 
     @Override
+    public void onViewRecycled(@NonNull OfferViewHolder holder) {
+        ProductImages.clear(holder.itemView.findViewById(R.id.view_offer_thumb));
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public int getItemCount() {
         return offers.size();
     }
 
-    /** Both presentations bind the same API model and shared metadata views. */
     public static void bind(View itemView, Offer offer) {
         ImageView thumb = itemView.findViewById(R.id.view_offer_thumb);
         TextView badgeLabel = itemView.findViewById(R.id.tv_offer_badge_label);
@@ -75,7 +80,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
         TextView store = itemView.findViewById(R.id.tv_offer_store);
         TextView expiry = itemView.findViewById(R.id.tv_offer_expiry);
 
-        ProductImages.load(thumb, offer.getImageUrl(), offer.getThumbnailColorRes(), offer.getTitle());
+        ProductImages.load(thumb, offer, itemView.findViewById(R.id.product_image_attribution));
 
         if (offer.getBadgeLabel() != null) {
             badgeLabel.setVisibility(View.VISIBLE);

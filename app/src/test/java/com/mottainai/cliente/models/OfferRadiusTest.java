@@ -10,16 +10,20 @@ public class OfferRadiusTest {
     }
 
     @Test public void exposesOnlyProductApprovedOptionsInOrder() {
-        assertEquals(4, OfferRadius.values().length);
-        int[] expected = {5, 10, 15, 20};
+        assertEquals(2, OfferRadius.values().length);
+        int[] expected = {5, 10};
         for (int index = 0; index < expected.length; index++) {
             assertEquals(expected[index], OfferRadius.values()[index].kilometers());
             assertSame(OfferRadius.values()[index], OfferRadius.fromKilometers(expected[index]));
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void rejectsArbitraryRadius() { OfferRadius.fromKilometers(7); }
+    /** Rejeita distâncias arbitrárias e os raios antigos acima do limite atual. */
+    @Test public void rejectsArbitraryRadius() {
+        for (int radius : new int[]{7, 15, 20}) {
+            assertThrows(IllegalArgumentException.class, () -> OfferRadius.fromKilometers(radius));
+        }
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void rejectsZero() { OfferRadius.fromKilometers(0); }

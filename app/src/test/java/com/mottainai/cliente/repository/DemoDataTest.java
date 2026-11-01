@@ -26,7 +26,8 @@ public class DemoDataTest {
         LocalDate recentMonth = LocalDate.now().withDayOfMonth(1).minusMonths(5);
         List<CatalogPromotion> promotions = DemoData.promotions();
 
-        assertEquals(6, promotions.size());
+        assertEquals(7, promotions.size());
+        assertEquals("Nutella", DemoData.promotion("teste-foto-nutella").items.get(0).name);
         assertEquals(Integer.valueOf(420), DemoData.loyaltyAccount().pointsBalance);
         assertEquals(2, DemoData.transactions(recentMonth).size());
     }

@@ -1,60 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style
-        name="Base.Theme.MottainaiCliente"
-        parent="Theme.Material3.DayNight.NoActionBar">
-        <item
-            name="colorPrimary">@color/primary_green</item>
-        <item
-            name="colorOnPrimary">@color/on_primary</item>
-        <item
-            name="colorSecondary">@color/primary_green</item>
-        <item
-            name="colorOnSecondary">@color/on_primary</item>
-        <item name="colorPrimaryContainer">@color/card_light_green</item>
-        <item name="colorOnPrimaryContainer">@color/text_primary</item>
-        <item name="colorSecondaryContainer">@color/card_light_green</item>
-        <item name="colorOnSecondaryContainer">@color/text_primary</item>
-        <item name="colorTertiaryContainer">@color/card_light_green</item>
-        <item name="colorOnTertiaryContainer">@color/text_primary</item>
-        <item name="colorSurfaceVariant">@color/card_light_green</item>
-        <item name="colorOutline">@color/divider_grey</item>
-        <item name="colorError">@color/accent_red</item>
-        <item name="colorOnError">@color/on_primary</item>
-        <item name="colorErrorContainer">@color/surface_alert</item>
-        <item name="colorOnErrorContainer">@color/accent_red</item>
-        <item
-            name="colorTertiary">@color/primary_green_dark</item>
-        <item
-            name="colorControlActivated">@color/primary_green</item>
-        <item
-            name="android:colorAccent">@color/primary_green</item>
-        <item
-            name="android:colorBackground">@color/background_beige</item>
-        <item
-            name="colorSurface">@color/surface_card</item>
-        <item
-            name="colorOnSurface">@color/text_primary</item>
-        <item
-            name="colorOnSurfaceVariant">@color/text_grey</item>
-        <item
-            name="android:textColor">@color/text_primary</item>
-        <item
-            name="android:textColorHint">@color/text_grey</item>
-        <item
-            name="android:fontFamily">@font/dm_sans</item>
-        <item
-            name="fontFamily">@font/dm_sans</item>
-        <item
-            name="materialButtonStyle">@style/Widget.Client.Button</item>
-        <item
-            name="android:statusBarColor">@color/primary_green_dark</item>
-        <item
-            name="android:windowLightStatusBar">false</item>
+    <style name="Base.Theme.MottainaiCliente" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/design_primary</item>
+        <item name="colorOnPrimary">@color/design_on_primary</item>
+        <item name="android:colorBackground">@color/design_canvas</item>
+        <item name="colorSurface">@color/design_canvas</item>
+        <item name="android:textColor">@color/design_text</item>
+        <item name="android:fontFamily">@font/dm_sans</item>
     </style>
-    <style
-        name="Theme.MottainaiCliente"
-        parent="Base.Theme.MottainaiCliente" />
+
+    <style name="Theme.MottainaiCliente" parent="Base.Theme.MottainaiCliente" />
 </resources>

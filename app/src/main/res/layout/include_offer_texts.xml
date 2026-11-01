@@ -43,4 +43,15 @@
         android:textColor="@color/primary_green"
         android:textSize="12sp"
         android:visibility="gone" />
+    <TextView
+        android:id="@+id/product_image_attribution"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/product_image_attribution"
+        android:textColor="@color/text_grey"
+        android:textSize="12sp"
+        android:visibility="gone" />
 </LinearLayout>

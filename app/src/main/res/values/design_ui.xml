@@ -1,0 +1,36 @@
+<resources>
+    <color name="design_canvas">#F6F7FA</color>
+    <color name="design_primary">#102654</color>
+    <color name="design_on_primary">#FFFFFF</color>
+    <color name="design_text">#132B50</color>
+    <string name="design_required_field">Preencha este campo</string>
+    <string name="design_invalid_email">Informe um e-mail válido</string>
+    <string name="design_google_unavailable">O acesso com Google ainda não está configurado.</string>
+    <string name="design_share_message">Conheça o Mottainai e encontre ofertas de produtos perto de você.</string>
+    <string name="design_share_title">Compartilhar Mottainai</string>
+    <string name="design_marketing_selected">Receber novidades e ofertas: selecionado</string>
+    <string name="design_marketing_unselected">Receber novidades e ofertas: não selecionado</string>
+    <string name="design_logout_title">Deseja sair da conta?</string>
+    <string name="design_logout">Sair</string>
+    <string name="design_greeting">Bom dia, %1$s</string>
+    <string name="design_radius_title">Até %1$s de você</string>
+    <string name="design_photo_error">Não foi possível abrir a foto. Escolha outra imagem.</string>
+    <string name="design_show_password">Mostrar senha</string>
+    <string name="design_hide_password">Ocultar senha</string>
+    <string name="design_password_hint">Digite sua senha</string>
+    <string name="design_offers_empty">Ainda não há ofertas disponíveis.</string>
+    <string name="design_stores_empty">As lojas parceiras aparecerão aqui quando estiverem disponíveis.</string>
+    <string name="design_points_empty">Seus pontos e seu histórico aparecerão aqui quando as compras forem vinculadas à sua conta.</string>
+    <string name="design_economy_empty">Sua economia será exibida quando suas compras estiverem disponíveis.</string>
+    <string name="design_chat_unavailable">A Lô ainda não está conectada. Tente novamente mais tarde.</string>
+    <string name="design_chat_history">Minhas conversas</string>
+    <string name="design_chat_you">Você</string>
+    <string name="design_chat_assistant">Lô</string>
+    <string name="design_chat_history_empty">Suas conversas aparecerão aqui quando a Lô estiver disponível.</string>
+    <string name="design_map_open">Abrir no Maps</string>
+    <string name="design_map_location">Usar minha localização no mapa</string>
+    <string name="design_map_location_unavailable">Não foi possível obter sua localização. Você pode abrir o Maps.</string>
+    <string name="design_map_permission_denied">Localização não autorizada. Você pode abrir o Maps ou permitir o acesso nas configurações.</string>
+    <string name="design_map_loading">Carregando mapa…</string>
+    <string name="design_map_error">Não foi possível carregar o mapa. Verifique sua conexão ou abra no Maps.</string>
+</resources>

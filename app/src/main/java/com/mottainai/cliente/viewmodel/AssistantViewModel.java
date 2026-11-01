@@ -94,7 +94,7 @@ public final class AssistantViewModel extends AndroidViewModel {
                 if (message == null || message.content == null || message.content.trim().isEmpty()) continue;
                 if ("user".equals(message.role)) messages.add(new ChatMessage(ChatMessage.Sender.USER, message.content));
                 else if ("assistant".equals(message.role)) messages.add(new ChatMessage(ChatMessage.Sender.BOT, message.content));
-                // Do not render system/tool records as customer-visible conversation.
+                // Não exibe registros de sistema/ferramenta como conversa visível para o cliente.
             }
             closed = "closed".equalsIgnoreCase(history.status) || "expired".equalsIgnoreCase(history.status);
             state.setValue(LoadState.success(snapshot()));

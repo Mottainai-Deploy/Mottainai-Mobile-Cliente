@@ -1,8 +1,7 @@
 package com.mottainai.cliente.models;
 
-/** Product-approved radii, shared by location-related screens. */
 public enum OfferRadius {
-    KM_5(5), KM_10(10), KM_15(15), KM_20(20);
+    KM_5(5), KM_10(10);
 
     public static final OfferRadius DEFAULT = KM_5;
     private final int kilometers;

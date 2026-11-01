@@ -1,0 +1,6 @@
+<resources>
+    <color name="design_canvas">#09142A</color>
+    <color name="design_primary">#FF984F</color>
+    <color name="design_on_primary">#09142A</color>
+    <color name="design_text">#F9F1E7</color>
+</resources>

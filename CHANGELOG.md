@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Login e confirmação de cadastro com carregamento explícito; removidos acesso de demonstração e ação de trocar conta no cadastro.
+- Perfil salva nome, telefone e URL da foto vinculada à conta; confirmação da foto retorna ao perfil atualizado.
+- Busca por posição atual e seleção de raio de 5 ou 10 km; troca de distância preserva a tela atual.
+- Catálogo com imagens externas, apresentação revisada de preços e datas e busca dentro da tela de ofertas.
+- Layouts Android identificados por nomes descritivos em inglês e mapeamento de importação versionado.
+
+### Histórico das etapas anteriores
+
+As entradas abaixo registram etapas anteriores; as regras atuais acima prevalecem quando houver diferenças.
+
+- Ajustada a tela de login, removida a ação separada de sincronização e adicionadas abertura para usuários sem sessão e transições entre telas.
+
+- Corrigida a dimensão do Google Maps na tela de lojas e a interação de toque dentro da página.
+
+- Login Google usa o fluxo explícito do botão, com cancelamento/erros visíveis, limite de espera e bloqueio de cliques repetidos; texto centralizado nos temas claro e escuro.
+
+- Interface principal substituída pelo frontend completo da PR #25, com navegação Figma nativa e temas claro/escuro, conectando Firebase, perfil SQL, catálogo, imagens, Google Maps, pontos e assistente aos serviços existentes.
+- Protótipo visual isolado em debug; login real não abre sessão fictícia e formulários de cadastro mantêm dados somente em memória.
+
+- Fotos ilustrativas do Open Food Facts por nome do produto na Home, Catálogo e detalhe, sem alterar API/banco; busca assíncrona, cache, limite de consultas e créditos com link para a fonte.
+- Demonstração inclui oferta fictícia de Nutella para testar a imagem externa com internet.
+
 - Integração visual do Cliente reaproveita marca e DM Sans do frontend, com estilos compartilhados e cores para modo claro/escuro.
 - Home usa cards compactos em RecyclerView e acesso ao catálogo; Home e Catálogo compartilham adapter e conteúdo dos cards, preservando Firebase, API e Google Maps.
 - Formatador nativo de telefone carrega metadados fora da thread principal e aplica a formatação na thread da view, no cadastro e na edição do perfil.

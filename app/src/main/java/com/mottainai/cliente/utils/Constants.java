@@ -1,6 +1,5 @@
 package com.mottainai.cliente.utils;
 
-/** Non-sensitive application identifiers shared by infrastructure components. */
 public final class Constants {
 
     public static final String SESSION_PREFERENCES_NAME = "mottainai_cliente_session";

@@ -1,6 +1,7 @@
 package com.mottainai.cliente.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.mottainai.cliente.network.dto.CustomerProfileResponse;
 import com.mottainai.cliente.network.dto.UpdateFirebaseCustomerProfileRequest;
 import com.mottainai.cliente.network.dto.ViaCepAddress;
 import com.mottainai.cliente.utils.FirebaseSupport;
+import com.mottainai.cliente.utils.CloudinaryProfilePhoto;
 import com.mottainai.cliente.utils.SessionManager;
 
 import retrofit2.Call;
@@ -31,6 +33,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public final class AuthRepository {
+    private static final String PROFILE_CACHE = "customer_profile_cache";
     public interface Result<T> {
         void success(T value);
         void error(String message);
@@ -56,12 +59,16 @@ public final class AuthRepository {
     private final ViaCepService viaCep;
     private final SessionManager session;
     private final FirebaseAuth firebaseAuth;
+    private final SharedPreferences profileCache;
+    private final Context appContext;
 
     public AuthRepository(Context context) {
+        appContext = context.getApplicationContext();
         session = new SessionManager(context);
         api = BuildConfig.API_BASE_URL.trim().isEmpty()
                 ? null : ApiClient.create(context, BuildConfig.API_BASE_URL);
         firebaseAuth = FirebaseSupport.authIfConfigured(context);
+        profileCache = context.getApplicationContext().getSharedPreferences(PROFILE_CACHE, Context.MODE_PRIVATE);
         viaCep = new Retrofit.Builder()
                 .baseUrl("https://viacep.com.br/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -70,7 +77,7 @@ public final class AuthRepository {
 
     public void login(String email, String password, Result<LoginResult> result) {
         if (!ready(result)) return;
-        result.progress("Autenticando sua conta no Firebase…");
+        result.progress("Entrando…");
         session.clearSession();
         firebaseAuth.signInWithEmailAndPassword(email.trim(), password).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
@@ -83,7 +90,7 @@ public final class AuthRepository {
 
     public void loginWithGoogle(String idToken, Result<LoginResult> result) {
         if (!ready(result)) return;
-        result.progress("Autenticando sua conta Google no Firebase…");
+        result.progress("Entrando com Google…");
         session.clearSession();
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
@@ -100,11 +107,16 @@ public final class AuthRepository {
     public LoginResult pendingProfile() {
         FirebaseUser user = firebaseAuth == null ? null : firebaseAuth.getCurrentUser();
         return user != null && !session.isLoggedIn()
-                // A Firebase identity without a local session does not prove a SQL profile is absent.
+                // Uma identidade Firebase sem sessão local não comprova que o perfil SQL esteja ausente.
                 ? new LoginResult(false, user.getEmail()) : null;
     }
 
-    public void signOut() { session.clearSession(); }
+    public void signOut() {
+        FirebaseUser user = firebaseAuth == null ? null : firebaseAuth.getCurrentUser();
+        if (user != null) clearCachedProfile(user.getUid());
+        session.clearSession();
+        if (firebaseAuth != null) firebaseAuth.signOut();
+    }
 
     public void retryProfileSync(Result<LoginResult> result) {
         if (ready(result)) loadCurrentProfile(result);
@@ -135,7 +147,7 @@ public final class AuthRepository {
         }
         session.clearClientSession();
         if (current != null) firebaseAuth.signOut();
-        result.progress("Criando sua identidade no Firebase…");
+        result.progress("Criando sua conta…");
         firebaseAuth.createUserWithEmailAndPassword(request.email.trim(), request.password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -152,7 +164,7 @@ public final class AuthRepository {
             return;
         }
         if (api == null) {
-            result.error("Configure MOTTAINAI_API_BASE_URL para consultar seu perfil.");
+            result.error("Não foi possível carregar seu perfil. Tente novamente.");
             return;
         }
         if (firebaseAuth == null || firebaseAuth.getCurrentUser() == null || !session.isLoggedIn()) {
@@ -171,6 +183,7 @@ public final class AuthRepository {
                 ProfileSyncStatus status = ProfileSyncStatus.from(response.code(), body);
                 if (status == ProfileSyncStatus.READY) {
                     populateLoginEmail(body);
+                    hydrateCachedProfile(uid, body);
                     result.success(body);
                 } else {
                     result.error(response.code() == 404
@@ -192,7 +205,7 @@ public final class AuthRepository {
             return;
         }
         if (api == null) {
-            result.error("Configure MOTTAINAI_API_BASE_URL para salvar seu perfil.");
+            result.error("Não foi possível salvar seus dados. Tente novamente.");
             return;
         }
         if (firebaseAuth == null || firebaseAuth.getCurrentUser() == null || !session.isLoggedIn()) {
@@ -209,9 +222,13 @@ public final class AuthRepository {
                     CustomerProfileResponse profile = response.body();
                     ProfileSyncStatus status = ProfileSyncStatus.from(response.code(), profile);
                     if (status == ProfileSyncStatus.READY) {
-                        // The SQL update confirmed this input; retain it only in this in-memory response.
+                        // A resposta atual da API omite estes campos protegidos; mantém os valores confirmados.
                         profile.fullName = request.fullName;
+                        profile.phone = request.phone;
+                        profile.marketingConsent = request.marketingConsent;
+                        if (request.avatarUrl != null) profile.avatarUrl = request.avatarUrl;
                         populateLoginEmail(profile);
+                        cacheProfile(uid, profile);
                         result.success(profile);
                     } else {
                         result.error(response.code() == 404
@@ -248,11 +265,11 @@ public final class AuthRepository {
 
     private boolean ready(Result<?> result) {
         if (firebaseAuth == null) {
-            result.error("Configure o Firebase Authentication e adicione google-services.json ao app.");
+            result.error("O acesso à sua conta está indisponível no momento.");
             return false;
         }
         if (api == null) {
-            result.error("Configure MOTTAINAI_API_BASE_URL para conectar o aplicativo à API.");
+            result.error("Não foi possível conectar agora. Tente novamente.");
             return false;
         }
         return true;
@@ -265,7 +282,7 @@ public final class AuthRepository {
             return;
         }
         String uid = user.getUid();
-        result.progress("Conta autenticada. Consultando seu perfil na API…");
+        result.progress("Carregando seu perfil…");
         api.profile(uid).enqueue(new Callback<CustomerProfileResponse>() {
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
@@ -298,7 +315,7 @@ public final class AuthRepository {
             return;
         }
         String uid = user.getUid();
-        result.progress("Conta autenticada. Verificando se o perfil já foi salvo…");
+        result.progress("Verificando seu perfil…");
         api.profile(uid).enqueue(new Callback<CustomerProfileResponse>() {
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
@@ -313,8 +330,7 @@ public final class AuthRepository {
                 } else if (status.allowsProfileCreation(createIfMissing)) {
                     createSqlProfile(request, result);
                 } else if (status == ProfileSyncStatus.PROFILE_REQUIRED) {
-                    result.error("A API informou conflito, mas não retornou um perfil desta conta. "
-                            + "Confira os dados ou contate o suporte; não crie outra conta Firebase.");
+                    result.error("Não foi possível concluir seu cadastro. Confira os dados e tente novamente.");
                 } else {
                     result.error(profileFailure(status, response.code()));
                 }
@@ -333,7 +349,7 @@ public final class AuthRepository {
             return;
         }
         String uid = user.getUid();
-        result.progress("Salvando seu cadastro na API…");
+        result.progress("Salvando seu cadastro…");
         CreateFirebaseCustomerProfileRequest payload = new CreateFirebaseCustomerProfileRequest(
                 request.fullName, request.cpf, request.phone, request.birthDate,
                 request.marketingConsent, request.address);
@@ -348,21 +364,24 @@ public final class AuthRepository {
                 ProfileSyncStatus status = ProfileSyncStatus.from(response.code(), profile);
                 if (status == ProfileSyncStatus.READY) {
                     session.saveClientSession(String.valueOf(profile.id), uid);
+                    profile.fullName = request.fullName;
+                    profile.phone = request.phone;
+                    profile.marketingConsent = request.marketingConsent;
+                    cacheProfile(uid, profile);
                     result.success(null);
                 } else if (status == ProfileSyncStatus.INACTIVE
                         || status == ProfileSyncStatus.INVALID_RESPONSE) {
                     result.error(profileFailure(status, response.code()));
                 } else if (response.code() == 409) {
-                    // A previous timed-out POST may already have committed. Read once, never loop POST.
+                    // Um POST anterior que expirou pode já ter sido concluído. Lê uma vez e nunca repete o POST em loop.
                     ensureSqlProfile(request, result, false);
                 } else {
-                    result.error("Conta Firebase criada, mas não foi possível salvar seu perfil no sistema (HTTP "
-                            + response.code() + "). Corrija os dados ou tente novamente; não crie outra conta.");
+                    result.error("Não foi possível concluir seu cadastro. Confira os dados e tente novamente.");
                 }
             }
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
-                result.error("Não foi possível confirmar se o perfil foi salvo. " + syncError(throwable));
+                    result.error("Não foi possível confirmar seu cadastro. Tente novamente.");
             }
         });
     }
@@ -378,18 +397,42 @@ public final class AuthRepository {
         profile.email = current.getEmail();
     }
 
+    private void hydrateCachedProfile(String uid, CustomerProfileResponse profile) {
+        if (profile.fullName == null || profile.fullName.trim().isEmpty()) {
+            profile.fullName = profileCache.getString(uid + ".fullName", null);
+        }
+        if (profile.phone == null || profile.phone.trim().isEmpty()) {
+            profile.phone = profileCache.getString(uid + ".phone", null);
+        }
+        if (profile.avatarUrl != null && profile.avatarUrl.startsWith("https://")) {
+            CloudinaryProfilePhoto.saveUrl(appContext, profile.avatarUrl);
+        }
+    }
+
+    private void cacheProfile(String uid, CustomerProfileResponse profile) {
+        profileCache.edit().putString(uid + ".fullName", profile.fullName)
+                .putString(uid + ".phone", profile.phone).apply();
+        if (profile.avatarUrl != null && profile.avatarUrl.startsWith("https://")) {
+            CloudinaryProfilePhoto.saveUrl(appContext, profile.avatarUrl);
+        }
+    }
+
+    private void clearCachedProfile(String uid) {
+        profileCache.edit().remove(uid + ".fullName").remove(uid + ".phone").apply();
+    }
+
     private String profileFailure(ProfileSyncStatus status, int httpStatus) {
         if (status == ProfileSyncStatus.INACTIVE) {
             session.clearClientSession();
             return "Seu cadastro está inativo. Entre em contato com o suporte.";
         }
         if (status == ProfileSyncStatus.INVALID_RESPONSE) {
-            return "A API retornou um perfil incompleto. Tente sincronizar novamente.";
+            return "Não foi possível carregar seu perfil. Tente novamente.";
         }
-        if (httpStatus == 401) return "A API não aceitou a autenticação Firebase. Entre novamente ou confira a configuração do servidor.";
-        if (httpStatus == 403) return "A API não autorizou o acesso ao perfil desta conta.";
-        if (httpStatus >= 500) return "A API está indisponível. Sua conta Firebase não precisa ser recriada.";
-        return "Não foi possível confirmar seu perfil (HTTP " + httpStatus + "). Tente novamente.";
+        if (httpStatus == 401) return "Sua sessão expirou. Entre novamente.";
+        if (httpStatus == 403) return "Não foi possível acessar este perfil.";
+        if (httpStatus >= 500) return "Não foi possível concluir agora. Tente novamente.";
+        return "Não foi possível confirmar seu perfil. Tente novamente.";
     }
 
     private String syncError(Throwable failure) {
@@ -412,7 +455,7 @@ public final class AuthRepository {
             case "ERROR_WEAK_PASSWORD": return "Use uma senha mais forte (mínimo de 8 caracteres).";
             case "ERROR_TOO_MANY_REQUESTS": return "Muitas tentativas. Aguarde um pouco e tente novamente.";
             case "ERROR_OPERATION_NOT_ALLOWED":
-                return "O provedor de login utilizado ainda não foi habilitado no Firebase.";
+                return "Este método de acesso não está disponível no momento.";
             case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
                 return "Este e-mail já usa outro método de acesso. Entre com o método original.";
             default: return fallback;

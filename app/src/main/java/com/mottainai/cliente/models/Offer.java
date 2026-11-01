@@ -24,6 +24,7 @@ public class Offer {
     private final String itemsLabel;
     private final boolean catalogOffer;
     private final String imageUrl;
+    private final String imageSearchName;
 
     public Offer(String id, String title, String storeName, double distanceKm, int discountPercent,
                  String expiryLabel, String category, int thumbnailColorRes, String badgeLabel,
@@ -42,11 +43,13 @@ public class Offer {
         this.itemsLabel = null;
         this.catalogOffer = false;
         this.imageUrl = null;
+        this.imageSearchName = null;
     }
 
     public Offer(CatalogPromotion promotion) {
         this.id = promotion.id;
         this.imageUrl = ProductImageSource.forPromotion(promotion);
+        this.imageSearchName = ProductImageSource.searchName(promotion);
         this.title = promotion.name == null ? "Promoção" : promotion.name;
         this.storeName = promotion.store == null || promotion.store.name == null
                 ? "Loja parceira" : promotion.store.name;
@@ -135,4 +138,5 @@ public class Offer {
     public String getItemsLabel() { return itemsLabel; }
     public boolean isCatalogOffer() { return catalogOffer; }
     public String getImageUrl() { return imageUrl; }
+    public String getImageSearchName() { return imageSearchName; }
 }

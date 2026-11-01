@@ -1,0 +1,25 @@
+<resources>
+    <declare-styleable name="DesignBoundedLayout">
+        <attr name="designMaxWidth" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="DesignImageView">
+        <attr name="designAsset" format="string" />
+    </declare-styleable>
+    <declare-styleable name="DesignArtLayout">
+        <attr name="designWidth" format="float" />
+        <attr name="designHeight" format="float" />
+    </declare-styleable>
+    <declare-styleable name="DesignArtLayout_Layout">
+        <attr name="designX" format="float" />
+        <attr name="designY" format="float" />
+        <attr name="designChildWidth" format="float" />
+        <attr name="designChildHeight" format="float" />
+    </declare-styleable>
+    <declare-styleable name="DesignMaskLayout">
+        <attr name="designMask" format="string" />
+        <attr name="maskX" format="float" />
+        <attr name="maskY" format="float" />
+        <attr name="maskWidth" format="float" />
+        <attr name="maskHeight" format="float" />
+    </declare-styleable>
+</resources>

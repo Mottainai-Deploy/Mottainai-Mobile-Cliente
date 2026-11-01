@@ -3,7 +3,6 @@ package com.mottainai.cliente.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/** Inclusive monthly bounds at the PostgreSQL timestamp microsecond precision. */
 public final class LoyaltyPeriod {
     public final LocalDateTime from;
     public final LocalDateTime to;

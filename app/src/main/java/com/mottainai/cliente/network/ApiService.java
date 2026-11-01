@@ -11,11 +11,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Tag;
 
-/**
- * REST contract for the Mottainai API.
- *
- * Client endpoints use Firebase ID tokens injected by ApiClient.
- */
 public interface ApiService {
     @GET("api/v1/client/auth/profile")
     Call<CustomerProfileResponse> profile(@Tag String firebaseUid);

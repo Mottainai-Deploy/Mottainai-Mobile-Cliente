@@ -1,0 +1,37 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="364" height="364" viewBox="0 0 364 364" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Base cartogr&#195;&#161;fica esquem&#195;&#161;tica / ruas e quadras" clip-path="url(#clip0_0_33)">
+<path id="Vector" d="M364 0H0V364H364V0Z" fill="#E8ECE9"/>
+<g id="Group">
+<path id="Vector_2" d="M92 12H18V74H92V12Z" fill="#E2E5E1"/>
+<path id="Vector_3" d="M192 12H118V74H192V12Z" fill="#E2E5E1"/>
+<path id="Vector_4" d="M344 12H216V74H344V12Z" fill="#E2E5E1"/>
+<path id="Vector_5" d="M92 102H18V184H92V102Z" fill="#E2E5E1"/>
+<path id="Vector_6" d="M192 102H118V184H192V102Z" fill="#E2E5E1"/>
+<path id="Vector_7" d="M344 102H216V184H344V102Z" fill="#E2E5E1"/>
+<path id="Vector_8" d="M92 211H18V273H92V211Z" fill="#E2E5E1"/>
+<path id="Vector_9" d="M192 211H118V273H192V211Z" fill="#E2E5E1"/>
+<path id="Vector_10" d="M344 211H216V273H344V211Z" fill="#E2E5E1"/>
+<path id="Vector_11" d="M192 299H18V359H192V299Z" fill="#E2E5E1"/>
+</g>
+<path id="Vector_12" d="M331 300H228C222.477 300 218 304.477 218 310V354C218 359.523 222.477 364 228 364H331C336.523 364 341 359.523 341 354V310C341 304.477 336.523 300 331 300Z" fill="#CDE2C8"/>
+<g id="Group_2">
+<path id="Vector_13" d="M105 0V88M105 88V198M105 88H0M105 88H204M105 198V286M105 198H0M105 198H204M105 286V364M105 286H0M105 286H204M204 0V88M204 88V198M204 88H364M204 198V286M204 198H364M204 286V364M204 286H364" stroke-width="15" stroke="#D2D8D4"/>
+</g>
+<g id="Group_3">
+<path id="Vector_14" d="M105 0V88M105 88V198M105 88H0M105 88H204M105 198V286M105 198H0M105 198H204M105 286V364M105 286H0M105 286H204M204 0V88M204 88V198M204 88H364M204 198V286M204 198H364M204 286V364M204 286H364" stroke-width="11" stroke="white"/>
+</g>
+<g id="Vector_15">
+<path d="M-40 342L405 17Z" fill="black"/>
+<path d="M-40 342L405 17" stroke-width="22" stroke="#D2D8D4"/>
+</g>
+<g id="Vector_16">
+<path d="M-40 342L405 17Z" fill="black"/>
+<path d="M-40 342L405 17" stroke-width="17" stroke="white"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_33">
+<rect width="364" height="364" fill="white"/>
+</clipPath>
+</defs>
+</svg>

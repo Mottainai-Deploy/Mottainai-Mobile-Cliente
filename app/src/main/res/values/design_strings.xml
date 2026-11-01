@@ -1,0 +1,667 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="design_bee73e2cb3ea" formatted="false">APP CLIENTE</string>
+    <string name="design_634ce60fb0b4" formatted="false">Boas ofertas.</string>
+    <string name="design_2c9b7b70a961" formatted="false">Perto de você.</string>
+    <string name="design_84f05e0da1f9" formatted="false">Entre na sua conta</string>
+    <string name="design_e1c65531a66e" formatted="false">Suas ofertas e seu impacto, em um só lugar.</string>
+    <string name="design_2550d962e536" formatted="false">E-mail</string>
+    <string name="design_ae43f4395b8c" formatted="false">camila@exemplo.com</string>
+    <string name="design_d482c10b3d4d" formatted="false">Senha</string>
+    <string name="design_fb852610a393" formatted="false">••••••••</string>
+    <string name="design_16696f2ed928" formatted="false">Esqueci minha senha</string>
+    <string name="design_2a5967c44a43" formatted="false">Entrar        Continuar com Google Criar conta</string>
+    <string name="design_4105811890ae" formatted="false">Entrar</string>
+    <string name="design_df9cc81a0a84" formatted="false">       Continuar com Google</string>
+    <string name="design_d634b915721a" formatted="false">Continuar com Google</string>
+    <string name="design_8cb3525e3b7e" formatted="false">Criar conta</string>
+    <string name="design_fc74181ece96" formatted="false">ou</string>
+    <string name="design_2432ccdc00e9" formatted="false">Bom ter você</string>
+    <string name="design_2bd53f6f7355" formatted="false">por aqui.</string>
+    <string name="design_ebb27392ab3f" formatted="false">Voltar / signup</string>
+    <string name="design_580425b2e5fc" formatted="false">Seus dados</string>
+    <string name="design_29e0fd13af17" formatted="false">Etapa 1 de 2 — dados pessoais e acesso</string>
+    <string name="design_52015b04c01a" formatted="false">Nome completo</string>
+    <string name="design_741e97dbc8d6" formatted="false">Camila Oliveira</string>
+    <string name="design_30d436c2782c" formatted="false">CPF</string>
+    <string name="design_a68ad65994d4" formatted="false">000.000.000-00</string>
+    <string name="design_2f151735cce7" formatted="false">Telefone</string>
+    <string name="design_f8cb72eba8b9" formatted="false">(11) 90000-0000</string>
+    <string name="design_0b69482eddcd" formatted="false">Data de nascimento (opcional)</string>
+    <string name="design_31da44bb6e96" formatted="false">DD/MM/AAAA</string>
+    <string name="design_3f881cb8d3f8" formatted="false">••••••••••</string>
+    <string name="design_49ee794e5e64" formatted="false">Confirmar senha</string>
+    <string name="design_a482a12f4d84" formatted="false">Use de 8 a 100 caracteres.</string>
+    <string name="design_83451900c74e" formatted="false"> Quero receber novidades e ofertas (opcional)</string>
+    <string name="design_677e47e482ba" formatted="false">Quero receber novidades e ofertas (opcional)</string>
+    <string name="design_63e2bbaf1c92" formatted="false">Continuar</string>
+    <string name="design_0f6b5e3e04ba" formatted="false">Já tenho conta</string>
+    <string name="design_6b074c7f924a" formatted="false">Voltar / signupRegion</string>
+    <string name="design_1de1f5449862" formatted="false">Seu endereço</string>
+    <string name="design_1b6c74e873fb" formatted="false">Onde você mora?</string>
+    <string name="design_435008630c45" formatted="false">Etapa 2 de 2 — confira o endereço antes de salvar</string>
+    <string name="design_d686368b5071" formatted="false">CEP</string>
+    <string name="design_348b39e0b05e" formatted="false">00000-000</string>
+    <string name="design_957a014353b3" formatted="false">Consultar CEP</string>
+    <string name="design_64b05a320a2c" formatted="false">Rua</string>
+    <string name="design_662861ad5269" formatted="false">Digite o logradouro</string>
+    <string name="design_67e494d69c2d" formatted="false">Número</string>
+    <string name="design_03c2f10570eb" formatted="false">Complemento (opcional)</string>
+    <string name="design_aad067502224" formatted="false">Apartamento, bloco…</string>
+    <string name="design_2dbd2bbcce58" formatted="false">Bairro</string>
+    <string name="design_de1c17687a54" formatted="false">Cidade</string>
+    <string name="design_55852e07d3b7" formatted="false">UF</string>
+    <string name="design_052acb46d795" formatted="false">Você pode preencher ou corrigir o endereço manualmente.</string>
+    <string name="design_50d7079488ae" formatted="false">Revisar cadastro Voltar aos dados</string>
+    <string name="design_b90f3d0bad9e" formatted="false">Revisar cadastro</string>
+    <string name="design_d873246f0bfb" formatted="false">Voltar aos dados</string>
+    <string name="design_53080daf1d4c" formatted="false">Criando conta</string>
+    <string name="design_af096a61d2f6" formatted="false">Criando sua conta</string>
+    <string name="design_1bf94fff3751" formatted="false">Só um instante.</string>
+    <string name="design_856d8e41c44d" formatted="false">Bem-vinda,</string>
+    <string name="design_73deffc898ce" formatted="false">Camila.</string>
+    <string name="design_322085898310" formatted="false">Mensagem</string>
+    <string name="design_2ae7eba094fb" formatted="false">Seu cadastro está pronto.</string>
+    <string name="design_7be7dfa2c4f1" formatted="false">Voltar / signupError</string>
+    <string name="design_dfb5f6c4366a" formatted="false">Revise seus dados</string>
+    <string name="design_5b4ee6a4ab5c" formatted="false">Nome completo Digite seu nome</string>
+    <string name="design_1c72f81ca1ad" formatted="false">Digite seu nome</string>
+    <string name="design_a687815c81a9" formatted="false">Nome completo é obrigatório.</string>
+    <string name="design_9ce6b1bf33e4" formatted="false">Voltar / cepError</string>
+    <string name="design_3814e749ccf6" formatted="false">CEP não encontrado. Confira os 8 números ou preencha o endereço manualmente.</string>
+    <string name="design_08ca9e933de1" formatted="false">Voltar / recovery</string>
+    <string name="design_988c6e1474cb" formatted="false">Recuperar acesso</string>
+    <string name="design_fdefcea84b90" formatted="false">Esqueceu sua senha?</string>
+    <string name="design_991bd70844b6" formatted="false">Informe seu e-mail para receber um link de recuperação.</string>
+    <string name="design_d20d9e7b2716" formatted="false">Enviar link</string>
+    <string name="design_49675fa91802" formatted="false">Voltar para entrar</string>
+    <string name="design_f0cbe0f3913b" formatted="false">Voltar / recoverySent</string>
+    <string name="design_3430568fb863" formatted="false">Verifique seu e-mail</string>
+    <string name="design_91e10a73f311" formatted="false">Confira seu e-mail</string>
+    <string name="design_5ea005da79d8" formatted="false">Se houver uma conta para camila@exemplo.com, enviaremos o link para redefinir a senha.</string>
+    <string name="design_d70d2996938a" formatted="false">Não encontrou? Confira também a pasta de spam.</string>
+    <string name="design_37278736f8f2" formatted="false">Voltar ao início</string>
+    <string name="design_62c95076dbeb" formatted="false">Detalhes</string>
+    <string name="design_37440a41ee4e" formatted="false">Abrir Lô</string>
+    <string name="design_0d12c4109baa" formatted="false">−48% hoje</string>
+    <string name="design_9e86e8280c9e" formatted="false">Cesta hortifruti</string>
+    <string name="design_c275b5539d04" formatted="false">Mercado da Praça — 1,2 km</string>
+    <string name="design_9a3f6cc13959" formatted="false">R$ 12,90</string>
+    <string name="design_5ba350938a72" formatted="false">R$ 24,90</string>
+    <string name="design_ee656318930d" formatted="false">Uma seleção de frutas e verduras do dia. A composição varia conforme a disponibilidade da loja.</string>
+    <string name="design_ff09483495a3" formatted="false">Retirada</string>
+    <string name="design_cf1f84fa0f64" formatted="false">Hoje, das 16h às 19h</string>
+    <string name="design_243d6de93464" formatted="false">Onde retirar</string>
+    <string name="design_dfc1f60cf1fc" formatted="false">Rua Afonso Celso, 210</string>
+    <string name="design_5f7aec7b9ad6" formatted="false">Validade</string>
+    <string name="design_495df4ec2ff6" formatted="false">22/10/2026 — faltam 3 dias</string>
+    <string name="design_9c7733200e9b" formatted="false">Prazo da promoção</string>
+    <string name="design_38fd801fbf75" formatted="false">Hoje, até as 20h</string>
+    <string name="design_9ec199be054d" formatted="false">Como chegar</string>
+    <string name="design_598813670ff4" formatted="false">Ver informações da loja</string>
+    <string name="design_a2fb9bb29e39" formatted="false"> Início  Ofertas  Lojas  Pontos  Perfil</string>
+    <string name="design_ebe9b3a44254" formatted="false"> Início</string>
+    <string name="design_325dfc37c9ba" formatted="false">Início</string>
+    <string name="design_f75ef7d4c42c" formatted="false"> Ofertas</string>
+    <string name="design_2d9219ead0cf" formatted="false">Ofertas</string>
+    <string name="design_775462c2352a" formatted="false"> Lojas</string>
+    <string name="design_f148495719a3" formatted="false">Lojas</string>
+    <string name="design_0a1ef9298119" formatted="false"> Pontos</string>
+    <string name="design_6ac2b76d12ad" formatted="false">Pontos</string>
+    <string name="design_55f07fa6b47f" formatted="false"> Perfil</string>
+    <string name="design_00d551e63dd5" formatted="false">Perfil</string>
+    <string name="design_6894441b3fa5" formatted="false">Busca</string>
+    <string name="design_6f5f9c0900fe" formatted="false">O que você procura?</string>
+    <string name="design_ed8f580f920b" formatted="false">Busque pelo nome do produto.</string>
+    <string name="design_96297f31d8aa" formatted="false"> Buscar produtos  Filtros</string>
+    <string name="design_643bdae86d63" formatted="false"> Buscar produtos</string>
+    <string name="design_3dc14b9666e2" formatted="false">Buscar produtos</string>
+    <string name="design_5ca0864e4cde" formatted="false"> Filtros</string>
+    <string name="design_57ac13ce3d5b" formatted="false">Filtros</string>
+    <string name="design_53240bda3b59" formatted="false">Todas as lojas</string>
+    <string name="design_9e9a2606ac92" formatted="false">Sugestões de busca</string>
+    <string name="design_0047e30c4bfb" formatted="false">⌕  Cesta hortifruti ⌕  Leite</string>
+    <string name="design_79b991b82f2a" formatted="false">⌕  Cesta hortifruti</string>
+    <string name="design_e1b0cb7261b4" formatted="false">⌕  Leite</string>
+    <string name="design_26a60ddeddcf" formatted="false"> Lô</string>
+    <string name="design_a346ea239e4a" formatted="false">Lô</string>
+    <string name="design_589b48ed96e5" formatted="false">Pesquisa</string>
+    <string name="design_0d78988f1afd" formatted="false">Cesta de hortifruti</string>
+    <string name="design_82b296f417a9" formatted="false">1 resultado</string>
+    <string name="design_1f4f81e7843d" formatted="false"> Cesta hortifruti ×</string>
+    <string name="design_8db71ed28b0f" formatted="false">×</string>
+    <string name="design_b0b853555ab6" formatted="false"> −48% 1,2 km Cesta hortifruti Mercado da Praça R$ 12,90 R$ 24,90 Retirada hoje · 16h–19h Validade 22/10/2026</string>
+    <string name="design_639cd0d2db0e" formatted="false">−48%</string>
+    <string name="design_b91ff8d1fa24" formatted="false">1,2 km</string>
+    <string name="design_5eff29304dcb" formatted="false">Mercado da Praça</string>
+    <string name="design_2e6f8a5e5d00" formatted="false">Retirada hoje · 16h–19h</string>
+    <string name="design_42e75d0836f1" formatted="false">Validade 22/10/2026</string>
+    <string name="design_a0e12afb894c" formatted="false">Leite</string>
+    <string name="design_e6a6167ffb6c" formatted="false"> Leite ×</string>
+    <string name="design_0e52ec8dab09" formatted="false"> Leite integral Consultar preço 1 L Mercado da Praça</string>
+    <string name="design_b3c55927df5c" formatted="false">Leite integral</string>
+    <string name="design_71b67ae18e35" formatted="false">Consultar preço</string>
+    <string name="design_221cd92f8e7a" formatted="false">1 L</string>
+    <string name="design_4585707b7fd8" formatted="false">Fechar painel</string>
+    <string name="design_151559f9a016" formatted="false">Filtrar por loja</string>
+    <string name="design_b4306e314982" formatted="false">A seleção é aplicada na hora.</string>
+    <string name="design_a6aa5be58db5" formatted="false">✓ Loja selecionada</string>
+    <string name="design_bb9dbb406dcb" formatted="false">Cancelar</string>
+    <string name="design_afa9b0f8e1ff" formatted="false">Voltar / detalhes da oferta</string>
+    <string name="design_ee03cdaa6a1f" formatted="false">A loja</string>
+    <string name="design_ab5595ec80c4" formatted="false">Vila Mariana, São Paulo</string>
+    <string name="design_f09f71e7772e" formatted="false">Explorar ofertas</string>
+    <string name="design_7d596d59a663" formatted="false">Veja a validade e o horário de retirada em cada oferta.</string>
+    <string name="design_6f9b1b25ab43" formatted="false">Disponibilidade</string>
+    <string name="design_517a904b76de" formatted="false">Oferta indisponível</string>
+    <string name="design_158f01a5656f" formatted="false">Leite integral, 1 L</string>
+    <string name="design_24b9c5a02228" formatted="false">Esta oferta não está mais disponível. Você ainda pode encontrar outras opções perto de você.</string>
+    <string name="design_90e037e97cf2" formatted="false">Ver outras ofertas</string>
+    <string name="design_8ecec886cf28" formatted="false">Ver a loja</string>
+    <string name="design_a768c8d21ffe" formatted="false">Até onde buscar?</string>
+    <string name="design_9e937e4bcffa" formatted="false">A partir da posição atual do seu celular.</string>
+    <string name="design_feb4836b9909" formatted="false">5 km</string>
+    <string name="design_11e58e69464a" formatted="false">10 km</string>
+    <string name="design_11dd4090d1ef" formatted="false">15 km</string>
+    <string name="design_cc63f9200168" formatted="false">20 km</string>
+    <string name="design_55c3741ea169" formatted="false">O mesmo raio vale para ofertas, lojas e avisos próximos.</string>
+    <string name="design_ddb246f212b8" formatted="false">Permitir que o Mottainai acesse a localização deste dispositivo?</string>
+    <string name="design_c4c3d390c056" formatted="false">Durante o uso do app</string>
+    <string name="design_9abfc9008ba8" formatted="false">Apenas desta vez</string>
+    <string name="design_791f51fad0a2" formatted="false">Não permitir</string>
+    <string name="design_1f1be0cff41d" formatted="false">Localização não permitida</string>
+    <string name="design_e68cff8c1ea0" formatted="false">A localização do celular é necessária para usar os serviços.</string>
+    <string name="design_302fcceadc9d" formatted="false">Rever acesso</string>
+    <string name="design_b73f3ff34b4b" formatted="false">Sair da conta</string>
+    <string name="design_15e99ec6827a" formatted="false">Ative a localização</string>
+    <string name="design_7dda21ad5766" formatted="false">Voltar / Pontos</string>
+    <string name="design_a80de96d9716" formatted="false">Histórico</string>
+    <string name="design_2e651d25cbd7" formatted="false">Seu histórico</string>
+    <string name="design_fe36c6b8e59e" formatted="false">Pontos de impacto registrados nas compras.</string>
+    <string name="design_ed19bed6e9c2" formatted="false">Outubro de 2026</string>
+    <string name="design_5ab8bb12fc95" formatted="false">Mercado Verde</string>
+    <string name="design_940dd9e7d65a" formatted="false">20 de outubro</string>
+    <string name="design_b0d51207f1ac" formatted="false">+50 pontos</string>
+    <string name="design_de66366f81c3" formatted="false">Padaria Sol</string>
+    <string name="design_05e4f8f72266" formatted="false">18 de outubro</string>
+    <string name="design_3a218fd7ea8a" formatted="false">+30 pontos</string>
+    <string name="design_cd8b2bbfee07" formatted="false">Como funcionam</string>
+    <string name="design_9bbee7f2245c" formatted="false"> Compra cancelada Estorno de pontos </string>
+    <string name="design_4f8b9561b0ea" formatted="false">Compra cancelada</string>
+    <string name="design_f9e19e9f6d7d" formatted="false">Estorno de pontos</string>
+    <string name="design_a514c5ddc788" formatted="false">Pontos ganhos</string>
+    <string name="design_991f80d4356d" formatted="false">Como funciona</string>
+    <string name="design_93729bd3720d" formatted="false">Compras que contam</string>
+    <string name="design_56886a5200e1" formatted="false">Pontos de fidelidade, sem troca por dinheiro ou descontos.</string>
+    <string name="design_8d55c3d56fe8" formatted="false">1 ponto por real gasto</string>
+    <string name="design_b7e6431afb73" formatted="false">O total pago na compra gera pontos após a confirmação do mercado.</string>
+    <string name="design_277f3a62fbd6" formatted="false">Informe seu CPF no caixa</string>
+    <string name="design_49604993c8f8" formatted="false">O PDV Mottainai vincula a compra à sua conta.</string>
+    <string name="design_70b98c5f8d3f" formatted="false">Avisos com prioridade</string>
+    <string name="design_88f5643de42d" formatted="false">Quem tem mais pontos recebe primeiro os avisos de melhores promoções. O catálogo continua disponível para todos.</string>
+    <string name="design_e9d08b0c0abd" formatted="false">Devolução ou cancelamento</string>
+    <string name="design_6d3c843eac18" formatted="false">Os pontos da compra são retirados e o estorno aparece no histórico.</string>
+    <string name="design_c2e32cefa1d9" formatted="false">O status mostra participação. Não é certificação ambiental nem cálculo de alimentos ou CO₂ evitados.</string>
+    <string name="design_fb6358379e51" formatted="false">Ver minha jornada</string>
+    <string name="design_ec45d8ed1170" formatted="false">Meus pontos</string>
+    <string name="design_5435f8259615" formatted="false">Seu histórico começa aqui</string>
+    <string name="design_977eb6072f18" formatted="false">Quando houver pontos registrados na sua conta, eles aparecerão aqui.</string>
+    <string name="design_258213e713c0" formatted="false">Não foi possível</string>
+    <string name="design_b78a5c02260b" formatted="false">carregar seus pontos</string>
+    <string name="design_f6cc3e12ad91" formatted="false">Tente novamente para consultar seus pontos de fidelidade.</string>
+    <string name="design_b9e10688be01" formatted="false">Tentar novamente</string>
+    <string name="design_1345ef647a2c" formatted="false">Continuar nas ofertas</string>
+    <string name="design_6525d231ce1e" formatted="false">Voltar / impact</string>
+    <string name="design_fb0f375e0201" formatted="false">Minha economia e impacto</string>
+    <string name="design_c0e0da7a0edc" formatted="false">Sua economia</string>
+    <string name="design_d080a7778200" formatted="false">O valor economizado nas compras</string>
+    <string name="design_0382b356f1d2" formatted="false">vinculadas à sua conta.</string>
+    <string name="design_33cf2ae7b079" formatted="false">EXEMPLO DE CÁLCULO</string>
+    <string name="design_f4e48e664a60" formatted="false">​</string>
+    <string name="design_76d51a3d0315" formatted="false">Preço original</string>
+    <string name="design_afba2418d6ae" formatted="false">−</string>
+    <string name="design_d913f69b1f38" formatted="false">Valor pago</string>
+    <string name="design_74a83382042d" formatted="false">Economia</string>
+    <string name="design_29599ba73b92" formatted="false">R$ 12,00</string>
+    <string name="design_7c6bdc7b66b3" formatted="false">Suas compras ainda não foram vinculadas. Por isso, este exemplo não é o seu total economizado.</string>
+    <string name="design_61d6205b940d" formatted="false">Impacto ambiental será mostrado apenas com dados e método de cálculo definidos.</string>
+    <string name="design_96eed8857fe8" formatted="false">Assistente Mottainai</string>
+    <string name="design_8bbcb056a45e" formatted="false">Minhas conversas</string>
+    <string name="design_c8b65007b99d" formatted="false">Oi, Camila.</string>
+    <string name="design_8a027d7cae06" formatted="false">Vamos encontrar algo bom?</string>
+    <string name="design_4c6fa8828c1e" formatted="false">Converse comigo sobre ofertas,</string>
+    <string name="design_18ef9063ec51" formatted="false">lojas e retirada.</string>
+    <string name="design_be339a0cd3d8" formatted="false">Você pode começar por aqui</string>
+    <string name="design_6ae6432f4a04" formatted="false">Ofertas por perto</string>
+    <string name="design_00c724b498af" formatted="false">Lojas próximas</string>
+    <string name="design_cbc6498e30a7" formatted="false">Como retirar?</string>
+    <string name="design_f0ee7d44c523" formatted="false">Quais ofertas estão disponíveis?</string>
+    <string name="design_56c57edf5258" formatted="false">Enviar mensagem</string>
+    <string name="design_b21e91730d18" formatted="false">Você</string>
+    <string name="design_30f9ef535eb1" formatted="false">•  •  •</string>
+    <string name="design_04c4da792d48" formatted="false">Lô está preparando uma resposta…</string>
+    <string name="design_4ec30f7ac179" formatted="false">Pergunte à Lô…</string>
+    <string name="design_3fbd638d7328" formatted="false">Encontrei esta opção no catálogo. Confira a oferta e as informações de retirada antes de ir.</string>
+    <string name="design_81ed9284a7e2" formatted="false">R$ 12,90 — −48%</string>
+    <string name="design_f9a930d3126a" formatted="false">Ver detalhes da oferta</string>
+    <string name="design_3f18fbd0b6f9" formatted="false">Onde retirar? Condições</string>
+    <string name="design_97f611018ebc" formatted="false">Onde retirar?</string>
+    <string name="design_c395cbc2ad42" formatted="false">Condições</string>
+    <string name="design_42c3533bcb33" formatted="false">Como encontro a loja?</string>
+    <string name="design_f83e41c3c642" formatted="false">Abra Lojas para consultar o mapa e o endereço. A oferta desta conversa está no Mercado da Praça.</string>
+    <string name="design_6ea79633a068" formatted="false">Vila Mariana</string>
+    <string name="design_fd33a2e60e27" formatted="false">Ver loja no mapa</string>
+    <string name="design_4b5962a6459d" formatted="false">O que conferir na retirada?</string>
+    <string name="design_8c0ec15b3175" formatted="false">Confira o produto, o preço, a validade e o horário informado na oferta antes de ir à loja.</string>
+    <string name="design_37e477612ae6" formatted="false">Retirada: hoje, das 16h às 19h</string>
+    <string name="design_facb1cc95989" formatted="false">Consultar detalhes da oferta</string>
+    <string name="design_768f3871138d" formatted="false">Posso receber em casa?</string>
+    <string name="design_17c398fd01cb" formatted="false">Não consigo confirmar essa informação por aqui. Consulte as condições da oferta ou as informações da loja.</string>
+    <string name="design_42d0f009b537" formatted="false">Perguntar sobre ofertas</string>
+    <string name="design_ed4fd3e134fc" formatted="false">Não enviada</string>
+    <string name="design_f1e538923c37" formatted="false">Não foi possível enviar.</string>
+    <string name="design_4d901239850f" formatted="false">Sua mensagem continua no campo abaixo. Tente novamente.</string>
+    <string name="design_1eafd36be6bf" formatted="false">Conferir envio</string>
+    <string name="design_5c7d9b3a3248" formatted="false">Consultar ofertas</string>
+    <string name="design_a2579dab1092" formatted="false">Quais ofertas estão disponíveis? </string>
+    <string name="design_4d8fbb4b0637" formatted="false">Voltar ao perfil</string>
+    <string name="design_76b0fb6ad189" formatted="false">Configurações</string>
+    <string name="design_36a9e7f1c95b" formatted="false"> </string>
+    <string name="design_cb1ee8cb964f" formatted="false">Ellipse</string>
+    <string name="design_70c974409176" formatted="false">Alterar foto do perfil</string>
+    <string name="design_80d161545383" formatted="false">Camila</string>
+    <string name="design_32626bf97d74" formatted="false">Informações pessoais</string>
+    <string name="design_52651b35b7dd" formatted="false"> Nome e telefone Editar dados pessoais </string>
+    <string name="design_42510fab94a5" formatted="false">Nome e telefone</string>
+    <string name="design_d4792c064fe0" formatted="false">Editar dados pessoais</string>
+    <string name="design_77f225193489" formatted="false">Acesso à conta</string>
+    <string name="design_d2c014c5e7da" formatted="false"> E-mail camila@exemplo.com </string>
+    <string name="design_cefacb239035" formatted="false"> Senha Alterar senha </string>
+    <string name="design_32f9c37cfc7d" formatted="false">Alterar senha</string>
+    <string name="design_89a33fc24bf6" formatted="false"> Preferências de comunicação Gerenciar consentimento </string>
+    <string name="design_6c429fa9e05d" formatted="false">Preferências de comunicação</string>
+    <string name="design_ec2c784d747b" formatted="false">Gerenciar consentimento</string>
+    <string name="design_fdd0a144481d" formatted="false">Alterar e-mail</string>
+    <string name="design_30d4b2621e7e" formatted="false">Altere seu e-mail</string>
+    <string name="design_b3d04b21abf9" formatted="false">Atual: camila@exemplo.com</string>
+    <string name="design_480a16b73212" formatted="false">Novo e-mail</string>
+    <string name="design_b7f7d90544bc" formatted="false">camila.novo@exemplo.com</string>
+    <string name="design_9d6059060f49" formatted="false">Você precisará confirmar sua identidade e o link enviado ao novo endereço.</string>
+    <string name="design_db1532fb31bd" formatted="false">Altere sua senha</string>
+    <string name="design_956d870f5cbd" formatted="false">Confirme sua senha atual para proteger a conta.</string>
+    <string name="design_070b4b3394f4" formatted="false">Senha atual</string>
+    <string name="design_ebc707b04697" formatted="false">Nova senha</string>
+    <string name="design_b36c65458db6" formatted="false">••••••••••••</string>
+    <string name="design_144a6671a953" formatted="false">Confirmar nova senha</string>
+    <string name="design_2bc9fbb6064f" formatted="false">Sair da conta?</string>
+    <string name="design_8836fcf3bb66" formatted="false">Você poderá entrar novamente quando quiser.</string>
+    <string name="design_2d023dea2a9d" formatted="false">Sair</string>
+    <string name="design_15758430202c" formatted="false">Continuar no app</string>
+    <string name="design_72f2afd2fb79" formatted="false">Entre novamente</string>
+    <string name="design_2f0eac5d53e2" formatted="false">Sua sessão precisa ser renovada para acessar seus dados.</string>
+    <string name="design_05d410b61f11" formatted="false">Entrar novamente</string>
+    <string name="design_b1f0e9018e1e" formatted="false">Não conseguimos carregar seu cadastro</string>
+    <string name="design_7fb2afba2f31" formatted="false">Você já entrou na conta. Tente carregar o cadastro novamente, sem criar outra conta.</string>
+    <string name="design_2c3695a601f3" formatted="false">Conclua seu cadastro</string>
+    <string name="design_0450406a142c" formatted="false">Sua conta já foi identificada. Faltam seus dados para continuar.</string>
+    <string name="design_8789723f7cdf" formatted="false">Conta identificada</string>
+    <string name="design_b8465a5917d5" formatted="false">Preencha ou corrija os campos antes de continuar.</string>
+    <string name="design_ced92f3cef03" formatted="false">Rua informada</string>
+    <string name="design_87f27aef73b2" formatted="false">Número informado</string>
+    <string name="design_01af1ecb8056" formatted="false">Não informado</string>
+    <string name="design_2ed7b4c01277" formatted="false">Bairro informado</string>
+    <string name="design_0214f5f7afc2" formatted="false">Cidade informada</string>
+    <string name="design_64b787caaf44" formatted="false">Concluindo seu cadastro</string>
+    <string name="design_28bc56df8bf7" formatted="false">Dados pessoais</string>
+    <string name="design_dcf6d60588b1" formatted="false">Atualize apenas o que mudou.</string>
+    <string name="design_dbcde3d60956" formatted="false">Se não informar outro telefone, o atual será mantido.</string>
+    <string name="design_8b51b68afdc0" formatted="false">Salvar dados</string>
+    <string name="design_706db99398da" formatted="false">Salvando</string>
+    <string name="design_88b754e4b990" formatted="false">Salvando seus dados</string>
+    <string name="design_90448549821d" formatted="false">Comunicação</string>
+    <string name="design_1e2b30579196" formatted="false">Escolha se deseja receber novidades e ofertas.</string>
+    <string name="design_71c402756e93" formatted="false">Esta escolha é diferente da permissão de notificações do celular.</string>
+    <string name="design_9a064a9fcaa3" formatted="false">Salvar preferências</string>
+    <string name="design_244417debecb" formatted="false">Salvando sua preferência</string>
+    <string name="design_637af8c42721" formatted="false">Preferência atualizada</string>
+    <string name="design_ab6df875ff44" formatted="false">Sua preferência de comunicação foi salva.</string>
+    <string name="design_e447b71a2ee4" formatted="false">Voltar à minha conta</string>
+    <string name="design_472b4fc2915d" formatted="false">Não foi possível salvar</string>
+    <string name="design_ffcd2119bfa2" formatted="false">A alteração não foi confirmada. Sua escolha foi mantida para tentar novamente.</string>
+    <string name="design_50cf19ad19cf" formatted="false">Revisar preferência</string>
+    <string name="design_6cc1bbba0f84" formatted="false">Carregando…</string>
+    <string name="design_ba179c087a8f" formatted="false"> Café sem açúcar</string>
+    <string name="design_61cfe8c45051" formatted="false">Café sem açúcar</string>
+    <string name="design_4410f3299961" formatted="false">Nenhum resultado</string>
+    <string name="design_4a2684087ceb" formatted="false">Não encontramos ofertas para esta busca.</string>
+    <string name="design_95fc63a06cf5" formatted="false">Tente outro nome de produto.</string>
+    <string name="design_e08ba6e3c7e3" formatted="false">Nova busca</string>
+    <string name="design_b7b042022cbf" formatted="false">Não foi possível buscar ofertas</string>
+    <string name="design_0491c2ec2156" formatted="false">Confira sua conexão e tente novamente.</string>
+    <string name="design_777cf512ac1c" formatted="false">Ofertas perto de você</string>
+    <string name="design_16c310f63876" formatted="false">O que já carregou continua disponível.</string>
+    <string name="design_6c5940b00514" formatted="false"> −48% 1,2 km Cesta hortifruti Retirada hoje R$ 12,90 Mercado da Praça Val. 22/10/2026  Leite integral 1 L Consultar preço Mercado da Praça</string>
+    <string name="design_cf4f60a6d52f" formatted="false">Retirada hoje</string>
+    <string name="design_12eb11074116" formatted="false">Val. 22/10/2026</string>
+    <string name="design_73003d97f47a" formatted="false">Não foi possível carregar mais ofertas.</string>
+    <string name="design_61ffae6d6a4b" formatted="false"> −48% 1,2 km Cesta hortifruti Retirada hoje R$ 12,90 Mercado da Praça Val. 22/10/2026</string>
+    <string name="design_0ba3c32004cd" formatted="false"> Leite integral 1 L Consultar preço Mercado da Praça</string>
+    <string name="design_c6b0024a9ce1" formatted="false">Bom dia, Camila</string>
+    <string name="design_5a59006fa17e" formatted="false">Perto de você — Vila Mariana, SP</string>
+    <string name="design_caa065241e4a" formatted="false"> Pergunte à Lô Ofertas, lojas e retirada </string>
+    <string name="design_b287acf88835" formatted="false">Pergunte à Lô</string>
+    <string name="design_be83cc1db86b" formatted="false">Ofertas, lojas e retirada</string>
+    <string name="design_cb6bd0b44f6c" formatted="false">Seu saldo não carregou</string>
+    <string name="design_6e7f2cdd15fa" formatted="false">As ofertas continuam disponíveis.</string>
+    <string name="design_593b16fcbe96" formatted="false">Tentar consultar saldo</string>
+    <string name="design_8f10c7b54400" formatted="false"> Buscar produtos ou lojas</string>
+    <string name="design_d0f7f5a1cdba" formatted="false">Buscar produtos ou lojas</string>
+    <string name="design_78401e726d97" formatted="false">Sugestões para buscar</string>
+    <string name="design_d518cc000c94" formatted="false"> Cesta hortifruti  Leite</string>
+    <string name="design_92a6b603da58" formatted="false"> Cesta hortifruti</string>
+    <string name="design_258b345a1136" formatted="false"> Leite</string>
+    <string name="design_ea4539974ba6" formatted="false">Até 48% de economia Confira as ofertas de hoje </string>
+    <string name="design_d26a13b5599c" formatted="false">Até 48% de economia</string>
+    <string name="design_5972993bd0e4" formatted="false">Confira as ofertas de hoje</string>
+    <string name="design_9e326977dd7a" formatted="false">Para aproveitar hoje</string>
+    <string name="design_6240cde90c92" formatted="false">Ver todas</string>
+    <string name="design_8eb4cb14b71b" formatted="false"> Cesta hortifruti Retirada hoje R$ 12,90  Mais ofertas No seu bairro Explorar →</string>
+    <string name="design_8213c0821403" formatted="false"> Cesta hortifruti Retirada hoje R$ 12,90</string>
+    <string name="design_8140a39d249a" formatted="false"> Mais ofertas No seu bairro Explorar →</string>
+    <string name="design_da05e6dcb8ed" formatted="false">Mais ofertas</string>
+    <string name="design_7ab1d736f27b" formatted="false">No seu bairro</string>
+    <string name="design_496cad617096" formatted="false">Explorar →</string>
+    <string name="design_fe01c0c9210f" formatted="false">Bom dia</string>
+    <string name="design_bfd59c87cce7" formatted="false">Encontre ofertas dos mercados por perto.</string>
+    <string name="design_6b2ebde55d81" formatted="false">Seu saldo e os outros recursos continuam disponíveis.</string>
+    <string name="design_a08ece94f6ba" formatted="false">Tentar buscar ofertas</string>
+    <string name="design_a3616d707a45" formatted="false">320 pontos — Ver saldo</string>
+    <string name="design_3610072dcc71" formatted="false">320 pontos</string>
+    <string name="design_b2bcbf1634a7" formatted="false">Seu perfil não carregou</string>
+    <string name="design_8a6103bc9e01" formatted="false">Você pode continuar consultando as ofertas.</string>
+    <string name="design_d55d577a86f6" formatted="false">Tentar carregar perfil</string>
+    <string name="design_bad45c5f57f9" formatted="false">O histórico recebido continua disponível.</string>
+    <string name="design_38eed6d936ca" formatted="false">Últimas movimentações</string>
+    <string name="design_340448f87d21" formatted="false">Mercado Verde — +50 pontos</string>
+    <string name="design_07e6f6e68c8a" formatted="false">Padaria Sol — +30 pontos</string>
+    <string name="design_e3bf1dc23d45" formatted="false">Ver histórico</string>
+    <string name="design_6926f6bc06ed" formatted="false">320 pontos de fidelidade</string>
+    <string name="design_47e9df162f23" formatted="false">Seu saldo está disponível.</string>
+    <string name="design_ef87a2027109" formatted="false">O histórico não carregou</string>
+    <string name="design_1dc37f13fe46" formatted="false">Uma falha na consulta não significa que não houve movimentações.</string>
+    <string name="design_eb5ecdc5809a" formatted="false">Tentar carregar histórico</string>
+    <string name="design_6fa76792bedd" formatted="false">Voltar aos pontos</string>
+    <string name="design_66ffa5c72d84" formatted="false">Histórico incompleto</string>
+    <string name="design_48c34ca2c21c" formatted="false">Maio a outubro de 2026 — últimos 6 meses</string>
+    <string name="design_909b7d13274d" formatted="false">Histórico de pontos de fidelidade indisponível neste período.</string>
+    <string name="design_e5d752d1a777" formatted="false">Setembro de 2026</string>
+    <string name="design_b2d5fb41e1e6" formatted="false">Não foi possível carregar este mês.</string>
+    <string name="design_39c022e89342" formatted="false">Tentar setembro novamente</string>
+    <string name="design_5ee34069c8a1" formatted="false">Alguns meses não foram recebidos. Esta lista parcial não representa todo o histórico.</string>
+    <string name="design_6e071eb4c0a6" formatted="false">Períodos da consulta: maio, junho, julho, agosto, setembro e outubro de 2026.</string>
+    <string name="design_4416a070f9c1" formatted="false"> Raio de busca 5 km</string>
+    <string name="design_609310ee580e" formatted="false">Raio de busca</string>
+    <string name="design_f5ae6dee5781" formatted="false">Até 5 km de você</string>
+    <string name="design_3c2a22ecd15f" formatted="false">Sua localização atual</string>
+    <string name="design_e8930b3967d6" formatted="false">VILA MARIANA</string>
+    <string name="design_0da91c2d72a2" formatted="false">Rua Afonso Celso</string>
+    <string name="design_08f271887ce9" formatted="false">M</string>
+    <string name="design_08afe2ff23f3" formatted="false">Remover filtro de 5 km</string>
+    <string name="design_50801d95787a" formatted="false">Mercado da Praça Rua Afonso Celso, 210 Ver informações da loja →</string>
+    <string name="design_ec4e1d515ff1" formatted="false">Ver informações da loja →</string>
+    <string name="design_58097aeb42aa" formatted="false">Explorar ofertas próximas →</string>
+    <string name="design_f65acb4f313b" formatted="false">O mapa não carregou</string>
+    <string name="design_a8fdcab30259" formatted="false">Você pode consultar a lista e o endereço da loja.</string>
+    <string name="design_ca88c9df353f" formatted="false">Vila Mariana — São Paulo</string>
+    <string name="design_8911656863b4" formatted="false">Tentar carregar mapa</string>
+    <string name="design_85b4a88e29dc" formatted="false">Localização no mapa indisponível</string>
+    <string name="design_362bea52eebe" formatted="false">Esta loja está sem coordenadas para exibir um pin.</string>
+    <string name="design_367cb06cf653" formatted="false">Esta loja não está disponível</string>
+    <string name="design_f5fad82c8893" formatted="false">Ela pode ter sido removida ou ficado indisponível.</string>
+    <string name="design_74eb326d221e" formatted="false">Ver outras lojas</string>
+    <string name="design_1644161775f4" formatted="false">Confira seu endereço</string>
+    <string name="design_9a65d4fafbf4" formatted="false">Rua, bairro, cidade e UF vieram do CEP. Todos os campos podem ser corrigidos.</string>
+    <string name="design_10037c64fa12" formatted="false">01001-000</string>
+    <string name="design_5fa65d6d2cc0" formatted="false">Praça da Sé</string>
+    <string name="design_ca37c9eecee2" formatted="false">Número (informado por você)</string>
+    <string name="design_ad5736686512" formatted="false">100</string>
+    <string name="design_4777ec0ddb23" formatted="false">Apartamento, bloco… (opcional)</string>
+    <string name="design_d437db2e1af8" formatted="false">Sé</string>
+    <string name="design_f00fd81daee5" formatted="false">São Paulo</string>
+    <string name="design_f5aeb0b6798a" formatted="false">SP</string>
+    <string name="design_c2321017c8d6" formatted="false">Consultar outro CEP</string>
+    <string name="design_87d9d3dc85aa" formatted="false">Confirme que é você</string>
+    <string name="design_9e812a49102a" formatted="false">Para proteger sua conta, confirme o acesso antes de enviar a alteração de e-mail.</string>
+    <string name="design_83dab6027e1b" formatted="false">Use a mesma forma de acesso da sua conta. Se entrou com Google, confirme com Google.</string>
+    <string name="design_1ac32d4291d7" formatted="false">Confirmar com senha</string>
+    <string name="design_38eadc29c91c" formatted="false">Confirmar com Google</string>
+    <string name="design_11e98544c328" formatted="false">Confira seu novo e-mail</string>
+    <string name="design_e14a31629cac" formatted="false">Enviamos um link para camila.novo@exemplo.com. Abra a mensagem e confirme a alteração.</string>
+    <string name="design_03e9096fbd43" formatted="false">Ainda não mudou</string>
+    <string name="design_f9413a632e98" formatted="false">Seu e-mail continua camila@exemplo.com até você confirmar o link.</string>
+    <string name="design_ca3c8c98565b" formatted="false">Verificar confirmação</string>
+    <string name="design_4d5155348603" formatted="false">Reenviar e-mail</string>
+    <string name="design_e8600e95298e" formatted="false">E-mail alterado</string>
+    <string name="design_6365bb5afa61" formatted="false">A confirmação foi recebida.</string>
+    <string name="design_cc0045797ec5" formatted="false">Novo e-mail da conta</string>
+    <string name="design_cdc0edd8a143" formatted="false">Voltar à conta</string>
+    <string name="design_739ad8b93dd5" formatted="false">Não foi possível enviar</string>
+    <string name="design_24f87911e431" formatted="false">Confira sua conexão e tente novamente. Seu e-mail atual não foi alterado.</string>
+    <string name="design_b16f597643fc" formatted="false">Novo e-mail preservado</string>
+    <string name="design_30ca1218730c" formatted="false">Confirmar conta</string>
+    <string name="design_4c9b3109496f" formatted="false">Falta confirmar o link</string>
+    <string name="design_04bfbd3626a5" formatted="false">Ainda não recebemos a confirmação para camila.novo@exemplo.com.</string>
+    <string name="design_4a5fcc31a6b5" formatted="false">Abra a mensagem no novo e-mail. Confira também a pasta de spam. Seu e-mail atual permanece o mesmo.</string>
+    <string name="design_0faf36fe4751" formatted="false">Verificar novamente</string>
+    <string name="design_ca23a13d8333" formatted="false">Alterando sua senha</string>
+    <string name="design_dfe011e4b0e9" formatted="false">Aguarde a confirmação.</string>
+    <string name="design_670e0f3c81f4" formatted="false">Não é necessário enviar novamente.</string>
+    <string name="design_b49a4c05840e" formatted="false">PERTO DE VOCÊ</string>
+    <string name="design_68be04fe2a6e" formatted="false">Bem perto de você.</string>
+    <string name="design_6ada6519424a" formatted="false">Encontre produtos com desconto nos mercados da sua região.</string>
+    <string name="design_9a15189f4096" formatted="false">Pular apresentação</string>
+    <string name="design_2502769ee3ef" formatted="false">RETIRE NA LOJA</string>
+    <string name="design_53a9c72b2ec6" formatted="false">Confira a validade e a retirada</string>
+    <string name="design_e85819aabf49" formatted="false">Encontre. Confira.</string>
+    <string name="design_364328df748d" formatted="false">Retire na loja.</string>
+    <string name="design_841b8f6c33c2" formatted="false">Veja o preço, a validade e as informações de retirada antes de visitar a loja.</string>
+    <string name="design_52db7f2c8ff9" formatted="false">SEU IMPACTO</string>
+    <string name="design_88820462180e" formatted="false">320</string>
+    <string name="design_9a8cf3859a42" formatted="false">pontos de fidelidade</string>
+    <string name="design_8f9d1a8243e1" formatted="false">Cada escolha</string>
+    <string name="design_f2e5d4258b12" formatted="false">faz diferença.</string>
+    <string name="design_c78418f31fcb" formatted="false">Acompanhe os pontos de fidelidade das suas compras. Eles representam sua participação e dão prioridade nos avisos, sem troca por descontos.</string>
+    <string name="design_ce606fe867de" formatted="false">Começar</string>
+    <string name="design_a7b73ff6c5d1" formatted="false">Alternar tema</string>
+    <string name="design_30b8ee74e087" formatted="false">Permita o acesso à localização para usar as ofertas, o mapa e os demais serviços do app.</string>
+    <string name="design_9899e9bd20d1" formatted="false">Usamos a posição atual do celular. O endereço do cadastro não substitui essa localização.</string>
+    <string name="design_72ecc5406350" formatted="false">Você pode autorizar a localização aproximada ou precisa.</string>
+    <string name="design_326cc341cf6a" formatted="false">Permitir localização</string>
+    <string name="design_b7125c47f588" formatted="false">Para usar os serviços do Mottainai, permita a localização nas configurações do celular.</string>
+    <string name="design_4dc25299c9e2" formatted="false">Abrir configurações</string>
+    <string name="design_1c2e640ed7fe" formatted="false">A permissão está autorizada, mas a localização do celular está desligada.</string>
+    <string name="design_519a428a29b8" formatted="false">Buscando sua posição</string>
+    <string name="design_eaf0b19ce365" formatted="false">Estamos localizando mercados parceiros próximos.</string>
+    <string name="design_7b914992c437" formatted="false">Aguarde um instante.</string>
+    <string name="design_5aa69b56b619" formatted="false">Não conseguimos sua posição</string>
+    <string name="design_16a4ec24b4de" formatted="false">Confira a conexão e a localização do celular e tente novamente.</string>
+    <string name="design_17aa257c3f0c" formatted="false">Rever permissão</string>
+    <string name="design_39ba0f759350" formatted="false">Conferindo seu acesso</string>
+    <string name="design_a144d08bae8b" formatted="false">Fechar histórico</string>
+    <string name="design_999a3d72093a" formatted="false">Suas conversas</string>
+    <string name="design_2ec797fe520a" formatted="false">Nova conversa</string>
+    <string name="design_aa6dd94baa2c" formatted="false">CONVERSAS</string>
+    <string name="design_b4a931e02dc0" formatted="false"> Ofertas perto de mim Conversa anterior </string>
+    <string name="design_aa515c151410" formatted="false">Ofertas perto de mim</string>
+    <string name="design_af07edc5cd1d" formatted="false">Conversa anterior</string>
+    <string name="design_e765cfd49744" formatted="false"> Informações de retirada Conversa encerrada </string>
+    <string name="design_ce7b6f5a1572" formatted="false">Informações de retirada</string>
+    <string name="design_99d5bcdacdbd" formatted="false">Conversa encerrada</string>
+    <string name="design_5e25d280bac0" formatted="false">Comece uma conversa</string>
+    <string name="design_1e9382af7328" formatted="false">Suas conversas com a Lô aparecerão aqui.</string>
+    <string name="design_1d03ac3f247b" formatted="false">Conversas não carregaram</string>
+    <string name="design_2c0c2a962b18" formatted="false">Sua conta continua conectada. Tente consultar novamente.</string>
+    <string name="design_2c61286b6090" formatted="false">Escolha se quer receber avisos de mercados parceiros próximos.</string>
+    <string name="design_78f59d802c8d" formatted="false">Desativados</string>
+    <string name="design_3890bea54e52" formatted="false">Mesmo raio das ofertas 5 km</string>
+    <string name="design_668180e73d60" formatted="false">Mesmo raio das ofertas</string>
+    <string name="design_8b25f00fd16f" formatted="false">Os avisos precisam de internet. Cada loja pode anunciar até 3 produtos diferentes por dia; isso não garante que você receberá 3 avisos.</string>
+    <string name="design_8c09399a7679" formatted="false">Ativar avisos</string>
+    <string name="design_aa6cb3c7bd3f" formatted="false">Desativar avisos</string>
+    <string name="design_6e7cdf00540b" formatted="false">Como funciona em segundo plano</string>
+    <string name="design_67b30aac99b5" formatted="false">Permitir notificações?</string>
+    <string name="design_6a7228f3a661" formatted="false">Autorize o Mottainai a mostrar avisos de ofertas no seu celular.</string>
+    <string name="design_4bf4e9a66ed7" formatted="false">Permitir</string>
+    <string name="design_e3318476ee31" formatted="false">Avisos desativados</string>
+    <string name="design_57b77a0eed7e" formatted="false">Você pode continuar usando o app. Para receber avisos, permita as notificações nas configurações do celular.</string>
+    <string name="design_339d51d553ae" formatted="false">Voltar aos avisos</string>
+    <string name="design_9ef93f577217" formatted="false">Mesmo com o app fechado</string>
+    <string name="design_9c15d24be643" formatted="false">Os avisos de proximidade dependem das permissões e das restrições do seu Android.</string>
+    <string name="design_0e718f8f358a" formatted="false">Não enviamos novos avisos sem internet. A entrega pode atrasar e não é garantida após forçar a parada do app.</string>
+    <string name="design_e4a8b1862d9b" formatted="false">Quando o recurso solicitar acesso em segundo plano, o Android explicará as opções disponíveis. Ativar avisos não concede essa permissão automaticamente.</string>
+    <string name="design_9f93738a0362" formatted="false">Entendi</string>
+    <string name="design_2ffd280b7153" formatted="false">Ver exemplo de aviso</string>
+    <string name="design_a05abe828e65" formatted="false">Uma oferta perto de você</string>
+    <string name="design_bacf32fee619" formatted="false">Exemplo de aviso</string>
+    <string name="design_e58552bd1609" formatted="false">Mottainai · Mercado da Praça Cesta hortifruti por R$ 12,90 Confira a disponibilidade e as informações da oferta.</string>
+    <string name="design_a591585ddc1f" formatted="false">Mottainai · Mercado da Praça</string>
+    <string name="design_ef9481ee3857" formatted="false">Cesta hortifruti por R$ 12,90</string>
+    <string name="design_2fa317e66ef4" formatted="false">Confira a disponibilidade e as informações da oferta.</string>
+    <string name="design_ed4e58cda574" formatted="false">Ver oferta</string>
+    <string name="design_6c7eec54486d" formatted="false">Esta oferta já terminou</string>
+    <string name="design_5145ab31725c" formatted="false">A promoção anunciada não está mais disponível. Nenhum produto foi reservado.</string>
+    <string name="design_8cdf3cfff445" formatted="false">Seu saldo está disponível</string>
+    <string name="design_a5d328cf6e82" formatted="false">O programa ainda não informou seu status de participação. Seus pontos continuam registrados.</string>
+    <string name="design_916c4387ba21" formatted="false">Status e progresso só aparecem quando forem informados pelo programa. Não representam certificação ambiental.</string>
+    <string name="design_dafb59613e12" formatted="false">Atualizar</string>
+    <string name="design_1a26fa5ad8e5" formatted="false">Voltar à jornada</string>
+    <string name="design_209eda3bf64a" formatted="false">Imagem indisponível</string>
+    <string name="design_ddc0630e3ac0" formatted="false">Validade: 22/10/2026</string>
+    <string name="design_6eef8e8e776a" formatted="false">Consulte a composição e os horários de retirada.</string>
+    <string name="design_4a4ed02d3dca" formatted="false">Ver detalhes</string>
+    <string name="design_265ab0c00be1" formatted="false">Configurações de localização</string>
+    <string name="design_226dff198707" formatted="false">Representação das opções do Android</string>
+    <string name="design_86f1f42e805f" formatted="false">Mottainai</string>
+    <string name="design_3928a43617bc" formatted="false">Permitir durante o uso</string>
+    <string name="design_d51c1be83279" formatted="false">Manter sem permissão</string>
+    <string name="design_b0c6be4bc6f0" formatted="false">Localização do celular desligada</string>
+    <string name="design_78db477d8fa2" formatted="false">Voltar ao Mottainai</string>
+    <string name="design_91d068b4dcf1" formatted="false">Usar a câmera?</string>
+    <string name="design_0870888f32c3" formatted="false">Permita o acesso à câmera para tirar sua foto de perfil.</string>
+    <string name="design_950342d69232" formatted="false">Permitir câmera</string>
+    <string name="design_a73293ea3f24" formatted="false">Agora não</string>
+    <string name="design_14d919228b25" formatted="false">Tirar foto</string>
+    <string name="design_c27f269c619a" formatted="false">Cancelar captura</string>
+    <string name="design_ad5cd5d1d563" formatted="false">Posicione seu rosto no centro</string>
+    <string name="design_427f698a0804" formatted="false">Prévia ilustrativa da câmera</string>
+    <string name="design_826bbb6774e4" formatted="false">Capturar foto</string>
+    <string name="design_3523cd85f2f1" formatted="false">Capturar</string>
+    <string name="design_5ac846078002" formatted="false">Câmera não autorizada</string>
+    <string name="design_7c3df2bf5258" formatted="false">Você pode permitir o acesso à câmera ou escolher uma foto da galeria.</string>
+    <string name="design_b52930a4077d" formatted="false">Escolher da galeria</string>
+    <string name="design_bee1213a4e19" formatted="false"> Sua posição atual Vila Mariana, São Paulo </string>
+    <string name="design_79b4aa873884" formatted="false">Sua posição atual</string>
+    <string name="design_3ad8147145ba" formatted="false">Sugestões para buscar:</string>
+    <string name="design_af2aa4aa6306" formatted="false">⌕ Cesta hortifruti ⌕ Leite</string>
+    <string name="design_29dc8bbb1b0f" formatted="false">⌕ Cesta hortifruti</string>
+    <string name="design_148c3dba2314" formatted="false">⌕ Leite</string>
+    <string name="design_5d8cde3d609c" formatted="false">Ofertas de hoje</string>
+    <string name="design_6a120ce8fa99" formatted="false"> −48% 1,2 km Cesta hortifruti Mercado da Praça R$ 12,90 R$ 24,90 Retirada hoje · 16h–19h Validade 22/10/2026  Leite integral Consultar preço 1 L Mercado da Praça</string>
+    <string name="design_2aa0969598f7" formatted="false"> Seu impacto 320 pontos de fidelidade </string>
+    <string name="design_6469e24a10c3" formatted="false">Seu impacto</string>
+    <string name="design_3432f12e4ad1" formatted="false">Para você</string>
+    <string name="design_5585ca453806" formatted="false">Limpar</string>
+    <string name="design_06b52c36446a" formatted="false">Filtrar</string>
+    <string name="design_0730623181cd" formatted="false">Mercados próximos:</string>
+    <string name="design_13c84d42e525" formatted="false"> Mercado da Praça Rua Afonso Celso, 210 </string>
+    <string name="design_c537d67b6efe" formatted="false">Sua jornada</string>
+    <string name="design_e8f9b274e4ce" formatted="false">Broto 55% </string>
+    <string name="design_abc91cc7234d" formatted="false">Broto</string>
+    <string name="design_70c533bae274" formatted="false">55%</string>
+    <string name="design_4eb4bfc43f55" formatted="false">180 pontos para chegar a Planta</string>
+    <string name="design_2a4552e009b9" formatted="false">Progresso dentro do nível Broto</string>
+    <string name="design_f67915828d8a" formatted="false">Sua participação no Mottainai</string>
+    <string name="design_655aca0daedc" formatted="false">Mais pontos dão prioridade nos avisos de melhores promoções. Não reservam produtos nem dão descontos.</string>
+    <string name="design_bd749e033023" formatted="false">Como funciona Compartilhar</string>
+    <string name="design_46737d1651cc" formatted="false">Compartilhar</string>
+    <string name="design_07c5e388a9f2" formatted="false"> Broto · sua participação Faltam 180 pontos para Planta </string>
+    <string name="design_e4ccade70044" formatted="false">Broto · sua participação</string>
+    <string name="design_65017d34c494" formatted="false">Faltam 180 pontos para Planta</string>
+    <string name="design_9edbcdb31d91" formatted="false">Meu perfil</string>
+    <string name="design_0864a4892832" formatted="false"> Configurações da conta Dados pessoais, e-mail e senha </string>
+    <string name="design_0173efe9c844" formatted="false">Configurações da conta</string>
+    <string name="design_5f33a58e1a7b" formatted="false">Dados pessoais, e-mail e senha</string>
+    <string name="design_569cf17373c5" formatted="false">Sua atividade</string>
+    <string name="design_caef7959f827" formatted="false"> Pontos de impacto 320 pontos de fidelidade   Economia e impacto Acompanhe suas compras </string>
+    <string name="design_d5eac8c7db5e" formatted="false"> Pontos de impacto 320 pontos de fidelidade </string>
+    <string name="design_17347b713cda" formatted="false">Pontos de impacto</string>
+    <string name="design_4cffdf68a73a" formatted="false"> Economia e impacto Acompanhe suas compras </string>
+    <string name="design_2ee3270659a4" formatted="false">Economia e impacto</string>
+    <string name="design_01425052f923" formatted="false">Acompanhe suas compras</string>
+    <string name="design_6706dbe8b723" formatted="false">Preferências</string>
+    <string name="design_ce55a5d12e6c" formatted="false"> Minha região Onde você busca ofertas </string>
+    <string name="design_4c986f3db325" formatted="false">Minha região</string>
+    <string name="design_d7bd0df71d85" formatted="false">Onde você busca ofertas</string>
+    <string name="design_2f3e8dcc2464" formatted="false">Claro</string>
+    <string name="design_fde8bb83362a" formatted="false">Escuro</string>
+    <string name="design_89a5612fd31d" formatted="false"> Avisos próximos Ofertas das lojas da sua região </string>
+    <string name="design_e06f25b3d798" formatted="false">Avisos próximos</string>
+    <string name="design_2952af7ca19c" formatted="false">Ofertas das lojas da sua região</string>
+    <string name="design_72acce791452" formatted="false">Ofertas por perto Lojas próximas</string>
+    <string name="design_2541f20dce44" formatted="false">Pergunte à Lô… </string>
+    <string name="design_dda296963a79" formatted="false">Confira seu cadastro</string>
+    <string name="design_dec2c539e8a9" formatted="false">Confira seus dados antes de criar a conta.</string>
+    <string name="design_ef5e7e12bdac" formatted="false">Endereço</string>
+    <string name="design_ead8470cc067" formatted="false">Praça da Sé, 100</string>
+    <string name="design_58f0b5a9270e" formatted="false">Sé, São Paulo — SP</string>
+    <string name="design_6885dbed3b7a" formatted="false">CEP 01001-000</string>
+    <string name="design_59dc926760d0" formatted="false">Voltar</string>
+    <string name="design_e64358dd8386" formatted="false">Confira seus dados</string>
+    <string name="design_da75b9523e11" formatted="false">Sua conta continua a mesma.</string>
+    <string name="design_0a4634db6474" formatted="false">Telefone informado — CPF informado</string>
+    <string name="design_00cdba7d4755" formatted="false">Rua, número, bairro, cidade, UF e CEP informados</string>
+    <string name="design_b6c775f2844a" formatted="false">Concluir cadastro</string>
+    <string name="design_3de6a52d1b4a" formatted="false">Corrigir dados</string>
+    <string name="design_a9a2eb2e4eaf" formatted="false">Dados salvos</string>
+    <string name="design_0059f0b7e1d0" formatted="false">Dados atualizados</string>
+    <string name="design_18bdc774b4e5" formatted="false">Seu nome e telefone foram salvos.</string>
+    <string name="design_c406514ef5cc" formatted="false">Senha alterada</string>
+    <string name="design_3d8d462671c5" formatted="false">Use a nova senha nos próximos acessos.</string>
+    <string name="design_06cbecd560c1" formatted="false">Sua foto</string>
+    <string name="design_0d884b7653d5" formatted="false">Confira sua foto</string>
+    <string name="design_154f257f53f2" formatted="false">Ela aparecerá no seu perfil.</string>
+    <string name="design_308849b6ca44" formatted="false">Salvar foto</string>
+    <string name="design_10b323bb11c3" formatted="false">Escolher outra</string>
+    <string name="design_a46d7cd01bd9" formatted="false">Hoje</string>
+    <string name="design_2285b6045bee" formatted="false">Envio não confirmado</string>
+    <string name="design_eeb245ad2e14" formatted="false">A conexão caiu e não sabemos se a mensagem foi recebida. Confira a conversa antes de enviar de novo.</string>
+    <string name="design_9e56cce5800c" formatted="false">Atualizar conversa Voltar às conversas</string>
+    <string name="design_0cf3c2fd441e" formatted="false">Atualizar conversa</string>
+    <string name="design_cd06955f3724" formatted="false">Voltar às conversas</string>
+    <string name="design_ab6ad4ec88a4" formatted="false">Sua jornada Mottainai</string>
+    <string name="design_19c768964d09" formatted="false">Níveis de participação em compras confirmadas.</string>
+    <string name="design_b8c0dd371c67" formatted="false">Broto · 320 pontos</string>
+    <string name="design_479a2545ebc1" formatted="false">Semente</string>
+    <string name="design_e7770886f0d9" formatted="false">0 a menos de 100 pontos</string>
+    <string name="design_db5460384df9" formatted="false">100 a menos de 500 pontos</string>
+    <string name="design_4d667de7b3e4" formatted="false">Planta</string>
+    <string name="design_ef09a04427b1" formatted="false">500 a menos de 1.500 pontos</string>
+    <string name="design_3f87f7d207cb" formatted="false">Árvore</string>
+    <string name="design_f6537c4bc168" formatted="false">1.500 a menos de 3.000 pontos</string>
+    <string name="design_6917fa0dd306" formatted="false">Floresta</string>
+    <string name="design_303fea41a5d1" formatted="false">3.000 pontos ou mais</string>
+    <string name="design_d4e12669cb6e" formatted="false">Os níveis representam participação, não certificação ambiental. Pontos e progresso são informados pelo programa e podem mudar após estornos.</string>
+    <string name="design_e04c3f041c4a" formatted="false">Pontos estornados</string>
+    <string name="design_b79d2ff609c4" formatted="false">A compra foi cancelada ou devolvida.</string>
+    <string name="design_f29e960128d0" formatted="false">−50 pontos</string>
+    <string name="design_bcd767dfe4af" formatted="false">Estorno relacionado ao crédito de +50 pontos desta compra.</string>
+    <string name="design_237afb6dfb91" formatted="false">O saldo exibido na sua jornada já considera os lançamentos confirmados.</string>
+    <string name="design_dcdd7bd1f16d" formatted="false">Voltar ao histórico</string>
+    <string name="design_8d6a391e4c94" formatted="false">Compartilhar sua participação</string>
+    <string name="design_e98d375c2972" formatted="false">Prévia da mensagem</string>
+    <string name="design_300ae1a46653" formatted="false">Tenho 320 pontos de fidelidade no Mottainai.</string>
+    <string name="design_37c12a301614" formatted="false">Minha participação em compras confirmadas nas lojas parceiras.</string>
+    <string name="design_756796e19107" formatted="false">Compartilhe apenas o saldo confirmado. Nenhum dado da compra ou CPF acompanha a mensagem.</string>
+    <string name="design_b772bae831d7" formatted="false">Enviando foto</string>
+    <string name="design_d330d33ab52c" formatted="false">Aguarde a confirmação do envio.</string>
+</resources>

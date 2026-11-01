@@ -21,29 +21,34 @@ public class CustomerProfileResponseTest {
         assertNull(profile.email);
     }
 
-    @Test public void neverDisplaysProtectedTokensAsNameOrContact() {
+    /** Lê os dados de contato e a referência da foto publicados pelo contrato atual. */
+    @Test public void readsContactFieldsAndAvatarFromCurrentProfileContract() {
         CustomerProfileResponse profile = new Gson().fromJson(
-                "{\"id\":7,\"fullName\":\"CUS_SHA256_example\",\"email\":\"EMAIL_SHA256_example\",\"phone\":\"PHONE_SHA256_example\"}",
+                "{\"id\":7,\"fullName\":\"Cliente Exemplo\",\"email\":\"cliente@example.invalid\",\"phone\":\"11999990000\",\"avatarUrl\":\"https://res.cloudinary.com/example/avatar.jpg\"}",
                 CustomerProfileResponse.class);
-        assertNull(profile.fullName);
-        assertNull(profile.email);
-        assertNull(profile.phone);
+        assertEquals("Cliente Exemplo", profile.fullName);
+        assertEquals("cliente@example.invalid", profile.email);
+        assertEquals("11999990000", profile.phone);
+        assertEquals("https://res.cloudinary.com/example/avatar.jpg", profile.avatarUrl);
     }
 
-    @Test public void presentationFieldsAreNotPersistedInJson() {
+    /** Preserva no JSON os campos de perfil agora publicados pela API Cliente. */
+    @Test public void profileFieldsSurviveJsonRoundTrip() {
         CustomerProfileResponse profile = new CustomerProfileResponse();
         profile.id = 7;
         profile.active = true;
         profile.fullName = "Nome confirmado pela atualização SQL";
         profile.email = "login@example.invalid";
         profile.phone = "telefone de apresentação";
+        profile.avatarUrl = "https://res.cloudinary.com/example/avatar.jpg";
 
         CustomerProfileResponse restored = new Gson().fromJson(
                 new Gson().toJson(profile), CustomerProfileResponse.class);
         assertEquals(profile.id, restored.id);
         assertTrue(restored.active);
-        assertNull(restored.fullName);
-        assertNull(restored.email);
-        assertNull(restored.phone);
+        assertEquals(profile.fullName, restored.fullName);
+        assertEquals(profile.email, restored.email);
+        assertEquals(profile.phone, restored.phone);
+        assertEquals(profile.avatarUrl, restored.avatarUrl);
     }
 }

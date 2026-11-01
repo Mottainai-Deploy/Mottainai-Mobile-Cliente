@@ -12,6 +12,10 @@ import com.mottainai.cliente.network.dto.UpdateFirebaseCustomerProfileRequest;
 import com.mottainai.cliente.repository.AuthRepository;
 
 public final class ProfileViewModel extends AndroidViewModel {
+    public interface SaveResult {
+        void success(CustomerProfileResponse profile);
+        void error(String message);
+    }
     public static final class State {
         public enum Kind { IDLE, LOADING, SAVING, READY, ERROR }
 
@@ -68,6 +72,42 @@ public final class ProfileViewModel extends AndroidViewModel {
 
             @Override public void error(String message) {
                 state.setValue(new State(State.Kind.ERROR, previous, message));
+            }
+        });
+    }
+
+    public void saveAvatar(String avatarUrl, SaveResult result) {
+        State current = state.getValue();
+        CustomerProfileResponse profile = current == null ? null : current.profile;
+        if (profile == null) {
+            repository.loadProfile(new AuthRepository.Result<CustomerProfileResponse>() {
+                @Override public void success(CustomerProfileResponse loaded) {
+                    saveAvatarFromProfile(loaded, avatarUrl, result);
+                }
+                @Override public void error(String message) { result.error(message); }
+            });
+            return;
+        }
+        saveAvatarFromProfile(profile, avatarUrl, result);
+    }
+
+    private void saveAvatarFromProfile(CustomerProfileResponse profile, String avatarUrl,
+                                       SaveResult result) {
+        if (profile.fullName == null || profile.fullName.trim().isEmpty()) {
+            result.error("Não foi possível identificar seu perfil.");
+            return;
+        }
+        state.setValue(new State(State.Kind.SAVING, profile, null));
+        UpdateFirebaseCustomerProfileRequest request = new UpdateFirebaseCustomerProfileRequest(
+                profile.fullName, profile.phone, profile.marketingConsent, avatarUrl);
+        repository.updateProfile(request, new AuthRepository.Result<CustomerProfileResponse>() {
+            @Override public void success(CustomerProfileResponse updated) {
+                state.setValue(new State(State.Kind.READY, updated, "Foto atualizada."));
+                result.success(updated);
+            }
+            @Override public void error(String message) {
+                state.setValue(new State(State.Kind.ERROR, profile, message));
+                result.error(message);
             }
         });
     }

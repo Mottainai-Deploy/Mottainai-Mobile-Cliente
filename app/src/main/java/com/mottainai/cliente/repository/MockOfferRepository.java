@@ -6,11 +6,6 @@ import com.mottainai.cliente.models.Offer;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Stand-in for the future /offers endpoint. Returns the same fixed catalog
- * every time so the client screens can be built and demoed before the
- * consumer-facing REST API exists.
- */
 public class MockOfferRepository {
 
     private static final List<Offer> OFFERS = buildOffers();

@@ -11,7 +11,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Tag;
 
-/** Existing IA contract; identity is only in the authenticated header. */
 public interface AssistantService {
     @POST("chat") Call<ChatResponse> send(@Body ChatRequest request, @Tag String firebaseUid);
     @GET("chat/history/{sessionId}") Call<ChatHistory> history(@Path("sessionId") String sessionId,

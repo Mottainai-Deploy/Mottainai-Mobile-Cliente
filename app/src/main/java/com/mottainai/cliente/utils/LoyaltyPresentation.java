@@ -4,7 +4,6 @@ import com.mottainai.cliente.network.dto.LoyaltyAccount;
 
 import java.util.Locale;
 
-/** Displays server values only; never derives a level, points credit or environmental metric. */
 public final class LoyaltyPresentation {
     private LoyaltyPresentation() { }
 
@@ -14,7 +13,7 @@ public final class LoyaltyPresentation {
 
     public static String status(LoyaltyAccount account) {
         return account == null || account.statusName == null || account.statusName.trim().isEmpty()
-                ? "Nível ainda não informado pela API" : account.statusName.trim();
+                ? "Seu status sustentável aparecerá aqui." : account.statusName.trim();
     }
 
     public static String nextStatus(LoyaltyAccount account) {
