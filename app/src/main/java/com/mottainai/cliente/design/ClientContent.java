@@ -52,6 +52,12 @@ public final class ClientContent {
         }
         if(view instanceof TextView&&!(view instanceof EditText)) {
             TextView text=(TextView)view;String value=text.getText().toString();
+            boolean noticeScreen=DesignRepository.get(view.getContext()).screen(screen).optString("name").contains("Cliente / Avisos /");
+            if(noticeScreen) {
+                if(value.equals("Ofertas por perto"))text.setText("Ofertas e novidades");
+                else if(value.startsWith("Escolha se quer receber avisos"))text.setText("Escolha se quer receber os avisos enviados à sua conta.");
+                else if(value.contains("Cada loja pode anunciar"))text.setText("Os avisos precisam de internet. A entrega em segundo plano depende do Android.");
+            }
             String name=prefs.getString("field_Nome completo","");
             if(name.equals("Camila Oliveira"))name="";
             String email=prefs.getString("field_E-mail","");if(email.equals("camila@exemplo.com"))email="";
@@ -65,7 +71,8 @@ public final class ClientContent {
             else if(value.equals("Outubro de 2026"))view.setVisibility(View.GONE);
             else if(value.startsWith("Sugestões para buscar")||value.startsWith("Sugestões de busca"))view.setVisibility(View.GONE);
             else if(value.startsWith("Faltam 180")||value.equals("55%"))view.setVisibility(View.GONE);
-            else if(value.equals("Desativados"))text.setText(prefs.getBoolean("nearby_alerts",false)&&androidx.core.app.NotificationManagerCompat.from(view.getContext()).areNotificationsEnabled()?"Ativados":"Desativados");
+            else if(value.equals("Desativados"))text.setText(com.mottainai.cliente.notifications.CustomerNotifications.enabled(view.getContext())
+                    &&com.mottainai.cliente.notifications.CustomerNotifications.permitted(view.getContext())?"Ativados":"Desativados");
             else if(value.equals("Compartilhar")||value.startsWith("Broto ·")||value.equals("55%"))view.setVisibility(View.GONE);
         }
         if(view instanceof EditText&&tag.optString("field").equals("Busca")&&screen.equals("2413:31330"))((EditText)view).setText(prefs.getString("search_query",""));

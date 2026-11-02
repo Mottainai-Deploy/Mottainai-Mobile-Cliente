@@ -39,6 +39,11 @@ public class DesignScreenFragment extends Fragment {
     private com.mottainai.cliente.design.ClientRuntime runtime;
     private DesignRepository repository;
     private final List<EditText> fields=new ArrayList<>();
+    private final androidx.activity.result.ActivityResultLauncher<String> notificationPermission=registerForActivityResult(
+            new androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),allowed->{
+                if(!isAdded())return;
+                if(allowed)enableNotifications();else showNotificationSettings();
+            });
     private final androidx.activity.result.ActivityResultLauncher<String[]> clientLocation=registerForActivityResult(
             new androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(),result->{if(runtime!=null)runtime.locationResult();});
     /** Verifica os requisitos e inicia a obtenção da localização do cliente. */
@@ -54,11 +59,6 @@ public class DesignScreenFragment extends Fragment {
         }
         clientLocation.launch(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION});
     }
-    private final androidx.activity.result.ActivityResultLauncher<String> notifications=registerForActivityResult(
-            new androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),allowed->{
-                preferences().edit().putBoolean("nearby_alerts",allowed).apply();
-                open(allowed?"2557:30760":"2557:30824");
-            });
     private final androidx.activity.result.ActivityResultLauncher<String> gallery=registerForActivityResult(
             new androidx.activity.result.contract.ActivityResultContracts.GetContent(),uri->{
                 if(uri==null)return;
@@ -227,7 +227,7 @@ public class DesignScreenFragment extends Fragment {
                 else if(value.equals("Bom dia, Camila"))text.setText(getString(R.string.design_greeting,first));
             }
             String radius=preferences().getString("radius","5 km");
-            if(!radius.equals("5 km")&&!radius.equals("10 km")) {radius="10 km";preferences().edit().putString("radius",radius).apply();}
+            if(!radius.equals("5 km")&&!radius.equals("10 km")) {radius="10 km";preferences().edit().putString("radius",radius).apply();com.mottainai.cliente.notifications.NotificationPreferenceRepository.radiusChanged(requireContext());}
             if(value.equals("5 km")&&!insideRadiusOption(view))text.setText(radius);
             else if(value.equals("Até 5 km de você"))text.setText(getString(R.string.design_radius_title,radius));
         }
@@ -304,7 +304,12 @@ public class DesignScreenFragment extends Fragment {
         if(runtime!=null&&runtime.act(tag,label))return;
         if(label.equals("Minhas conversas")){open("2557:30504");return;}
         if(!host().isDesignPreview()) {
-            if(label.equals("Ativar avisos")||screen.equals("2557:30792")){requestNotificationPermission();return;}
+            if(label.equals("Ativar avisos")||label.equals("Rever permissão")
+                    ||screen.equals("2557:30792")&&label.equals("Permitir")){requestNotificationPermission();return;}
+            if(screen.equals("2557:30792")&&label.equals("Não permitir")){
+                com.mottainai.cliente.notifications.CustomerNotifications.setEnabled(requireContext(),false);
+                host().showScreen("2557:30824",false);return;
+            }
             if(label.equals("Tirar foto")||label.equals("Permitir câmera")){try{camera.launch(null);}catch(android.content.ActivityNotFoundException ignored){photoError();}return;}
             if(label.equals("Como retirar?")){sendSuggestion("Como funciona a retirada?");return;}
         }
@@ -382,7 +387,7 @@ public class DesignScreenFragment extends Fragment {
         if(name.equals("Ellipse")||name.equals("Alterar foto do perfil")) {open("2571:30930");return;}
         if(name.contains("Região de busca")) {open("2143:10256");return;}
         if(label.matches("(5|10) km")) {
-            preferences().edit().putString("radius",label).apply();requireActivity().getSupportFragmentManager().popBackStack();return;
+            preferences().edit().putString("radius",label).apply();com.mottainai.cliente.notifications.NotificationPreferenceRepository.radiusChanged(requireContext());requireActivity().getSupportFragmentManager().popBackStack();return;
         }
         if(label.equals("Mercado da Praça")) {open("2005:4391");return;}
         if(label.equals("Todas as lojas")||label.equals("Limpar")) {open("2005:3914");return;}
@@ -552,14 +557,67 @@ public class DesignScreenFragment extends Fragment {
     private View findAction(View v,String action){if(tag(v).optString("action").trim().equals(action)&&v.isClickable())return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View found=findAction(((ViewGroup)v).getChildAt(i),action);if(found!=null)return found;}return null;}
     /** Solicita a permissão de notificações quando necessária ao dispositivo. */
     public void requestNotificationPermission() {
-        if(android.os.Build.VERSION.SDK_INT>=33&&androidx.core.content.ContextCompat.checkSelfPermission(requireContext(),android.Manifest.permission.POST_NOTIFICATIONS)!=android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            notifications.launch(android.Manifest.permission.POST_NOTIFICATIONS);
-        }else {
-            boolean allowed=androidx.core.app.NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
-            preferences().edit().putBoolean("nearby_alerts",allowed).apply();
-            if(!allowed)startActivity(new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(android.provider.Settings.EXTRA_APP_PACKAGE,requireContext().getPackageName()));
-            else host().showScreen("2557:30760",false);
+        if(!isAdded())return;
+        if(!com.mottainai.cliente.notifications.RedisNotificationRepository.configured()){
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext()).setTitle("Avisos indisponíveis")
+                    .setMessage("Não é possível ativar os avisos agora. Você pode continuar consultando as ofertas no aplicativo.")
+                    .setPositiveButton("Entendi",null).show();return;
         }
+        if(android.os.Build.VERSION.SDK_INT>=33&&androidx.core.content.ContextCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.POST_NOTIFICATIONS)!=android.content.pm.PackageManager.PERMISSION_GRANTED){
+            notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS);return;
+        }
+        enableNotifications();
+    }
+    /** Ativa os avisos da conta e atualiza os controles sem sair da tela original. */
+    private void enableNotifications(){
+        if(!isAdded())return;
+        if(!com.mottainai.cliente.notifications.CustomerNotifications.permitted(requireContext())){
+            showNotificationSettings();return;
+        }
+        androidx.appcompat.app.AlertDialog progress=new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Ativando avisos").setView(new com.mottainai.cliente.design.LoadingStateView(requireContext(),
+                "Salvando sua preferência…",false)).setCancelable(false).create();
+        progress.show();
+        com.mottainai.cliente.notifications.CustomerNotifications.setEnabled(requireContext(),true,saved->{
+            progress.dismiss();
+            if(!isAdded()||getView()==null)return;
+            refreshNotificationSettings();
+            if(saved){android.widget.Toast.makeText(requireContext(),"Avisos ativados",android.widget.Toast.LENGTH_SHORT).show();
+                com.mottainai.cliente.notifications.NotificationBackgroundAccess.offer(requireActivity());}
+            else new androidx.appcompat.app.AlertDialog.Builder(requireContext()).setTitle("Não foi possível ativar os avisos")
+                .setMessage("Confira sua conexão e a localização do celular e tente novamente.")
+                .setPositiveButton("Entendi",null).show();
+        });
+    }
+    /** Abre as configurações de notificações somente quando a autorização precisa ser revista. */
+    private void showNotificationSettings(){
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext()).setTitle("Permita as notificações")
+                .setMessage("Para receber avisos, permita as notificações do Mottainai no Android.")
+                .setPositiveButton("Abrir configurações",(dialog,which)->startActivity(new Intent(
+                        android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE,requireContext().getPackageName())))
+                .setNegativeButton("Agora não",null).show();
+    }
+    /** Sincroniza as ações e o estado dos avisos ao ativar, desativar ou voltar das configurações. */
+    public void refreshNotificationSettings(){
+        if(!isAdded()||getView()==null||host().isDesignPreview()
+                ||!repository.screen(screen).optString("name").contains("Cliente / Avisos /"))return;
+        boolean enabled=com.mottainai.cliente.notifications.CustomerNotifications.enabled(requireContext())
+                &&com.mottainai.cliente.notifications.CustomerNotifications.permitted(requireContext());
+        View activate=findAction(getView(),"Ativar avisos"),deactivate=findAction(getView(),"Desativar avisos");
+        if(activate!=null)activate.setVisibility(enabled?View.GONE:View.VISIBLE);
+        if(deactivate!=null)deactivate.setVisibility(enabled?View.VISIBLE:View.GONE);
+        updateNotificationStatus(getView(),enabled);
+    }
+    /** Atualiza apenas o indicador de ativação, preservando textos e componentes do layout. */
+    private void updateNotificationStatus(View view,boolean enabled){
+        if(view instanceof TextView){
+            String value=((TextView)view).getText().toString();
+            if(value.equals("Ativados")||value.equals("Desativados"))((TextView)view).setText(enabled?"Ativados":"Desativados");
+        }
+        if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)
+            updateNotificationStatus(((ViewGroup)view).getChildAt(i),enabled);
     }
     /** Verifica se o componente pertence a uma opção de distância. */
     private boolean insideRadiusOption(View view) {
@@ -576,7 +634,7 @@ public class DesignScreenFragment extends Fragment {
     /** Ativa os recursos que acompanham a exibição da tela. */
     @Override public void onStart(){super.onStart();if(runtime!=null)runtime.start();}
     /** Retoma os recursos da tela e atualiza os dados necessários ao voltar para ela. */
-    @Override public void onResume(){super.onResume();if(runtime!=null)runtime.resume();}
+    @Override public void onResume(){super.onResume();if(runtime!=null)runtime.resume();refreshNotificationSettings();}
     /** Pausa os recursos associados à tela quando ela perde o foco. */
     @Override public void onPause(){if(runtime!=null)runtime.pause();super.onPause();}
     /** Interrompe os recursos visuais enquanto a tela não está visível. */

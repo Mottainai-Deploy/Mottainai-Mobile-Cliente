@@ -103,6 +103,7 @@ public class SessionManager {
                 .remove(Constants.KEY_SESSION_ACTIVE)
                 .remove(Constants.KEY_DEMO_MODE)
                 .apply();
+        com.mottainai.cliente.notifications.CustomerNotifications.cancel(context);
     }
 
     /** Verifica se o valor está ausente ou contém apenas espaços. */

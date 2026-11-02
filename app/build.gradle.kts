@@ -21,6 +21,12 @@ val cloudinaryCloudName = gradle.startParameter.projectProperties["MOTTAINAI_CLO
 val cloudinaryUploadPreset = gradle.startParameter.projectProperties["MOTTAINAI_CLOUDINARY_UPLOAD_PRESET"]
     ?: localSettings.getProperty("MOTTAINAI_CLOUDINARY_UPLOAD_PRESET")
     ?: providers.gradleProperty("MOTTAINAI_CLOUDINARY_UPLOAD_PRESET").orElse("").get()
+val notificationsBaseUrl = gradle.startParameter.projectProperties["MOTTAINAI_NOTIFICATIONS_BASE_URL"]
+    ?: localSettings.getProperty("MOTTAINAI_NOTIFICATIONS_BASE_URL")
+    ?: providers.gradleProperty("MOTTAINAI_NOTIFICATIONS_BASE_URL").orElse("").get()
+val notificationsTokenPath = gradle.startParameter.projectProperties["MOTTAINAI_NOTIFICATIONS_TOKEN_PATH"]
+    ?: localSettings.getProperty("MOTTAINAI_NOTIFICATIONS_TOKEN_PATH")
+    ?: providers.gradleProperty("MOTTAINAI_NOTIFICATIONS_TOKEN_PATH").orElse("").get()
 
 
 if (file("google-services.json").exists()) {
@@ -46,6 +52,8 @@ android {
         buildConfigField("String", "ASSISTANT_BASE_URL", "\"${assistantBaseUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"${cloudinaryCloudName.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"${cloudinaryUploadPreset.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        buildConfigField("String", "NOTIFICATIONS_BASE_URL", "\"${notificationsBaseUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        buildConfigField("String", "NOTIFICATIONS_TOKEN_PATH", "\"${notificationsTokenPath.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 

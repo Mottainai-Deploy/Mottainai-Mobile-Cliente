@@ -27,4 +27,7 @@
     <string name="product_image_unavailable">Imagem indisponível: %1$s</string>
     <string name="product_image_description">Imagem do produto: %1$s</string>
     <string name="product_image_illustrative_description">Imagem de %1$s</string>
+    <string name="notification_preferences_entry_title">Avisos de ofertas</string>
+    <string name="notification_preferences_entry_summary">Ative ou pause as ofertas próximas</string>
+    <string name="notification_preferences_entry_description">Avisos de ofertas. Ativar ou desativar.</string>
 </resources>

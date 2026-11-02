@@ -48,13 +48,24 @@ public class MainActivity extends AppCompatActivity {
         });
         if(state==null) {
             String requested=getIntent().getStringExtra("screen");
+            String notificationOwner=getIntent().getStringExtra("notification_owner");
+            if(notificationOwner!=null&&!com.mottainai.cliente.notifications.RedisNotificationRepository.owns(this,notificationOwner)){
+                getIntent().removeExtra("offer_id");requested="2005:3914";
+            }
             com.mottainai.cliente.utils.SessionManager session=new com.mottainai.cliente.utils.SessionManager(this);
             String initial=session.canBrowse()?"2005:3812":"2244:11739";
             showScreen(requested!=null?requested:initial,false);
+            com.mottainai.cliente.notifications.NotificationNavigation.markOpened(this,getIntent());
         }
     }
     /** Exibe a tela solicitada e organiza a navegação e os painéis sobrepostos. */
     public void showScreen(String id, boolean history) {
+        findViewById(R.id.design_container).post(()->{
+            if(!isFinishing()&&!isDestroyed())navigateToScreen(id,history);
+        });
+    }
+    /** Executa a navegação fora dos callbacks de criação dos fragmentos para fechar painéis com segurança. */
+    private void navigateToScreen(String id, boolean history) {
         DesignRepository repository=DesignRepository.get(this);
         if(!repository.available(id))return;
         if(!isDesignPreview()) {
@@ -69,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(!isDesignPreview()&&repository.canonical(id).equals("2557:30792")) {
-            if(currentScreen() instanceof DesignScreenFragment){((DesignScreenFragment)currentScreen()).requestNotificationPermission();return;}
-            id="2557:30760";
+        boolean notificationPreferences=!isDesignPreview()
+            &&repository.screen(repository.canonical(id)).optString("name").contains("Cliente / Avisos /");
+        if(notificationPreferences){
+            if(currentScreen()!=null){com.mottainai.cliente.notifications.NotificationPreferencesDialog.show(this);return;}
+            id="2005:4483";history=false;
         }
         if(!repository.available(id)) return;
         android.view.View focused=getCurrentFocus();
@@ -81,13 +94,20 @@ public class MainActivity extends AppCompatActivity {
         }
         String canonical=repository.canonical(id);
         androidx.fragment.app.FragmentManager manager=getSupportFragmentManager();
+        if(manager.isStateSaved())return;
         if(!isDesignPreview()&&canonical.equals("2028:4492")&&manager.getBackStackEntryCount()>0) {
-            manager.popBackStack(null,androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            manager.popBackStackImmediate(null,androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        if(manager.findFragmentById(R.id.design_overlay)!=null)manager.popBackStack("overlay",androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if(manager.findFragmentById(R.id.design_overlay)!=null)manager.popBackStackImmediate("overlay",androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
         boolean overlay=repository.screen(canonical).optBoolean("overlay");
+        androidx.fragment.app.Fragment content=manager.findFragmentById(R.id.design_content);
+        if(!overlay&&content!=null&&canonical.equals(content.getTag()))return;
         androidx.fragment.app.FragmentTransaction transaction=manager.beginTransaction().setReorderingAllowed(true);
-        transaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out);
+        if(android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            transaction.setCustomAnimations(history&&!overlay?R.anim.client_detail_enter:R.anim.client_fade_enter,
+                    R.anim.client_fade_exit,R.anim.client_fade_enter,
+                    history&&!overlay?R.anim.client_detail_exit:R.anim.client_fade_exit);
+        }
         if(overlay) {
             if(manager.findFragmentById(R.id.design_content)==null) {
                 String base=overlayBase(canonical);
@@ -99,20 +119,32 @@ public class MainActivity extends AppCompatActivity {
             if(history)transaction.addToBackStack(canonical);
         }
         transaction.commit();
+        if(notificationPreferences)findViewById(R.id.design_container).post(()->
+            com.mottainai.cliente.notifications.NotificationPreferencesDialog.show(this));
     }
     /** Retoma os recursos da tela e atualiza os dados necessários ao voltar para ela. */
     @Override protected void onResume() {
         super.onResume();
         if(isDesignPreview())return;
+        com.mottainai.cliente.notifications.CustomerNotifications.start(this);
         androidx.fragment.app.Fragment current=currentScreen();
         if(current==null||current.getArguments()==null)return;
         String id=current.getArguments().getString("screen","");
         String name=DesignRepository.get(this).screen(id).optString("name");
         com.mottainai.cliente.utils.SessionManager session=new com.mottainai.cliente.utils.SessionManager(this);
-        if(!com.mottainai.cliente.design.ClientRoutes.isPublic(name)&&!session.canBrowse())showScreen("2028:4492",false);
+        if(name.contains("Cliente / Avisos /")&&session.canBrowse()){
+            showScreen("2005:4483",false);
+            findViewById(R.id.design_container).post(()->com.mottainai.cliente.notifications.NotificationPreferencesDialog.show(this));
+        }
+        else if(!com.mottainai.cliente.design.ClientRoutes.isPublic(name)&&!session.canBrowse())showScreen("2028:4492",false);
         else if(session.canBrowse()&&com.mottainai.cliente.design.ClientRoutes.isLocationAccess(name)
                 &&com.mottainai.cliente.utils.ClientAccessGuard.hasLocationPermission(this)
                 &&com.mottainai.cliente.utils.ClientAccessGuard.isLocationEnabled(this))showScreen("2005:3812",false);
+    }
+    /** Pausa a consulta frequente de avisos quando a atividade deixa o primeiro plano. */
+    @Override protected void onPause() {
+        com.mottainai.cliente.notifications.CustomerNotifications.stopForeground();
+        super.onPause();
     }
     /** Abre o início após verificar os requisitos de acesso do cliente. */
     public void openAuthenticatedHome() {

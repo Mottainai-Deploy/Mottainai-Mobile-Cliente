@@ -49,6 +49,7 @@ public final class ClientRuntime {
     private AssistantViewModel assistant;
     private PartnerMapView map;
     private TextView feedback;
+    private LoadingStateView loadingFeedback;
     private LinearLayout authLoading;
     private TextView authLoadingMessage;
     private boolean active=true;
@@ -112,7 +113,6 @@ public final class ClientRuntime {
         if(screen.equals("2093:6331")||screen.equals("2005:3812")||screen.equals("2005:4483")||screen.equals("2143:11079"))bindPoints();
         if(screen.equals("2093:6456")||screen.equals("2093:6588"))bindHistory();
         if(screen.equals("2393:19184")||screen.equals("2650:73471"))bindProfile();
-        if(screenName.contains("Cliente / Avisos /"))status("Ative os avisos para receber novidades e ofertas próximas.");
         if(screenName.contains("Conversa com a Lô"))bindAssistant();
         if(screen.equals("2143:10917"))bindFilters();
     }
@@ -166,6 +166,13 @@ public final class ClientRuntime {
     }
     /** Interpreta a ação disparada pelo componente e executa o fluxo correspondente. */
     public boolean act(JSONObject tag,String label) {
+        if(label.equals("Avisos próximos")||label.equals("Meus avisos")||tag.optString("name").equals("Opção / Avisos próximos")){
+            com.mottainai.cliente.notifications.NotificationPreferencesDialog.show(host);return true;
+        }
+        if(label.equals("Desativar avisos")){
+            com.mottainai.cliente.notifications.CustomerNotifications.setEnabled(host,false);
+            fragment.refreshNotificationSettings();return true;
+        }
         String name=tag.optString("name");
         if(auth!=null&&auth.isBusy()){status("Aguarde a conclusão da solicitação.");return true;}
         if(label.equals("Entrar")) {
@@ -194,7 +201,7 @@ public final class ClientRuntime {
             host.startActivity(new Intent(host,MainActivity.class).putExtra("screen","2244:11739")
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));host.finish();return true;}
         if(label.matches("(5|10) km")){int km=Integer.parseInt(label.split(" ")[0]);catalog().useStoreRadius(OfferRadius.fromKilometers(km));
-            host.getSharedPreferences("cliente_preferences",0).edit().putString("radius",label).apply();host.getSupportFragmentManager().popBackStack();return true;}
+            host.getSharedPreferences("cliente_preferences",0).edit().putString("radius",label).apply();com.mottainai.cliente.notifications.NotificationPreferenceRepository.radiusChanged(host);host.getSupportFragmentManager().popBackStack();return true;}
         if(label.equals("Permitir localização")||label.equals("Usar minha localização")||label.equals("Durante o uso do app")||label.equals("Apenas desta vez")||(label.equals("Tentar novamente")||label.equals("Verificar novamente")||label.equals("Rever acesso"))&&ClientRoutes.isLocationAccess(screenName)) {
             if(!ClientAccessGuard.hasLocationPermission(host))fragment.requestClientLocation();
             else if(!ClientAccessGuard.isLocationEnabled(host))host.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -349,7 +356,7 @@ public final class ClientRuntime {
         String saved=preferences.getString("radius","5 km");
         if("5 km".equals(saved)||"10 km".equals(saved))return saved;
         String allowed="10 km";
-        preferences.edit().putString("radius",allowed).apply();
+        preferences.edit().putString("radius",allowed).apply();com.mottainai.cliente.notifications.NotificationPreferenceRepository.radiusChanged(host);
         return allowed;
     }
     /** Conecta a busca de produtos ao campo dentro da tela de ofertas. */
@@ -373,7 +380,9 @@ public final class ClientRuntime {
         LinearLayout list=(LinearLayout)slot;list.setOrientation(LinearLayout.VERTICAL);list.setOnClickListener(null);list.setClickable(false);
         catalog().promotions().observe(fragment.getViewLifecycleOwner(),state->{
             if(state==null)return;if(expired(state.httpStatus))return;list.removeAllViews();
-            if(state.status==LoadState.Status.LOADING)list.addView(label("Carregando ofertas…"));
+            if(state.status==LoadState.Status.LOADING)list.addView(new LoadingStateView(host,
+                    state.data==null?"Buscando ofertas para você…":"Atualizando suas ofertas…",
+                    state.data==null||state.data.content==null||state.data.content.isEmpty()));
             if(state.status==LoadState.Status.ERROR){list.addView(label(state.message));button(list,"Tentar novamente",()->catalog().loadPromotions(catalog().promotionPage(),catalog().promotionStoreId(),catalog().promotionQuery()));}
             if(state.data==null)return;
             List<CatalogPromotion> items=state.data.content==null?Collections.emptyList():state.data.content;
@@ -439,7 +448,7 @@ public final class ClientRuntime {
         clearOfferFixtures();
         if(flow.promotionId==null){status("Selecione uma oferta no catálogo.");return;}
         catalog().detail().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;
-            if(state.status==LoadState.Status.LOADING)status("Carregando oferta…");
+            if(state.status==LoadState.Status.LOADING)showLoading("Preparando os detalhes da oferta…");
             if(state.status==LoadState.Status.ERROR){status(state.message);button(body(),"Tentar novamente",()->catalog().loadPromotion(flow.promotionId));}
             if(state.status==LoadState.Status.SUCCESS&&state.data!=null){hideStatus();flow.store=state.data.store;bindOffer(root,state.data);status(new Offer(state.data).getItemsLabel());}
         });catalog().loadPromotion(flow.promotionId);
@@ -456,7 +465,8 @@ public final class ClientRuntime {
             map=new PartnerMapView(host);parent.addView(map,index,params);map.createMap(null);if(!map.isConfigured())status("Não foi possível carregar o mapa agora.");
             map.setOnStoreSelected(store->{new CatalogRepository(host).store(store.getId(),result->{if(active&&result.status==LoadState.Status.SUCCESS){flow.store=result.data;host.showScreen("2005:4391",true);}});});}
         catalog().stores().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;list.removeAllViews();
-            list.addView(label("Lojas próximas"));if(state.status==LoadState.Status.LOADING)list.addView(label("Carregando lojas…"));
+            list.addView(label("Lojas próximas"));if(state.status==LoadState.Status.LOADING)list.addView(new LoadingStateView(host,
+                    "Buscando lojas perto de você…",state.data==null||state.data.content==null||state.data.content.isEmpty()));
             if(state.status==LoadState.Status.ERROR){list.addView(label(state.message));button(list,"Tentar novamente",()->catalog().requestLocation());}
             List<PartnerStore> pins=new ArrayList<>();
             if(state.data!=null&&state.data.content!=null){for(CatalogStore store:state.data.content){
@@ -477,7 +487,7 @@ public final class ClientRuntime {
     private void bindStoreDetail(){
         text(root,"store","");text(root,"address","");text(root,"region","");
         if(flow.store==null){status("Selecione uma loja na lista ou no mapa.");return;}
-        String id=flow.store.id;status("Carregando loja…");new CatalogRepository(host).store(id,result->{
+        String id=flow.store.id;showLoading("Preparando as informações da loja…");new CatalogRepository(host).store(id,result->{
             if(!active||expired(result.httpStatus))return;
             if(result.status==LoadState.Status.SUCCESS&&result.data!=null){flow.store=result.data;hideStatus();PartnerStore store=new PartnerStore(result.data);
                 text(root,"store",store.getName());text(root,"address",store.getAddressLabel());if(!store.hasValidLocation())status("A localização desta loja será aberta pelo endereço.");}
@@ -489,8 +499,10 @@ public final class ClientRuntime {
         LoyaltyViewModel points=new ViewModelProvider(host).get(LoyaltyViewModel.class);
         View slot=ClientContent.find(root,"Fidelidade / Saldo confirmado");
         points.account().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;
-            String value=state.data==null?"Saldo indisponível":LoyaltyPresentation.points(state.data.pointsBalance);text(root,"points",value);
-            if(slot instanceof ViewGroup){ViewGroup group=(ViewGroup)slot;group.removeAllViews();group.addView(label(state.status==LoadState.Status.LOADING?"Carregando saldo…":value));
+            String value=state.data==null?"Saldo indisponível":LoyaltyPresentation.points(state.data.pointsBalance);text(root,"points",state.data==null&&state.status==LoadState.Status.LOADING?"Buscando seus pontos…":value);
+            if(slot instanceof ViewGroup){ViewGroup group=(ViewGroup)slot;group.removeAllViews();
+                if(state.status==LoadState.Status.LOADING)group.addView(new LoadingStateView(host,"Atualizando seus pontos…",false));
+                if(state.status!=LoadState.Status.LOADING||state.data!=null)group.addView(label(value));
                 if(state.data!=null)group.addView(label(LoyaltyPresentation.status(state.data)));
                 if(state.status==LoadState.Status.ERROR){group.addView(label(state.message));button(group,"Tentar novamente",points::loadAccount);}}
         });if(points.account().getValue()==null)points.loadAccount();
@@ -500,9 +512,9 @@ public final class ClientRuntime {
         LoyaltyViewModel points=new ViewModelProvider(host).get(LoyaltyViewModel.class);ViewGroup list=body();if(list==null)return;
         points.transactions().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;list.removeAllViews();
             list.addView(label("Histórico de pontos · últimos seis meses"));
-            if(state.status==LoadState.Status.LOADING)list.addView(label("Carregando movimentações…"));
+            if(state.status==LoadState.Status.LOADING)list.addView(new LoadingStateView(host,"Buscando seu histórico…",state.data==null||state.data.isEmpty()));
             if(state.status==LoadState.Status.ERROR){list.addView(label(state.message));button(list,"Tentar novamente",points::loadRecentTransactions);}
-            if(state.data!=null){if(state.data.isEmpty())list.addView(label("Nenhuma movimentação no período."));
+            if(state.data!=null){if(state.data.isEmpty()&&state.status==LoadState.Status.SUCCESS)list.addView(label("Nenhuma movimentação no período."));
                 for(LoyaltyTransaction item:state.data)list.addView(label((item.description==null?"Movimentação de fidelidade":item.description)+"\n"+LoyaltyPresentation.points(item.points)+" · "+(item.createdAt==null?"":item.createdAt)));}
         });if(points.transactions().getValue()==null)points.loadRecentTransactions();
     }
@@ -513,7 +525,8 @@ public final class ClientRuntime {
             for(EditText field:fields.values())field.setEnabled(state.kind==ProfileViewModel.State.Kind.READY||state.kind==ProfileViewModel.State.Kind.ERROR&&state.profile!=null);
             if(state.message!=null)status(state.message);
             else if(state.kind==ProfileViewModel.State.Kind.READY)hideStatus();
-            if(state.kind==ProfileViewModel.State.Kind.LOADING||state.kind==ProfileViewModel.State.Kind.SAVING)status("Aguarde…");
+            if(state.kind==ProfileViewModel.State.Kind.LOADING||state.kind==ProfileViewModel.State.Kind.SAVING)
+                showLoading(state.kind==ProfileViewModel.State.Kind.SAVING?"Salvando suas alterações…":"Carregando seus dados…");
             if(state.profile!=null){if(state.kind==ProfileViewModel.State.Kind.READY){
                 setField("Nome completo",state.profile.fullName);setField("Telefone",state.profile.phone);
                 flow.marketing=Boolean.TRUE.equals(state.profile.marketingConsent);fragment.renderMarketingConsent(flow.marketing);
@@ -540,7 +553,7 @@ public final class ClientRuntime {
     /** Preenche o seletor de lojas com os resultados disponíveis. */
     private void renderFilters(ViewGroup list,LoadState<CatalogPage<CatalogStore>> stores){
         list.removeAllViews();list.addView(label("Filtrar por loja"));button(list,"Todas as lojas",()->{catalog().loadPromotions(0,null,"");host.showScreen("2005:3914",true);});
-        if(stores==null||stores.status==LoadState.Status.LOADING){list.addView(label("Carregando lojas…"));return;}
+        if(stores==null||stores.status==LoadState.Status.LOADING){list.addView(new LoadingStateView(host,"Buscando as lojas disponíveis…",false));return;}
         if(stores.status==LoadState.Status.ERROR){list.addView(label("Não foi possível carregar as lojas."));button(list,"Tentar novamente",catalog()::requestLocation);return;}
         if(stores.data==null||stores.data.content==null||stores.data.content.isEmpty()){list.addView(label("Nenhuma loja encontrada perto de você."));return;}
         for(CatalogStore store:stores.data.content)if(store!=null&&store.id!=null)button(list,store.name==null?"Loja parceira":store.name,()->{catalog().loadPromotions(0,store.id,"");host.showScreen("2005:3914",true);});
@@ -554,7 +567,7 @@ public final class ClientRuntime {
         model.state().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;ViewGroup group=body();if(!(group instanceof LinearLayout))return;
             LinearLayout messages=(LinearLayout)group;messages.removeAllViews();messages.setMinimumHeight(0);messages.setGravity(android.view.Gravity.TOP);
             if(state.data!=null)for(ChatMessage message:state.data)fragment.addBubble(messages,message.getText(),message.getSender()==ChatMessage.Sender.USER);
-            if(state.status==LoadState.Status.LOADING)messages.addView(label("Lô está respondendo…"));
+            if(state.status==LoadState.Status.LOADING)messages.addView(new LoadingStateView(host,"Lô está preparando uma resposta…",false));
             if(state.status==LoadState.Status.ERROR)messages.addView(label(state.message));
             if(state.status==LoadState.Status.SUCCESS&&(state.data==null||state.data.isEmpty()))messages.addView(label("Olá! Como posso ajudar?"));
         });
@@ -626,6 +639,7 @@ public final class ClientRuntime {
     /** Apresenta a mensagem de estado da operação na interface. */
     private void status(String message){
         if(message==null||message.isEmpty())return;
+        removeLoading();
         ViewGroup parent=body();if(parent==null)return;
         if(feedback==null||feedback.getParent()==null){
             feedback=label(message);feedback.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
@@ -638,7 +652,20 @@ public final class ClientRuntime {
         if(auth!=null)feedback.post(()->{if(active)feedback.requestRectangleOnScreen(new android.graphics.Rect(0,0,feedback.getWidth(),feedback.getHeight()),false);});
     }
     /** Oculta a mensagem de estado que deixou de ser necessária. */
-    private void hideStatus(){if(feedback!=null)feedback.setVisibility(View.GONE);}
+    private void hideStatus(){if(feedback!=null)feedback.setVisibility(View.GONE);removeLoading();}
+    /** Exibe um indicador de progresso sem esconder os dados e os campos já apresentados. */
+    private void showLoading(String message){
+        ViewGroup parent=body();if(parent==null)return;
+        hideStatus();
+        loadingFeedback=new LoadingStateView(host,message,false);
+        parent.addView(loadingFeedback,0,new ViewGroup.LayoutParams(-1,-2));
+    }
+    /** Remove o indicador quando a operação termina ou apresenta uma falha. */
+    private void removeLoading(){
+        if(loadingFeedback!=null&&loadingFeedback.getParent() instanceof ViewGroup)
+            ((ViewGroup)loadingFeedback.getParent()).removeView(loadingFeedback);
+        loadingFeedback=null;
+    }
     /** Exibe um aviso breve pelo componente nativo do Android. */
     private void notice(String message){android.widget.Toast.makeText(host,message,android.widget.Toast.LENGTH_SHORT).show();}
     /** Adiciona um botão ao contêiner e associa a ação ao toque. */

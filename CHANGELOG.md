@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Avisos de ofertas integrados ao Redis, com preferência por conta e notificações nativas.
+- Popup de ativação de avisos no perfil e abertura da oferta ao tocar na notificação.
+
+- Transições mais curtas entre telas e fechamento de painéis preservando a tela anterior; animações respeitam a configuração do sistema.
+- Indicadores de carregamento nas cores do tema e cartões reservados para a primeira consulta de ofertas e lojas; atualizações mantêm os dados disponíveis.
+- Localização prioriza GPS com permissão precisa e utiliza a rede como alternativa, com cancelamento de tentativas antigas e limite de espera de quinze segundos.
+- Testes de seleção de provedor e de restauração da navegação após recriar a atividade; roteiro de ajustes e validação da entrega Operacional.
+
 - Classes, construtores, métodos e callbacks Java documentados em português, incluindo testes.
 - Guia de execução com APIs locais, configuração de serviços, encaminhamento USB e requisitos de publicação HTTPS.
 
