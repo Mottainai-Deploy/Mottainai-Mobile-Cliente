@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/** Representa Offer, responsável por os dados apresentados pela interface. */
 public class Offer {
 
     private final String id;
@@ -26,6 +27,7 @@ public class Offer {
     private final String imageUrl;
     private final String imageSearchName;
 
+    /** Inicializa Offer com os dados e as dependências recebidos. */
     public Offer(String id, String title, String storeName, double distanceKm, int discountPercent,
                  String expiryLabel, String category, int thumbnailColorRes, String badgeLabel,
                  String description) {
@@ -46,6 +48,7 @@ public class Offer {
         this.imageSearchName = null;
     }
 
+    /** Inicializa Offer com os dados e as dependências recebidos. */
     public Offer(CatalogPromotion promotion) {
         this.id = promotion.id;
         this.imageUrl = ProductImageSource.forPromotion(promotion);
@@ -94,49 +97,64 @@ public class Offer {
                 Locale.forLanguageTag("pt-BR")).format(lowest);
     }
 
+    /** Retorna o identificador do registro. */
     public String getId() {
         return id;
     }
 
+    /** Retorna o título da oferta. */
     public String getTitle() {
         return title;
     }
 
+    /** Retorna o nome da loja responsável pela oferta. */
     public String getStoreName() {
         return storeName;
     }
 
+    /** Retorna a distância em quilômetros até a loja. */
     public double getDistanceKm() {
         return distanceKm;
     }
 
+    /** Retorna o percentual de desconto da oferta. */
     public int getDiscountPercent() {
         return discountPercent;
     }
 
+    /** Retorna o texto de validade apresentado na oferta. */
     public String getExpiryLabel() {
         return expiryLabel;
     }
 
+    /** Retorna a categoria associada à oferta. */
     public String getCategory() {
         return category;
     }
 
+    /** Retorna a cor usada na apresentação da miniatura. */
     public int getThumbnailColorRes() {
         return thumbnailColorRes;
     }
 
+    /** Retorna o texto do selo da oferta. */
     public String getBadgeLabel() {
         return badgeLabel;
     }
 
+    /** Retorna a descrição da oferta. */
     public String getDescription() {
         return description;
     }
 
+    /** Retorna o preço formatado da oferta. */
     public String getPriceLabel() { return priceLabel; }
+    /** Retorna a descrição dos itens incluídos na oferta. */
     public String getItemsLabel() { return itemsLabel; }
+    /** Indica se a oferta foi obtida do catálogo integrado. */
     public boolean isCatalogOffer() { return catalogOffer; }
+    /** Retorna a URL disponível para a imagem do produto. */
     public String getImageUrl() { return imageUrl; }
+    /** Retorna o nome usado para procurar a imagem do produto. */
     public String getImageSearchName() { return imageSearchName; }
 }

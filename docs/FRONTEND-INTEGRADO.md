@@ -1,74 +1,48 @@
-# Frontend integrado do Cliente
+# Frontend completo da PR #25
 
-## Objetivo e localização
+Esta integração usa os layouts nativos da PR #25 como interface principal do app: apresentação, login, cadastro, Home, ofertas, detalhes, lojas, pontos, perfil, configurações e Lô, com versões clara e escura. Substitui a adaptação parcial da PR #20.
 
-Integrar os elementos visuais úteis da PR #20 à implementação Java/XML existente, sem importar seu controlador de demonstração. Trabalho local na branch `feat/client-ui-integration`, no diretório `worktrees/mobile-cliente-ui-integration`. A base inclui as alterações locais anteriores de autenticação, catálogo, localização e assistente; o checkout anterior foi preservado.
+## Código e navegação
 
-A publicação foi autorizada para a PR #20, na branch remota `feat/client-native-xml`. A adaptação substitui o protótipo por um snapshot funcional, em um commit adicional que preserva o histórico anterior, sem force push. A PR permanece em draft e não será mergeada nesta etapa.
+- MainActivity hospeda os layouts registrados em assets/design_screens.json.
+- Os layouts usam nomes descritivos em inglês com prefixos `fragment_` e `dialog_`; `tools/design-import/layout-names.json` mantém os nomes estáveis entre importações. Os IDs das telas continuam os do Figma para preservar a navegação.
+- DesignScreenFragment cuida da apresentação, links entre telas e histórico.
+- ClientRuntime conecta os componentes do Figma aos ViewModels e repositórios já existentes.
+- Os cards de ofertas e lojas são extraídos dos próprios layouts da PR por tools/bind_figma_templates.py; não são os cards antigos.
+- Os nomes das Activities de login, cadastro, acesso à localização e detalhes permanecem como entradas compatíveis, exibindo o novo frontend.
 
-## O que foi aproveitado e simplificado
+Fluxo de dados: tela do Figma → ClientRuntime → ViewModel → Repository → Firebase Auth / API.
 
-- Fonte DM Sans e sua licença OFL; um único vetor da marca, com cor de texto adaptada ao tema.
-- Paleta clara azul e paleta escura com destaque laranja do novo frontend, aplicadas por recursos Android. Os nomes legados de cores permanecem como aliases de compatibilidade.
-- Cabeçalho compartilhado por include; estilos comuns de botão e campo, com cores de superfície compartilhadas.
-- Cards compactos na Home e cards em grade no Catálogo. Ambos usam OfferAdapter, Offer e o mesmo include de textos. Não há regras de preços ou requisições duplicadas para cada apresentação.
-- A Home passa a usar RecyclerView e oferece acesso ao catálogo completo. O adapter é desacoplado ao destruir a view.
-- Formulários existentes recebem os estilos compartilhados, preservando IDs, máscaras, validações, etapas e troca de conta.
-- Cores de superfícies, texto, chat, navegação e formulários respondem ao modo claro/escuro do sistema.
-- Estados de carregamento, vazio e erro continuam sendo estados das telas reais, com tentativas novamente; não foram importadas dezenas de páginas de demonstração para cada estado.
+## Comportamento real
 
-É uma adaptação dos componentes à arquitetura funcional. Não é uma importação integral dos 115 painéis do protótipo nem uma reprodução visual validada pixel a pixel. Ilustrações e composições exclusivas de cada painel da PR precisam de comparação visual antes de se afirmar equivalência ao Figma.
-
-## Arquitetura mantida
-
-Fluxo: Activity/Fragment → ViewModel → Repository → Retrofit/Firebase Auth.
-
-| Área | Implementação mantida |
+| Área | Integração |
 | --- | --- |
-| Conta | Firebase Auth com e-mail/senha e Google; sincronização do perfil pela API |
-| Sessão | Identidade Firebase vinculada ao perfil SQL; demonstração isolada em debug |
-| Navegação | nav_graph e BottomNavigationView da MainActivity |
-| Ofertas | CatalogViewModel e IDs reais de promoção; imagens recebidas pelo contrato |
-| Lojas | PartnerMapView com Google Maps SDK, posição atual e raio da sessão |
-| Destino da oferta | Google Maps oficial para a unidade anunciada |
-| Pontos/impacto | LoyaltyViewModel e valores fornecidos pela API |
-| Perfil | ProfileViewModel e edição suportada pelo contrato atual |
-| Lô | AssistantViewModel e AssistantRepository |
+| Login | E-mail/senha e Google pelo Firebase; sincronização do perfil SQL antes de liberar conteúdo |
+| Cadastro | Dados pessoais → endereço/ViaCEP → revisão → criação/vínculo do perfil na API |
+| Validação | Máscaras e validação de CPF, telefone, data, CEP, senha, confirmação e UF |
+| Sessão | SessionManager verifica a identidade Firebase e o ID do perfil SQL; o protótipo não concede acesso |
+| Ofertas | CatalogViewModel, busca, paginação, filtro por loja e ID real na abertura dos detalhes |
+| Imagens | Fallback ilustrativo Open Food Facts, independente da autenticação, com atribuição |
+| Lojas | Posição autorizada do aparelho, raio 5/10/15/20 km e marcadores de parceiros no Google Maps SDK |
+| Rotas | Abre o Google Maps oficial para coordenadas/endereço da loja selecionada |
+| Pontos | Saldo e histórico reais; sem criar pontos ou métricas ambientais no Android |
+| Perfil | Leitura/edição suportada pelo contrato da API; informações ausentes não são inventadas |
+| Lô | AssistantViewModel e serviço configurado; indisponibilidade explícita quando não há URL |
 
-Não foram incorporados ScreenFragment, ScreenRepository, roteamento por IDs do Figma, JSONs de demonstração, sessão local fictícia de produção ou mapa OpenStreetMap/WebView. A autorização real não foi substituída pelo protótipo.
+Os formulários de cadastro usam um ViewModel em memória para manter as etapas. CPF, telefone, endereço e senha não são gravados em SharedPreferences. O Firebase mantém a autenticação; a API mantém os dados de negócio.
 
-## Recursos e arquivos
+## Limites preservados
 
-A proposta evita importar o conjunto de aproximadamente 500 arquivos da PR. Foram aproveitados diretamente apenas a fonte, sua licença e o vetor da marca; o restante é adaptação dos layouts existentes e poucos recursos compartilhados. Nenhuma dependência nova foi adicionada para esta integração visual.
+- A prévia de todas as páginas do Figma continua disponível apenas em debug, pelo extra design_preview. Não representa autenticação.
+- O botão Explorar demonstração existe apenas em debug e identifica os dados como fictícios.
+- Foto no Cloudinary, sincronização de alteração de e-mail e entrega de avisos em segundo plano continuam dependendo das integrações pendentes. A interface não confirma uma gravação remota inexistente.
+- A redefinição de senha usa as instruções enviadas pelo Firebase ao e-mail da conta.
+- Categorias, medidas ambientais, horários e distâncias não fornecidos pelo contrato não são inventados. O endpoint atual de promoções permite busca e filtro por loja, mas não um feed geográfico global: a garantia de ordenação/proximidade de todo o feed depende desse contrato na API.
+- A API de perfil atual não devolve todos os dados pessoais; isso limita o preenchimento inicial e a edição isolada do consentimento de comunicação.
+- Login ponta a ponta exige Firebase configurado e API Cliente acessível. As configurações locais privadas não entram no Git.
 
-Esta versão tem 22 layouts no aplicativo, incluindo activities, fragments, itens e includes, e 77 arquivos de recursos no total. Esses números descrevem esta adaptação funcional; não significam que os demais arquivos da PR original fossem todos lixo ou gerados automaticamente.
+## Validação
 
-O lint identificou 15 recursos sem uso: foram removidos cinco drawables e cinco entradas de valores; as cinco strings de navegação existentes passaram a ser usadas pelo menu, eliminando sua duplicação em texto literal. A busca nas fontes confirmou a ausência de referências aos itens removidos.
+Compilar o app, testes unitários e APK instrumentado. Executar UiIntegrationTest para verificar os cards nos dois temas, proteção das rotas sem sessão, cadastro e navegação da demonstração. Os testes visuais do frontend usam a prévia explícita.
 
-Os arquivos privados google-services.json e propriedades locais continuam fora do Git. Cache de build, APK e relatórios não são fontes do app e não devem entrar na PR.
-
-## Verificação
-
-- Compilar com assembleDebug, executar testDebugUnitTest e lintDebug.
-- Compilar também assembleDebugAndroidTest.
-- UiIntegrationTest verifica os tipos/IDs usados pelos controllers, a inflação de telas nos temas claro e escuro e o reaproveitamento dos cards entre modelos.
-- Executar connectedDebugAndroidTest quando houver celular/emulador conectado. Compilar o APK de testes não significa executar esses testes.
-- Conferir visualmente em tela pequena e fonte ampliada: cadastro em duas etapas, cards compactos/grade, mapa, navegação, teclado do chat e modo escuro.
-- Conferir em sessão real a sincronização do perfil e as telas de dados; isso depende de uma API acessível e compatível.
-
-### Resultado local em 27/10/2026
-
-- assembleDebug: aprovado; APK em app/build/outputs/apk/debug/app-debug.apk.
-- testDebugUnitTest: 81 testes, zero falhas, erros ou ignorados.
-- lintDebug: zero erros, 222 avisos e zero recursos apontados como sem uso. Os avisos incluem textos literais, autofill, internacionalização e atualização de dependências; aprovação do lint não significa ausência de avisos.
-- assembleDebugAndroidTest: aprovado, incluindo UiIntegrationTest.
-- Testes instrumentados não executados: adb devices não encontrou aparelho/emulador conectado.
-- git diff --check: aprovado. Configurações privadas continuam ignoradas.
-- Não houve homologação visual no aparelho, comparação completa com o Figma ou teste ponta a ponta contra a API nesta etapa.
-
-## Entrega sugerida, após revisão e autorização
-
-1. Separar as alterações de integração anteriores das alterações estritamente visuais, preservando dependências.
-2. Revisar esta branch local e comparar as telas com o frontend de referência.
-3. Após autorização, publicar poucos commits com prefixos feat/fix e permitir o fluxo de PR acordado com a equipe.
-4. Substituir a PR de protótipo apenas quando a equipe aprovar a adaptação visual; manter o histórico da referência até lá.
+A PR deve ser revisada antes de aprovação/merge. Esta integração não autoriza nem realiza merge na main.

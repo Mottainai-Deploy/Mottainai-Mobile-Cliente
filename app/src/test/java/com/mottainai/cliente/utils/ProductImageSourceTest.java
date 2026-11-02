@@ -6,12 +6,15 @@ import java.util.Collections;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de ProductImageSource. */
 public class ProductImageSourceTest {
+    /** Verifica a imagem de substituição quando a resposta legada não oferece uma foto. */
     @Test public void legacyResponseUsesPlaceholder() {
         assertNull(ProductImageSource.forPromotion(new CatalogPromotion()));
         assertNull(ProductImageSource.forPromotion(null));
     }
 
+    /** Verifica a aceitação somente de URLs HTTPS sem credenciais embutidas. */
     @Test public void onlyHttpsWithoutCredentialsIsAccepted() {
         assertEquals("https://images.example.org/product.jpg", ProductImageSource.httpsUrl(
                 " https://images.example.org/product.jpg "));
@@ -22,6 +25,7 @@ public class ProductImageSourceTest {
         }
     }
 
+    /** Verifica se uma promoção com um produto usa a foto correspondente a ele. */
     @Test public void singleProductUsesItsOwnPhoto() {
         CatalogPromotion promotion = new CatalogPromotion();
         CatalogPromotion.Item product = new CatalogPromotion.Item();
@@ -30,6 +34,7 @@ public class ProductImageSourceTest {
         assertEquals(product.imageUrl, ProductImageSource.forPromotion(promotion));
     }
 
+    /** Verifica a exigência de capa explícita para promoções com vários produtos. */
     @Test public void multipleProductsRequireExplicitCover() {
         CatalogPromotion promotion = new CatalogPromotion();
         CatalogPromotion.Item product = new CatalogPromotion.Item();
@@ -40,6 +45,7 @@ public class ProductImageSourceTest {
         assertEquals(promotion.imageUrl, ProductImageSource.forPromotion(promotion));
     }
 
+    /** Verifica a busca de imagem pelo nome de um único produto conhecido. */
     @Test public void nameLookupUsesOnlyOneKnownProduct() {
         CatalogPromotion promotion = new CatalogPromotion();
         CatalogPromotion.Item item = new CatalogPromotion.Item();
@@ -52,6 +58,7 @@ public class ProductImageSourceTest {
         assertNull(ProductImageSource.searchName(null));
     }
 
+    /** Verifica o tratamento de itens ausentes sem interromper a execução. */
     @Test public void missingItemDoesNotCrash() {
         CatalogPromotion promotion = new CatalogPromotion();
         promotion.items = Collections.singletonList(null);

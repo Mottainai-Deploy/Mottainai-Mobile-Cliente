@@ -32,6 +32,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.*;
 
+/** Conecta as telas nativas do Figma aos repositórios existentes de Firebase e SQL. */
 public final class ClientRuntime {
     private final DesignScreenFragment fragment;
     private final MainActivity host;
@@ -54,12 +55,14 @@ public final class ClientRuntime {
     private boolean passwordBusy;
     private android.os.CancellationSignal googleRequest;
 
+    /** Inicializa ClientRuntime com os dados e as dependências recebidos. */
     public ClientRuntime(DesignScreenFragment fragment,View root,String screen) {
         this.fragment=fragment;this.root=root;this.screen=screen;host=(MainActivity)fragment.requireActivity();
         screenName=DesignRepository.get(host).screen(screen).optString("name");
         flow=new ViewModelProvider(host).get(ClientFlowState.class);
         session=new SessionManager(host);authRepository=new AuthRepository(host);
     }
+    /** Conecta os dados e as ações aos componentes visuais correspondentes. */
     public void bind() {
         collectFields(root);
         hideUnsupportedRadiusOptions(root);
@@ -78,8 +81,11 @@ public final class ClientRuntime {
                 if(pending!=null&&key.equals("E-mail")){field.setText(pending.email);field.setEnabled(false);}
                 if(pending!=null&&key.toLowerCase(Locale.ROOT).contains("senha"))((View)field.getParent().getParent().getParent()).setVisibility(View.GONE);
                 field.addTextChangedListener(new TextWatcher(){
+                    /** Recebe o aviso anterior à alteração do texto; mantém o comportamento previsto pelo observador. */
                     public void beforeTextChanged(CharSequence s,int start,int count,int after){}
+                    /** Recebe a alteração do campo e atualiza o estado associado ao texto. */
                     public void onTextChanged(CharSequence s,int start,int before,int count){flow.registration.put(key,s.toString());}
+                    /** Recebe o fim da edição; o valor já foi preservado durante a alteração do texto. */
                     public void afterTextChanged(Editable value){}
                 });
             }
@@ -110,13 +116,17 @@ public final class ClientRuntime {
         if(screenName.contains("Conversa com a Lô"))bindAssistant();
         if(screen.equals("2143:10917"))bindFilters();
     }
+    /** Identifica se a tela pertence ao fluxo de cadastro. */
     private boolean isRegistration(){return screenName.contains("/ Cadastro /")||screenName.contains("/ Concluir cadastro /");}
+    /** Identifica se a tela apresenta a confirmação dos dados do cadastro. */
     private boolean isReview(){return screen.equals("2143:9630")||screen.equals("2392:19502");}
+    /** Oculta as opções de distância que não fazem parte dos raios permitidos. */
     private void hideUnsupportedRadiusOptions(View view){
         String action=ClientContent.tag(view).optString("action").trim();
         if(action.equals("15 km")||action.equals("20 km")){view.setVisibility(View.GONE);return;}
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)hideUnsupportedRadiusOptions(((ViewGroup)view).getChildAt(i));
     }
+    /** Oculta ou desabilita as alterações de conta que não estão disponíveis. */
     private void hideUnsupportedAccountActions(View view){
         String name=ClientContent.tag(view).optString("name").trim();
         String action=ClientContent.tag(view).optString("action").trim();
@@ -126,7 +136,9 @@ public final class ClientRuntime {
         }
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)hideUnsupportedAccountActions(((ViewGroup)view).getChildAt(i));
     }
+    /** Percorre a interface e associa os campos aos seus identificadores. */
     private void collectFields(View view){if(view instanceof EditText)fields.put(ClientContent.tag(view).optString("field"),(EditText)view);if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)collectFields(((ViewGroup)view).getChildAt(i));}
+    /** Observa o estado da autenticação e atualiza o formulário e o carregamento. */
     private void bindAuth() {
         auth=new ViewModelProvider(fragment).get(AuthViewModel.class);
         auth.state().observe(fragment.getViewLifecycleOwner(),state->{
@@ -152,6 +164,7 @@ public final class ClientRuntime {
         });
         auth.cepError().observe(fragment.getViewLifecycleOwner(),message->{if(message!=null)status(message);});
     }
+    /** Interpreta a ação disparada pelo componente e executa o fluxo correspondente. */
     public boolean act(JSONObject tag,String label) {
         String name=tag.optString("name");
         if(auth!=null&&auth.isBusy()){status("Aguarde a conclusão da solicitação.");return true;}
@@ -164,7 +177,9 @@ public final class ClientRuntime {
             View focused=host.getCurrentFocus();
             if(focused!=null)((android.view.inputmethod.InputMethodManager)host.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(focused.getWindowToken(),0);
             googleRequest=GoogleSignInHelper.signIn(host,new GoogleSignInHelper.Callback(){
+                /** Recebe o token do Google e encaminha a autenticação para o fluxo da conta. */
                 public void onToken(String token){if(active)auth.loginWithGoogle(authRepository,token);}
+                /** Trata a falha recebida e informa o erro ao fluxo responsável. */
                 public void onError(String message){if(active)auth.googleSignInFailed(message);}
             });return true;
         }
@@ -208,16 +223,19 @@ public final class ClientRuntime {
         if(name.startsWith("Mensagem /")||name.equals("Escrever mensagem")||name.equals("Enviar mensagem")||name.equals("Campo / mensagem")){sendChat();return true;}
         return false;
     }
+    /** Envia a imagem pendente e retorna ao perfil quando a URL é salva com sucesso. */
     public void saveProfilePhoto(){
         java.io.File pending=CloudinaryProfilePhoto.pendingFile(host);
         if(!pending.isFile()){notice("Escolha uma foto antes de salvar.");return;}
         if(!CloudinaryProfilePhoto.isConfigured()){notice("Não foi possível enviar a foto agora. Tente novamente mais tarde.");return;}
         notice("Enviando foto…");
         CloudinaryProfilePhoto.upload(host,pending,new CloudinaryProfilePhoto.Result(){
+            /** Recebe o resultado bem-sucedido e dá continuidade à operação solicitada. */
             public void onSuccess(String secureUrl){
                 if(!active)return;
                 ProfileViewModel photoProfile=new ViewModelProvider(fragment).get(ProfileViewModel.class);
                 photoProfile.saveAvatar(secureUrl,new ProfileViewModel.SaveResult(){
+                    /** Recebe o resultado bem-sucedido e dá continuidade à operação solicitada. */
                     public void success(CustomerProfileResponse saved){
                         if(!active)return;
                         CloudinaryProfilePhoto.saveUrl(host,secureUrl);
@@ -226,18 +244,27 @@ public final class ClientRuntime {
                         notice("Foto atualizada.");
                         host.showScreen("2022:4219",false);
                     }
+                    /** Trata a falha recebida e informa o erro ao fluxo responsável. */
                     public void error(String message){if(active)notice("A foto foi enviada, mas não foi possível vinculá-la ao perfil. Tente novamente.");}
                 });
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             public void onFailure(){if(active)notice("Não foi possível enviar a foto agora. Confira sua conexão e tente novamente.");}
         });
     }
+    /** Reavalia a permissão e a localização do aparelho para escolher a próxima tela. */
     public void locationResult(){host.showScreen(!ClientAccessGuard.hasLocationPermission(host)?"2557:30344":!ClientAccessGuard.isLocationEnabled(host)?"2557:30376":"2005:3812",false);}
+    /** Lê o valor do campo ou recupera o valor preservado no estado do formulário. */
     private String value(String label){EditText field=fields.get(label);return field!=null?field.getText().toString():flow.registration.getOrDefault(label,"");}
+    /** Preenche o campo indicado com o valor informado. */
     private void setField(String label,String value){EditText field=fields.get(label);if(field!=null)field.setText(value==null?"":value);}
+    /** Trata a falha recebida e informa o erro ao fluxo responsável. */
     private boolean error(String label,String message){EditText field=fields.get(label);if(field!=null)DesignFormControls.error(field,message);else status(message);return false;}
+    /** Confere o preenchimento obrigatório e sinaliza o campo vazio. */
     private boolean required(String label){return !value(label).trim().isEmpty()||error(label,"Preencha este campo");}
+    /** Valida o formato e o tamanho do endereço de e-mail. */
     private boolean validEmail(String label){return Patterns.EMAIL_ADDRESS.matcher(value(label).trim()).matches()&&value(label).length()<=150||error(label,"Informe um e-mail válido.");}
+    /** Valida os dados pessoais antes de avançar no cadastro. */
     private boolean validatePersonal(){
         if(value("Nome completo").trim().isEmpty()||value("Nome completo").length()>150)return error("Nome completo","Informe seu nome (até 150 caracteres).");
         if(!CpfValidator.isValid(RegistrationFields.digits(value("CPF"))))return error("CPF","Confira os dígitos do CPF.");
@@ -249,24 +276,30 @@ public final class ClientRuntime {
             if(!password.equals(value("Confirmar senha")))return error("Confirmar senha","As senhas precisam ser iguais.");
         }return true;
     }
+    /** Valida os campos do endereço antes de confirmar o cadastro. */
     private boolean validateAddress(){
         if(RegistrationFields.digits(value("CEP")).length()!=8)return error("CEP","Informe os 8 dígitos do CEP.");
         for(String label:new String[]{"Rua","Número","Bairro","Cidade"})if(!required(label))return false;
         if(!Arrays.asList("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO").contains(value("UF").trim().toUpperCase(Locale.ROOT)))return error("UF","Informe uma UF válida.");
         return true;
     }
+    /** Monta os dados pessoais e o endereço que serão enviados no cadastro. */
     private CreateCustomerRequest registrationRequest(){
         if(!validatePersonal()||!validateAddress()){status("Revise os dados pessoais e o endereço antes de concluir.");return null;}
         return new CreateCustomerRequest(value("Nome completo").trim(),RegistrationFields.digits(value("CPF")),value("E-mail").trim(),value("Senha"),
                 RegistrationFields.phoneDigits(value("Telefone")),RegistrationFields.birthDateIso(value("Data de nascimento (opcional)")),flow.marketing,
                 new CreateAddressRequest(RegistrationFields.digits(value("CEP")),value("Rua").trim(),value("Número").trim(),value("Complemento (opcional)").trim(),value("Bairro").trim(),value("Cidade").trim(),value("UF").trim().toUpperCase(Locale.ROOT)));
     }
+    /** Preenche a confirmação do cadastro com os dados informados nas etapas anteriores. */
     private void bindReview(){
         text(root,"customerName",value("Nome completo"));text(root,"customerEmail",value("E-mail"));text(root,"customerPhone",value("Telefone"));
         text(root,"reviewStreet",value("Rua")+", "+value("Número"));text(root,"reviewCity",value("Bairro")+", "+value("Cidade")+" — "+value("UF"));text(root,"reviewZip","CEP "+value("CEP"));
     }
+    /** Obtém o estado compartilhado das consultas do catálogo. */
     private CatalogViewModel catalog(){if(catalog==null)catalog=new ViewModelProvider(host).get(CatalogViewModel.class);return catalog;}
+    /** Obtém o estado compartilhado da conversa com a assistente. */
     private AssistantViewModel assistant(){if(assistant==null)assistant=new ViewModelProvider(host).get(AssistantViewModel.class);return assistant;}
+    /** Valida os campos e solicita a alteração da senha da conta autenticada. */
     private void changePassword(){
         if(passwordBusy)return;
         com.google.firebase.auth.FirebaseAuth firebase=FirebaseSupport.authIfConfigured(host);
@@ -291,6 +324,7 @@ public final class ClientRuntime {
             });
         });
     }
+    /** Apresenta a região e o raio utilizados na busca por lojas próximas. */
     private void bindLocation(){
         View region=ClientContent.find(root,"Localização / Região de busca");
         if(region==null)return;
@@ -309,6 +343,7 @@ public final class ClientRuntime {
         });
         if(catalog().location().getValue()==null)catalog().requestLocation();
     }
+    /** Formata a distância selecionada para apresentá-la ao usuário. */
     private String selectedRadius(){
         android.content.SharedPreferences preferences=host.getSharedPreferences("cliente_preferences",0);
         String saved=preferences.getString("radius","5 km");
@@ -317,6 +352,7 @@ public final class ClientRuntime {
         preferences.edit().putString("radius",allowed).apply();
         return allowed;
     }
+    /** Conecta a busca de produtos ao campo dentro da tela de ofertas. */
     private void bindInlineSearch(){
         View trigger=ClientContent.find(root,"Buscar produtos");if(trigger==null||!(trigger.getParent() instanceof ViewGroup))return;
         ViewGroup parent=(ViewGroup)trigger.getParent();EditText search=new EditText(host);search.setSingleLine(true);search.setHint("Buscar produtos");search.setText(catalog().promotionQuery());search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);search.setVisibility(View.GONE);parent.addView(search,parent.indexOfChild(trigger)+1,new ViewGroup.LayoutParams(-1,-2));
@@ -324,11 +360,13 @@ public final class ClientRuntime {
         if(flow.openSearch){flow.openSearch=false;trigger.post(()->{if(active)trigger.performClick();});}
         search.setOnEditorActionListener((v,action,event)->{if(action!=EditorInfo.IME_ACTION_SEARCH)return false;catalog().loadPromotions(0,catalog().promotionStoreId(),search.getText().toString());((android.view.inputmethod.InputMethodManager)host.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(),0);return true;});
     }
+    /** Apresenta os dados de identificação do perfil nos componentes da tela. */
     private void bindIdentity(){
         com.google.firebase.auth.FirebaseAuth firebase=FirebaseSupport.authIfConfigured(host);
         String email=firebase==null||firebase.getCurrentUser()==null?"":firebase.getCurrentUser().getEmail();
         text(root,"customerName","Seu perfil");text(root,"customerEmail",email==null?"":email);text(root,"customerPhone","");text(root,"greeting","Olá!");
     }
+    /** Observa as promoções e atualiza a lista e seus estados de carregamento. */
     private void bindPromotions(){
         View slot=ClientContent.find(root,screen.equals("2005:3812")?"Ofertas / Lista compacta":"Ofertas / Grade compacta");
         if(!(slot instanceof LinearLayout))return;
@@ -352,11 +390,13 @@ public final class ClientRuntime {
         });
         if(catalog().promotions().getValue()==null)catalog().loadPromotions(0,null,"");
     }
+    /** Cria o componente visual de uma oferta para a lista solicitada. */
     private View offerCard(CatalogPromotion promotion,boolean compact,ViewGroup parent){
         View card=LayoutInflater.from(host).inflate(compact?R.layout.design_item_offer_compact:R.layout.design_item_offer_grid,parent,false);
         disableChildActions(card);bindOffer(card,promotion);card.setClickable(true);card.setFocusable(true);card.setContentDescription(promotion.name);
         card.setOnClickListener(v->{flow.promotionId=promotion.id;flow.store=promotion.store;host.showScreen("2005:4104",true);});return card;
     }
+    /** Preenche o cartão com os preços e as informações da promoção. */
     private void bindOffer(View card,CatalogPromotion promotion){
         Offer offer=new Offer(promotion);String storeName=offer.getStoreName();boolean distinctStore=storeName!=null&&!storeName.trim().equalsIgnoreCase(offer.getTitle().trim());text(card,"title",offer.getTitle());text(card,"store",distinctStore?storeName:"");text(card,"storeDistance","");
         text(card,"description",offer.getDescription());text(card,"expiry",promotion.endsAt==null?"Prazo não informado":"Até "+dateTime(promotion.endsAt));text(card,"period",period(promotion));
@@ -382,15 +422,18 @@ public final class ClientRuntime {
             ImageView image=new ImageView(host);image.setContentDescription(offer.getTitle());image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);box.addView(image,new ViewGroup.LayoutParams(-1,imageHeight));
             ProductImages.load(image,offer,null);}
     }
+    /** Formata o intervalo de vigência da promoção para exibição. */
     private String period(CatalogPromotion p){
         if(p.startsAt==null||p.startsAt.trim().isEmpty())return p.endsAt==null?"Período não informado":"Até "+dateTime(p.endsAt);
         if(p.endsAt==null||p.endsAt.trim().isEmpty())return "A partir de "+dateTime(p.startsAt);
         return dateTime(p.startsAt)+" até "+dateTime(p.endsAt);
     }
+    /** Converte a data recebida para uma apresentação legível ao usuário. */
     private String dateTime(String value){
         try{return java.time.LocalDateTime.parse(value).format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm",Locale.forLanguageTag("pt-BR")));}
         catch(java.time.format.DateTimeParseException ignored){return value.replace('T',' ').replaceAll("\\.\\d+$","");}
     }
+    /** Carrega e apresenta os detalhes da promoção selecionada. */
     private void bindPromotionDetail(){
         if(flow.promotionId==null)flow.promotionId=host.getIntent().getStringExtra("offer_id");
         clearOfferFixtures();
@@ -401,8 +444,10 @@ public final class ClientRuntime {
             if(state.status==LoadState.Status.SUCCESS&&state.data!=null){hideStatus();flow.store=state.data.store;bindOffer(root,state.data);status(new Offer(state.data).getItemsLabel());}
         });catalog().loadPromotion(flow.promotionId);
     }
+    /** Limpa os textos de exemplo antes de preencher os detalhes reais da oferta. */
     private void clearOfferFixtures(){for(String key:new String[]{"title","store","storeDistance","price","originalPrice","description","discount","distance","expiry","period","pickup","address"})text(root,key,"");
         View image=ClientContent.find(root,"Produto / cesta hortifruti");if(image instanceof ViewGroup)((ViewGroup)image).removeAllViews();}
+    /** Observa as lojas e atualiza os componentes da listagem e do mapa. */
     private void bindStores(){
         View slot=ClientContent.find(root,"Lojas / Mercados próximos");if(!(slot instanceof LinearLayout))return;
         LinearLayout list=(LinearLayout)slot;
@@ -428,6 +473,7 @@ public final class ClientRuntime {
         int radius=Integer.parseInt(selectedRadius().split(" ")[0]);catalog().useStoreRadius(OfferRadius.fromKilometers(radius));
         if(catalog().stores().getValue()==null)catalog().requestLocation();
     }
+    /** Apresenta os dados da loja selecionada na tela de detalhes. */
     private void bindStoreDetail(){
         text(root,"store","");text(root,"address","");text(root,"region","");
         if(flow.store==null){status("Selecione uma loja na lista ou no mapa.");return;}
@@ -438,6 +484,7 @@ public final class ClientRuntime {
             else {flow.store=null;status(result.message);}
         });
     }
+    /** Observa os dados de fidelidade e preenche o saldo e o status do cliente. */
     private void bindPoints(){
         LoyaltyViewModel points=new ViewModelProvider(host).get(LoyaltyViewModel.class);
         View slot=ClientContent.find(root,"Fidelidade / Saldo confirmado");
@@ -448,6 +495,7 @@ public final class ClientRuntime {
                 if(state.status==LoadState.Status.ERROR){group.addView(label(state.message));button(group,"Tentar novamente",points::loadAccount);}}
         });if(points.account().getValue()==null)points.loadAccount();
     }
+    /** Apresenta os lançamentos recebidos no histórico de pontos. */
     private void bindHistory(){
         LoyaltyViewModel points=new ViewModelProvider(host).get(LoyaltyViewModel.class);ViewGroup list=body();if(list==null)return;
         points.transactions().observe(fragment.getViewLifecycleOwner(),state->{if(state==null||expired(state.httpStatus))return;list.removeAllViews();
@@ -458,6 +506,7 @@ public final class ClientRuntime {
                 for(LoyaltyTransaction item:state.data)list.addView(label((item.description==null?"Movimentação de fidelidade":item.description)+"\n"+LoyaltyPresentation.points(item.points)+" · "+(item.createdAt==null?"":item.createdAt)));}
         });if(points.transactions().getValue()==null)points.loadRecentTransactions();
     }
+    /** Carrega o perfil e preenche os componentes de identificação e edição. */
     private void bindProfile(){
         profile=new ViewModelProvider(fragment).get(ProfileViewModel.class);
         profile.state().observe(fragment.getViewLifecycleOwner(),state->{
@@ -471,6 +520,7 @@ public final class ClientRuntime {
                 if("Perfil atualizado.".equals(state.message))status("Dados atualizados.");}}
         });profile.load();
     }
+    /** Valida os campos e solicita a persistência das alterações do perfil. */
     private void saveProfile(){
         if(profile==null){status("Aguarde o carregamento do perfil.");return;}
         ProfileViewModel.State state=profile.state().getValue();
@@ -480,12 +530,14 @@ public final class ClientRuntime {
         if(!RegistrationFields.validPhone(phone)){status("Informe um telefone válido com DDD nos dados pessoais.");return;}
         profile.save(new UpdateFirebaseCustomerProfileRequest(name,RegistrationFields.phoneDigits(phone),flow.marketing));
     }
+    /** Prepara os filtros de ofertas e observa as lojas disponíveis. */
     private void bindFilters(){
         View found=ClientContent.find(root,"Ofertas / Filtro por loja");ViewGroup list=found instanceof ViewGroup?(ViewGroup)found:null;if(list==null)return;
         catalog().stores().observe(fragment.getViewLifecycleOwner(),state->renderFilters(list,state));
         LoadState<CatalogPage<CatalogStore>> stores=catalog().stores().getValue();
         if(stores==null)catalog().requestLocation();else renderFilters(list,stores);
     }
+    /** Preenche o seletor de lojas com os resultados disponíveis. */
     private void renderFilters(ViewGroup list,LoadState<CatalogPage<CatalogStore>> stores){
         list.removeAllViews();list.addView(label("Filtrar por loja"));button(list,"Todas as lojas",()->{catalog().loadPromotions(0,null,"");host.showScreen("2005:3914",true);});
         if(stores==null||stores.status==LoadState.Status.LOADING){list.addView(label("Carregando lojas…"));return;}
@@ -493,6 +545,7 @@ public final class ClientRuntime {
         if(stores.data==null||stores.data.content==null||stores.data.content.isEmpty()){list.addView(label("Nenhuma loja encontrada perto de você."));return;}
         for(CatalogStore store:stores.data.content)if(store!=null&&store.id!=null)button(list,store.name==null?"Loja parceira":store.name,()->{catalog().loadPromotions(0,store.id,"");host.showScreen("2005:3914",true);});
     }
+    /** Conecta a conversa aos estados e às respostas da assistente. */
     private void bindAssistant(){
         AssistantViewModel model=assistant();
         if(screen.equals("2557:30504")){View found=ClientContent.find(root,"Histórico / Conteúdo");ViewGroup list=found instanceof ViewGroup?(ViewGroup)found:null;if(list==null)return;list.removeAllViews();
@@ -506,14 +559,22 @@ public final class ClientRuntime {
             if(state.status==LoadState.Status.SUCCESS&&(state.data==null||state.data.isEmpty()))messages.addView(label("Olá! Como posso ajudar?"));
         });
     }
+    /** Lê a mensagem digitada e solicita seu envio para a assistente. */
     public void sendChat(){EditText composer=fields.get("Mensagem");if(composer==null)return;String message=composer.getText().toString().trim();if(message.isEmpty())return;
         if(assistant().send(message))composer.setText("");else status(assistant().isBusy()?"Aguarde a resposta anterior.":"O assistente está indisponível. Sua mensagem não foi enviada.");}
+    /** Preenche a mensagem com a sugestão selecionada e inicia o envio. */
     private void sendSuggestion(String message){setField("Mensagem",message);sendChat();}
+    /** Reconhece a sessão expirada, limpa o acesso e encaminha para o login. */
     private boolean expired(int status){if(status!=401)return false;session.clearClientSession();host.showScreen("2028:4492",false);return true;}
+    /** Obtém ou atualiza o texto utilizado pelo componente neste fluxo. */
     private void text(View parent,String binding,String value){if(ClientContent.tag(parent).optString("binding").equals(binding)&&parent instanceof TextView){TextView text=(TextView)parent;text.setText(value==null?"":value);text.setVisibility(value==null||value.isEmpty()?View.GONE:View.VISIBLE);}if(parent instanceof ViewGroup)for(int i=0;i<((ViewGroup)parent).getChildCount();i++)text(((ViewGroup)parent).getChildAt(i),binding,value);}
+    /** Desabilita recursivamente as ações dos componentes filhos. */
     private void disableChildActions(View view){view.setOnClickListener(null);view.setClickable(false);view.setFocusable(false);if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)disableChildActions(((ViewGroup)view).getChildAt(i));}
+    /** Cria o texto de apresentação utilizado pelo componente. */
     private TextView label(String value){return ClientContent.label(host,value==null?"Não foi possível carregar os dados.":value,16);}
+    /** Localiza o contêiner que recebe o conteúdo dinâmico da tela. */
     private ViewGroup body(){View scroll=root.findViewById(R.id.design_scroll);if(scroll instanceof ViewGroup&&((ViewGroup)scroll).getChildCount()>0&&((ViewGroup)scroll).getChildAt(0) instanceof ViewGroup)return (ViewGroup)((ViewGroup)scroll).getChildAt(0);if(root instanceof ViewGroup&&((ViewGroup)root).getChildCount()>0&&((ViewGroup)root).getChildAt(0) instanceof LinearLayout)return (ViewGroup)((ViewGroup)root).getChildAt(0);return root instanceof ViewGroup?(ViewGroup)root:null;}
+    /** Habilita ou bloqueia as ações do formulário durante a autenticação. */
     private void setAuthActionsEnabled(View view,boolean enabled){
         String action=ClientContent.tag(view).optString("action").trim();
         if(Arrays.asList("Entrar","Continuar com Google","Confirmar com Google","Criar conta","Continuar","Revisar cadastro","Enviar link").contains(action)){
@@ -521,6 +582,7 @@ public final class ClientRuntime {
         }
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)setAuthActionsEnabled(((ViewGroup)view).getChildAt(i),enabled);
     }
+    /** Mostra ou oculta o carregamento explícito da autenticação e do cadastro. */
     private void renderAuthLoading(AuthViewModel.State state){
         boolean busy=auth!=null&&auth.isBusy();
         if(!busy){if(authLoading!=null)authLoading.setVisibility(View.GONE);return;}
@@ -552,6 +614,7 @@ public final class ClientRuntime {
                 :"Estamos entrando na sua conta…";
         authLoadingMessage.setText(message);authLoading.setVisibility(View.VISIBLE);
     }
+    /** Procura na hierarquia o componente associado à ação solicitada. */
     private View findAction(View view,String expected){
         if(ClientContent.tag(view).optString("action").trim().equals(expected))return view;
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++){
@@ -560,6 +623,7 @@ public final class ClientRuntime {
         }
         return null;
     }
+    /** Apresenta a mensagem de estado da operação na interface. */
     private void status(String message){
         if(message==null||message.isEmpty())return;
         ViewGroup parent=body();if(parent==null)return;
@@ -573,19 +637,29 @@ public final class ClientRuntime {
         feedback.setText(message);feedback.setVisibility(View.VISIBLE);
         if(auth!=null)feedback.post(()->{if(active)feedback.requestRectangleOnScreen(new android.graphics.Rect(0,0,feedback.getWidth(),feedback.getHeight()),false);});
     }
+    /** Oculta a mensagem de estado que deixou de ser necessária. */
     private void hideStatus(){if(feedback!=null)feedback.setVisibility(View.GONE);}
+    /** Exibe um aviso breve pelo componente nativo do Android. */
     private void notice(String message){android.widget.Toast.makeText(host,message,android.widget.Toast.LENGTH_SHORT).show();}
+    /** Adiciona um botão ao contêiner e associa a ação ao toque. */
     private void button(ViewGroup parent,String value,Runnable action){if(parent==null)return;TextView button=label(value);button.setGravity(android.view.Gravity.CENTER);button.setMinHeight(dp(48));button.setTextColor(androidx.core.content.ContextCompat.getColor(host,R.color.design_on_primary));button.setBackgroundResource(R.drawable.design_02b1e49a85b6);button.setPadding(dp(16),dp(12),dp(16),dp(12));button.setClickable(true);button.setFocusable(true);button.setOnClickListener(v->action.run());LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(12);parent.addView(button,lp);}
+    /** Formata o valor monetário no padrão brasileiro. */
     private String money(BigDecimal value){return NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR")).format(value);}
+    /** Converte a medida independente de densidade para pixels do aparelho. */
     private int dp(int value){return Math.round(value*host.getResources().getDisplayMetrics().density);}
+    /** Ativa os recursos que acompanham a exibição da tela. */
     public void start(){if(map!=null)map.startMap();}
+    /** Retoma os recursos da tela e atualiza os dados necessários ao voltar para ela. */
     public void resume(){
         if(!ClientRoutes.isPublic(screenName)&&!session.canBrowse()){host.showScreen("2028:4492",false);return;}
         if(!ClientRoutes.isPublic(screenName)&&!ClientRoutes.isLocationAccess(screenName)&&!session.isDemoMode()
             &&(!ClientAccessGuard.hasLocationPermission(host)||!ClientAccessGuard.isLocationEnabled(host))){host.showScreen("2557:30312",false);return;}
         if(map!=null)map.resumeMap();
     }
+    /** Pausa os recursos associados à tela quando ela perde o foco. */
     public void pause(){if(map!=null)map.pauseMap();}
+    /** Interrompe os recursos visuais enquanto a tela não está visível. */
     public void stop(){if(map!=null)map.stopMap();}
+    /** Libera os recursos da tela e remove referências que não devem sobreviver à interface. */
     public void destroy(){active=false;if(googleRequest!=null){if(auth!=null)auth.googleSignInFailed("Seleção da conta interrompida. Tente novamente.");googleRequest.cancel();googleRequest=null;}if(map!=null){map.releaseMap();map=null;}fields.clear();}
 }

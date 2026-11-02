@@ -12,9 +12,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.mottainai.cliente.design.DesignRepository;
 import com.mottainai.cliente.fragments.DesignScreenFragment;
 
+/** Centraliza a navegação do aplicativo e mantém a preferência persistente de tema claro/escuro. */
 public class MainActivity extends AppCompatActivity {
     private static final String PREFS="cliente_preferences";
     private boolean artworkFullBleed;
+    /** Inicializa a tela, recupera seu estado e prepara a navegação de entrada. */
     @Override protected void onCreate(Bundle state) {
         AppCompatDelegate.setDefaultNightMode(getSharedPreferences(PREFS,MODE_PRIVATE).getInt("theme",AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM));
         super.onCreate(state);
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             showScreen(requested!=null?requested:initial,false);
         }
     }
+    /** Exibe a tela solicitada e organiza a navegação e os painéis sobrepostos. */
     public void showScreen(String id, boolean history) {
         DesignRepository repository=DesignRepository.get(this);
         if(!repository.available(id))return;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
         transaction.commit();
     }
+    /** Retoma os recursos da tela e atualiza os dados necessários ao voltar para ela. */
     @Override protected void onResume() {
         super.onResume();
         if(isDesignPreview())return;
@@ -110,16 +114,20 @@ public class MainActivity extends AppCompatActivity {
                 &&com.mottainai.cliente.utils.ClientAccessGuard.hasLocationPermission(this)
                 &&com.mottainai.cliente.utils.ClientAccessGuard.isLocationEnabled(this))showScreen("2005:3812",false);
     }
+    /** Abre o início após verificar os requisitos de acesso do cliente. */
     public void openAuthenticatedHome() {
         startActivity(new android.content.Intent(this,MainActivity.class).putExtra("screen","2005:3812")
                 .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK|android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();
     }
+    /** Retorna o identificador da tela atualmente exibida. */
     public androidx.fragment.app.Fragment currentScreen() {
         androidx.fragment.app.Fragment overlay=getSupportFragmentManager().findFragmentById(R.id.design_overlay);
         return overlay!=null?overlay:getSupportFragmentManager().findFragmentById(R.id.design_content);
     }
+    /** Indica se a execução atual está no modo de prévia das telas. */
     public boolean isDesignPreview() { return BuildConfig.DEBUG&&getIntent().getBooleanExtra("design_preview",false); }
+    /** Retorna a tela que permanece abaixo do painel sobreposto. */
     private String overlayBase(String id) {
         String name=DesignRepository.get(this).screen(id).optString("name");
         if(name.contains("Foto do perfil"))return "2022:4219";
@@ -130,16 +138,19 @@ public class MainActivity extends AppCompatActivity {
         if(name.contains("Cadastro"))return "2143:9538";
         return "2005:3812";
     }
+    /** Aplica a preferência de aparência à interface. */
     public void setAppearance(boolean dark) {
         int mode=dark?AppCompatDelegate.MODE_NIGHT_YES:AppCompatDelegate.MODE_NIGHT_NO;
         getSharedPreferences(PREFS,MODE_PRIVATE).edit().putInt("theme",mode).apply();
         AppCompatDelegate.setDefaultNightMode(mode);
     }
+    /** Define se a arte deve ocupar toda a área disponível na tela. */
     public void setArtworkFullBleed(boolean fullBleed) {
         artworkFullBleed=fullBleed;
         if(fullBleed)findViewById(R.id.design_content).setPadding(0,0,0,0);
         ViewCompat.requestApplyInsets(findViewById(R.id.design_content));
     }
+    /** Atualiza o estado de demonstração usado pelo fluxo de navegação. */
     public void setDemoSession(boolean active) {
         getSharedPreferences(PREFS,MODE_PRIVATE).edit().putBoolean("demo_session",active).apply();
     }

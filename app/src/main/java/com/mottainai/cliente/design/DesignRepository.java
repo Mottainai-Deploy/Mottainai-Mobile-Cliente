@@ -11,14 +11,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Definições das telas nativas e links do protótipo, incluídos para uso offline. */
 public final class DesignRepository {
     private static DesignRepository instance;
     private final JSONObject screens;
     private final Map<String, JSONObject> links = new HashMap<>();
+    /** Obtém o recurso solicitado usando a instância disponível para o contexto. */
     public static synchronized DesignRepository get(Context context) {
         if(instance==null) instance=new DesignRepository(context.getApplicationContext());
         return instance;
     }
+    /** Inicializa DesignRepository com os dados e as dependências recebidos. */
     private DesignRepository(Context context) {
         try {
             screens=new JSONObject(read(context,"design_screens.json"));
@@ -29,6 +32,7 @@ public final class DesignRepository {
             }
         } catch(IOException|JSONException e) { throw new IllegalStateException(e); }
     }
+    /** Lê os dados locais que descrevem as telas do aplicativo. */
     private static String read(Context context,String asset) throws IOException {
         try(InputStream stream=context.getAssets().open(asset)) {
             ByteArrayOutputStream bytes=new ByteArrayOutputStream();
@@ -38,12 +42,16 @@ public final class DesignRepository {
             return new String(bytes.toByteArray(),StandardCharsets.UTF_8);
         }
     }
+    /** Obtém a descrição da tela pelo seu identificador. */
     public JSONObject screen(String id) { return screens.optJSONObject(id); }
+    /** Resolve o identificador usado como referência principal da tela. */
     public String canonical(String id) {
         JSONObject screen=screen(id);
         return screen==null?id:screen.optString("canonical",id);
     }
+    /** Resolve o destino de navegação associado ao componente. */
     public JSONObject link(String id) { return links.get(id); }
+    /** Obtém a ação de navegação ou interação associada ao componente. */
     public JSONObject action(String screenId,String nodeId,String name,String label) {
         JSONObject exact=links.get(nodeId);
         if(exact!=null) return exact;
@@ -61,5 +69,6 @@ public final class DesignRepository {
         }
         return null;
     }
+    /** Verifica se o recurso solicitado está disponível no repositório de telas. */
     public boolean available(String id) { return screens.has(id); }
 }

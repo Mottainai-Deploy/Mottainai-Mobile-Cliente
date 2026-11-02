@@ -13,8 +13,11 @@ import com.mottainai.cliente.R;
 import com.mottainai.cliente.fragments.DesignScreenFragment;
 import org.json.JSONObject;
 
+/** Estados vazios de produção quando a API do Cliente está indisponível. Dados do Figma ficam apenas nas prévias visuais. */
 public final class ClientContent {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private ClientContent(){}
+    /** Conecta os dados e as ações aos componentes visuais correspondentes. */
     public static void bind(DesignScreenFragment fragment,View root,String screen,SharedPreferences prefs) {
         replace(root,"Ofertas / Lista compacta",R.string.design_offers_empty);
         replace(root,"Ofertas / Grade compacta",R.string.design_offers_empty);
@@ -36,6 +39,7 @@ public final class ClientContent {
         }
         update(root,prefs,screen);
     }
+    /** Atualiza o conteúdo visual com os dados recebidos. */
     private static void update(View view,SharedPreferences prefs,String screen) {
         JSONObject tag=tag(view);String action=tag.optString("action").trim();
         if(action.equals("Compartilhar")||action.equals("Mercado da Praça"))view.setVisibility(View.GONE);
@@ -67,13 +71,19 @@ public final class ClientContent {
         if(view instanceof EditText&&tag.optString("field").equals("Busca")&&screen.equals("2413:31330"))((EditText)view).setText(prefs.getString("search_query",""));
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)update(((ViewGroup)view).getChildAt(i),prefs,screen);
     }
+    /** Substitui o conteúdo de exemplo pelo componente dinâmico correspondente. */
     private static void replace(View root,String name,int message) {
         View view=find(root,name);
         if(view instanceof ViewGroup){ViewGroup group=(ViewGroup)view;group.removeAllViews();group.addView(label(root.getContext(),root.getContext().getString(message),16));}
     }
+    /** Oculta o componente indicado na hierarquia visual. */
     private static void hide(View root,String name){View v=find(root,name);if(v!=null)v.setVisibility(View.GONE);}
+    /** Localiza o elemento ou resultado correspondente aos critérios informados. */
     public static View find(View root,String name){if(tag(root).optString("name").equals(name))return root;if(root instanceof ViewGroup)for(int i=0;i<((ViewGroup)root).getChildCount();i++){View v=find(((ViewGroup)root).getChildAt(i),name);if(v!=null)return v;}return null;}
+    /** Lê os metadados usados para identificar e conectar o componente da tela. */
     public static JSONObject tag(View view){try{return new JSONObject(String.valueOf(view.getTag()));}catch(Exception ignored){return new JSONObject();}}
+    /** Cria o texto de apresentação utilizado pelo componente. */
     public static TextView label(Context context,String text,int size){TextView label=new TextView(context);label.setText(text);label.setTextSize(size);label.setTextColor(ContextCompat.getColor(context,R.color.design_text));label.setTypeface(androidx.core.content.res.ResourcesCompat.getFont(context,R.font.dm_sans));label.setFontVariationSettings("'wght' 400, 'opsz' 14");label.setPadding(0,dp(context,12),0,dp(context,12));label.setLayoutParams(new ViewGroup.LayoutParams(-1,-2));return label;}
+    /** Converte a medida independente de densidade para pixels do aparelho. */
     private static int dp(Context c,int value){return Math.round(c.getResources().getDisplayMetrics().density*value);}
 }

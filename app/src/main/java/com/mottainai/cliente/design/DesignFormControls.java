@@ -16,8 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mottainai.cliente.R;
 
+/** Visibilidade nativa de senha e validação em linha, inclusive com o teclado visível. */
 public final class DesignFormControls {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private DesignFormControls() {}
+    /** Configura os campos e seus controles de entrada antes da interação. */
     public static void prepare(EditText input, boolean password) {
         Context context=input.getContext();
         ViewGroup parent=(ViewGroup)input.getParent();
@@ -56,11 +59,15 @@ public final class DesignFormControls {
         error.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         wrapper.addView(error,new LinearLayout.LayoutParams(-1,-2));
         input.addTextChangedListener(new TextWatcher(){
+            /** Recebe o aviso anterior à alteração do texto; mantém o comportamento previsto pelo observador. */
             public void beforeTextChanged(CharSequence s,int start,int count,int after){}
+            /** Recebe a alteração do campo e atualiza o estado associado ao texto. */
             public void onTextChanged(CharSequence s,int start,int before,int count){error.setVisibility(View.GONE);}
+            /** Processa o texto final do campo após a edição do usuário. */
             public void afterTextChanged(Editable s){}
         });
     }
+    /** Trata a falha recebida e informa o erro ao fluxo responsável. */
     public static void error(EditText field,String message) {
         ViewGroup wrapper=(ViewGroup)field.getParent().getParent();
         TextView error=wrapper.findViewById(R.id.design_field_error);
@@ -68,5 +75,6 @@ public final class DesignFormControls {
         field.requestFocus();
         field.post(()->field.requestRectangleOnScreen(new android.graphics.Rect(0,0,field.getWidth(),field.getHeight()+dp(field.getContext(),40)),false));
     }
+    /** Converte a medida independente de densidade para pixels do aparelho. */
     private static int dp(Context c,int value){return Math.round(value*c.getResources().getDisplayMetrics().density);}
 }

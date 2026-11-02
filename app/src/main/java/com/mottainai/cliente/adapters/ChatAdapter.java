@@ -18,38 +18,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** Representa ChatAdapter, responsável por a apresentação dos itens em uma lista. */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_BOT = 0;
     private static final int TYPE_USER = 1;
     private static final int TYPE_OFFER_CARD = 2;
 
+    /** Define o contrato de OnOfferCardClickListener, responsável por a apresentação dos itens em uma lista. */
     public interface OnOfferCardClickListener {
+        /** Notifica a seleção da oferta para abrir seus detalhes. */
         void onOfferCardClick(Offer offer);
     }
 
     private final List<ChatMessage> messages = new ArrayList<>();
     private final OnOfferCardClickListener listener;
 
+    /** Inicializa ChatAdapter com os dados e as dependências recebidos. */
     public ChatAdapter(OnOfferCardClickListener listener) {
         this.listener = listener;
     }
 
+    /** Adiciona uma mensagem à lista da conversa. */
     public void addMessage(ChatMessage message) {
         messages.add(message);
         notifyItemInserted(messages.size() - 1);
     }
 
+    /** Retorna a quantidade de mensagens da conversa. */
     public int getMessageCount() {
         return messages.size();
     }
 
+    /** Substitui as mensagens apresentadas na conversa. */
     public void setMessages(List<ChatMessage> snapshot) {
         messages.clear();
         if (snapshot != null) messages.addAll(snapshot);
         notifyDataSetChanged();
     }
 
+    /** Identifica o tipo de componente necessário para apresentar a mensagem. */
     @Override
     public int getItemViewType(int position) {
         ChatMessage message = messages.get(position);
@@ -59,6 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return message.getSender() == ChatMessage.Sender.USER ? TYPE_USER : TYPE_BOT;
     }
 
+    /** Cria o componente visual usado para exibir um item da lista. */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,6 +82,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /** Preenche o componente da lista com os dados do item na posição solicitada. */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
@@ -83,6 +93,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /** Preenche o cartão de oferta anexado à mensagem. */
     private void bindOfferCard(OfferCardViewHolder holder, Offer offer) {
         holder.title.setText(offer.getTitle());
         holder.meta.setText(String.format(Locale.getDefault(), "%s · %.1f km", offer.getStoreName(), offer.getDistanceKm()));
@@ -96,20 +107,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
+    /** Retorna a quantidade de itens que a lista pode exibir. */
     @Override
     public int getItemCount() {
         return messages.size();
     }
 
+    /** Representa TextViewHolder, responsável por a apresentação dos itens em uma lista. */
     static class TextViewHolder extends RecyclerView.ViewHolder {
         final TextView text;
 
+        /** Inicializa TextViewHolder com os dados e as dependências recebidos. */
         TextViewHolder(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.tv_message_text);
         }
     }
 
+    /** Representa OfferCardViewHolder, responsável por a apresentação dos itens em uma lista. */
     static class OfferCardViewHolder extends RecyclerView.ViewHolder {
         final View thumb;
         final TextView title;
@@ -117,6 +132,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final TextView discount;
         final View viewOfferButton;
 
+        /** Inicializa OfferCardViewHolder com os dados e as dependências recebidos. */
         OfferCardViewHolder(@NonNull View itemView) {
             super(itemView);
             thumb = itemView.findViewById(R.id.view_card_thumb);

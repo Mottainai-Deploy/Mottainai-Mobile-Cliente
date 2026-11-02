@@ -7,9 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/** Representa CatalogPages, responsável por o acesso e o tratamento dos dados do aplicativo. */
 public final class CatalogPages {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private CatalogPages() { }
 
+    /** Combina as páginas recebidas sem duplicar os registros já carregados. */
     public static <T> CatalogPage<T> merge(CatalogPage<T> previous, CatalogPage<T> next,
                                             Function<T, String> identity) {
         if (next.number < 0 || (next.number > 0

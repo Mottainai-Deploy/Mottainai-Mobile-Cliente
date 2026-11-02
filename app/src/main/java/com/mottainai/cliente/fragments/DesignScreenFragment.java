@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Comportamento compartilhado das telas XML nativas; os links seguem o protótipo do Figma. */
 public class DesignScreenFragment extends Fragment {
     private String screen;
     private com.mottainai.cliente.design.ClientRuntime runtime;
@@ -40,6 +41,7 @@ public class DesignScreenFragment extends Fragment {
     private final List<EditText> fields=new ArrayList<>();
     private final androidx.activity.result.ActivityResultLauncher<String[]> clientLocation=registerForActivityResult(
             new androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(),result->{if(runtime!=null)runtime.locationResult();});
+    /** Verifica os requisitos e inicia a obtenção da localização do cliente. */
     public void requestClientLocation(){
         if(!isAdded())return;
         if(com.mottainai.cliente.utils.ClientAccessGuard.hasLocationPermission(requireContext())) {
@@ -87,6 +89,7 @@ public class DesignScreenFragment extends Fragment {
             });
     private final androidx.activity.result.ActivityResultLauncher<Void> camera=registerForActivityResult(
             new androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview(),this::savePendingPhoto);
+    /** Preserva a foto selecionada para a etapa de confirmação. */
     private void savePendingPhoto(android.graphics.Bitmap bitmap) {
         if(bitmap==null)return;
         try(java.io.FileOutputStream out=new java.io.FileOutputStream(com.mottainai.cliente.utils.CloudinaryProfilePhoto.pendingFile(requireContext()))) {
@@ -94,8 +97,10 @@ public class DesignScreenFragment extends Fragment {
             open("2571:30962");
         }catch(Exception exception){photoError();}
     }
+    /** Apresenta o aviso de falha na seleção ou preparação da foto. */
     private void photoError(){if(isAdded())Toast.makeText(requireContext(),R.string.design_photo_error,Toast.LENGTH_LONG).show();}
 
+    /** Cria e configura a instância solicitada com os dados recebidos. */
     public static DesignScreenFragment create(String screen) {
         DesignScreenFragment fragment;
         switch(screen) {
@@ -110,6 +115,7 @@ public class DesignScreenFragment extends Fragment {
         Bundle arguments=new Bundle(); arguments.putString("screen",screen);fragment.setArguments(arguments);
         return fragment;
     }
+    /** Infla e devolve o layout que será exibido pelo fragmento. */
     @Nullable @Override public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle state) {
         screen=requireArguments().getString("screen","2005:3812");
         repository=DesignRepository.get(requireContext());
@@ -118,6 +124,7 @@ public class DesignScreenFragment extends Fragment {
         fields.clear();
         return inflater.inflate(layout,container,false);
     }
+    /** Conecta os componentes da tela às ações e aos dados após criar a interface. */
     @Override public void onViewCreated(@NonNull View view,@Nullable Bundle state) {
         super.onViewCreated(view,state);
         if(screen.equals("2244:11739")&&!host().isDesignPreview()) {
@@ -149,7 +156,9 @@ public class DesignScreenFragment extends Fragment {
         androidx.core.view.WindowInsetsControllerCompat bars=androidx.core.view.WindowCompat.getInsetsController(requireActivity().getWindow(),requireActivity().getWindow().getDecorView());
         if(!overlay){bars.setAppearanceLightStatusBars(lightBars);bars.setAppearanceLightNavigationBars(lightBars&&!artwork);}
     }
+    /** Obtém a atividade responsável pela navegação do fragmento. */
     private MainActivity host() { return (MainActivity)requireActivity(); }
+    /** Posiciona o acesso ao histórico no cabeçalho da conversa. */
     private void placeConversationHistoryInHeader(View root) {
         if(!repository.screen(screen).optString("name").contains("Conversa com a Lô")||repository.screen(screen).optBoolean("overlay"))return;
         View candidate=com.mottainai.cliente.design.ClientContent.find(root,"Cabeçalho");
@@ -171,6 +180,7 @@ public class DesignScreenFragment extends Fragment {
         LinearLayout.LayoutParams position=new LinearLayout.LayoutParams(dp(128),ViewGroup.LayoutParams.WRAP_CONTENT);
         position.setMarginStart(dp(8));header.addView(history,position);
     }
+    /** Aplica a apresentação visual do acesso às conversas anteriores. */
     private void styleHistoryLabel(View view) {
         if(view instanceof TextView) {
             TextView text=(TextView)view;text.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);text.setGravity(Gravity.CENTER);
@@ -178,7 +188,9 @@ public class DesignScreenFragment extends Fragment {
         }
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)styleHistoryLabel(((ViewGroup)view).getChildAt(i));
     }
+    /** Verifica se a interface está usando o tema escuro. */
     private boolean isDark() { return (getResources().getConfiguration().uiMode&Configuration.UI_MODE_NIGHT_MASK)==Configuration.UI_MODE_NIGHT_YES; }
+    /** Conecta os dados e as ações aos componentes visuais correspondentes. */
     private void bind(View view) {
         JSONObject tag=tag(view);
         if(view instanceof com.mottainai.cliente.design.DesignImageView&&tag.optString("name").equals("Ellipse")) {
@@ -267,10 +279,12 @@ public class DesignScreenFragment extends Fragment {
             for(int i=0;i<group.getChildCount();i++)bind(group.getChildAt(i));
         }
     }
+    /** Lê os metadados usados para identificar e conectar o componente da tela. */
     private JSONObject tag(View view) {
         try { return new JSONObject(String.valueOf(view.getTag())); }
         catch(Exception ignored) { return new JSONObject(); }
     }
+    /** Confere os campos da etapa antes de executar a ação de continuidade. */
     private boolean validateFields() {
         for(EditText field:fields) {
             String value=field.getText().toString().trim();
@@ -283,6 +297,7 @@ public class DesignScreenFragment extends Fragment {
         }
         return true;
     }
+    /** Interpreta a ação disparada pelo componente e executa o fluxo correspondente. */
     private void act(JSONObject tag,String label,JSONObject link) {
         String name=tag.optString("name");
         if(runtime!=null&&label.equals("Salvar foto")){runtime.saveProfilePhoto();return;}
@@ -400,7 +415,9 @@ public class DesignScreenFragment extends Fragment {
         // Um grupo decorativo pode ter um ponteiro do protótipo sem representar uma ação.
         // Não interrompe a navegação com um diálogo genérico nesses contêineres.
     }
+    /** Obtém as preferências locais utilizadas pela tela. */
     private SharedPreferences preferences() {return requireContext().getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE);}
+    /** Preserva temporariamente os valores dos campos do fluxo atual. */
     private void saveFields() {
         if(!host().isDesignPreview())return;
         SharedPreferences.Editor editor=preferences().edit();
@@ -411,7 +428,9 @@ public class DesignScreenFragment extends Fragment {
         }
         editor.apply();
     }
+    /** Atualiza a apresentação da opção de recebimento de ofertas. */
     public void renderMarketingConsent(boolean selected){if(getView()!=null)updateConsent(getView(),selected);}
+    /** Atualiza a escolha do usuário sobre o recebimento de ofertas. */
     private void updateConsent(View root,boolean selected) {
         if(tag(root).optString("name").equals("Conta / Consentimento de marketing")||tag(root).optString("name").equals("Consentimento / Opção documentada")) {
             root.setSelected(selected);
@@ -434,6 +453,7 @@ public class DesignScreenFragment extends Fragment {
         }
         if(root instanceof ViewGroup)for(int i=0;i<((ViewGroup)root).getChildCount();i++)updateConsent(((ViewGroup)root).getChildAt(i),selected);
     }
+    /** Cria o indicador visual da opção selecionada. */
     private View selectionMark(View root) {
         if(tag(root).optString("name").equals("Caixa de seleção"))return root;
         if(root instanceof ViewGroup)for(int i=0;i<((ViewGroup)root).getChildCount();i++) {
@@ -441,6 +461,7 @@ public class DesignScreenFragment extends Fragment {
         }
         return null;
     }
+    /** Abre o painel temporário correspondente à ação solicitada. */
     private void openTransient(String loading,String destination) {
         MainActivity activity=host();
         activity.showScreen(loading,true);
@@ -461,6 +482,7 @@ public class DesignScreenFragment extends Fragment {
             }
         },650);
     }
+    /** Abre o destino associado à interação do usuário. */
     private void open(String id) {
         if(id.equals("2557:30792")&&!host().isDesignPreview()){requestNotificationPermission();return;}
         String destination=null;
@@ -477,6 +499,7 @@ public class DesignScreenFragment extends Fragment {
         }
         if(destination!=null)openTransient(id,destination);else host().showScreen(id,true);
     }
+    /** Lê a mensagem digitada e solicita seu envio para a assistente. */
     private void sendChat() {
         if(runtime!=null){runtime.sendChat();return;}
         EditText composer=null;
@@ -496,6 +519,7 @@ public class DesignScreenFragment extends Fragment {
         addBubble(messages,reply,false);
         scroll.post(()->scroll.fullScroll(View.FOCUS_DOWN));
     }
+    /** Adiciona à conversa o balão com a mensagem e a identificação de quem enviou. */
     public void addBubble(LinearLayout messages,String text,boolean user) {
         LinearLayout turn=new LinearLayout(requireContext());turn.setOrientation(LinearLayout.VERTICAL);
         turn.setGravity(user?Gravity.END:Gravity.START);
@@ -522,8 +546,11 @@ public class DesignScreenFragment extends Fragment {
         LinearLayout.LayoutParams turnPosition=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         turnPosition.topMargin=dp(12);messages.addView(turn,turnPosition);
     }
+    /** Preenche a mensagem com a sugestão selecionada e inicia o envio. */
     private void sendSuggestion(String message){for(EditText f:fields)if(tag(f).optString("field").equals("Mensagem")){f.setText(message);sendChat();return;}}
+    /** Procura na hierarquia o componente associado à ação solicitada. */
     private View findAction(View v,String action){if(tag(v).optString("action").trim().equals(action)&&v.isClickable())return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View found=findAction(((ViewGroup)v).getChildAt(i),action);if(found!=null)return found;}return null;}
+    /** Solicita a permissão de notificações quando necessária ao dispositivo. */
     public void requestNotificationPermission() {
         if(android.os.Build.VERSION.SDK_INT>=33&&androidx.core.content.ContextCompat.checkSelfPermission(requireContext(),android.Manifest.permission.POST_NOTIFICATIONS)!=android.content.pm.PackageManager.PERMISSION_GRANTED) {
             notifications.launch(android.Manifest.permission.POST_NOTIFICATIONS);
@@ -534,6 +561,7 @@ public class DesignScreenFragment extends Fragment {
             else host().showScreen("2557:30760",false);
         }
     }
+    /** Verifica se o componente pertence a uma opção de distância. */
     private boolean insideRadiusOption(View view) {
         for(android.view.ViewParent p=view.getParent();p instanceof View;p=p.getParent()) {
             String action=tag((View)p).optString("action").trim();
@@ -541,11 +569,18 @@ public class DesignScreenFragment extends Fragment {
         }
         return false;
     }
+    /** Atualiza as cores dos textos da hierarquia conforme o estado visual. */
     private void setTextColors(View v,int color){if(v instanceof TextView)((TextView)v).setTextColor(color);if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++)setTextColors(((ViewGroup)v).getChildAt(i),color);}
+    /** Converte a medida independente de densidade para pixels do aparelho. */
     private int dp(int value) {return Math.round(value*getResources().getDisplayMetrics().density);}
+    /** Ativa os recursos que acompanham a exibição da tela. */
     @Override public void onStart(){super.onStart();if(runtime!=null)runtime.start();}
+    /** Retoma os recursos da tela e atualiza os dados necessários ao voltar para ela. */
     @Override public void onResume(){super.onResume();if(runtime!=null)runtime.resume();}
+    /** Pausa os recursos associados à tela quando ela perde o foco. */
     @Override public void onPause(){if(runtime!=null)runtime.pause();super.onPause();}
+    /** Interrompe os recursos visuais enquanto a tela não está visível. */
     @Override public void onStop(){if(runtime!=null)runtime.stop();super.onStop();}
+    /** Libera os recursos da tela e remove referências que não devem sobreviver à interface. */
     @Override public void onDestroyView() {if(runtime!=null){runtime.destroy();runtime=null;}fields.clear();super.onDestroyView();}
 }

@@ -12,10 +12,12 @@ import com.caverock.androidsvg.SVG;
 import com.mottainai.cliente.R;
 import java.io.InputStream;
 
+/** Preserva as máscaras alfa SVG originais do Figma ao compor ilustrações em camadas. */
 public class DesignMaskLayout extends DesignArtLayout {
     private final Picture mask;
     private final float maskX,maskY,maskWidth,maskHeight;
     private final Paint maskPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
+    /** Inicializa DesignMaskLayout com os dados e as dependências recebidos. */
     public DesignMaskLayout(Context context,AttributeSet attrs) {
         super(context,attrs);
         TypedArray a=context.obtainStyledAttributes(attrs,R.styleable.DesignMaskLayout);
@@ -31,6 +33,7 @@ public class DesignMaskLayout extends DesignArtLayout {
         maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         setLayerType(LAYER_TYPE_SOFTWARE,null);
     }
+    /** Desenha o componente respeitando sua apresentação e seus limites visuais. */
     @Override protected void dispatchDraw(Canvas canvas) {
         int layer=canvas.saveLayer(0,0,getWidth(),getHeight(),null);
         super.dispatchDraw(canvas);

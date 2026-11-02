@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Classes, construtores, métodos e callbacks Java documentados em português, incluindo testes.
+- Guia de execução com APIs locais, configuração de serviços, encaminhamento USB e requisitos de publicação HTTPS.
+
+- Ícone oficial do Cliente exportado do Figma pelo Icon Kitchen, com recursos adaptativos e cinco densidades Android.
+
 - Login e confirmação de cadastro com carregamento explícito; removidos acesso de demonstração e ação de trocar conta no cadastro.
 - Perfil salva nome, telefone e URL da foto vinculada à conta; confirmação da foto retorna ao perfil atualizado.
 - Busca por posição atual e seleção de raio de 5 ou 10 km; troca de distância preserva a tela atual.

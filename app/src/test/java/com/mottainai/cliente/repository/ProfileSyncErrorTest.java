@@ -8,6 +8,7 @@ import javax.net.ssl.SSLHandshakeException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de ProfileSyncError. */
 public class ProfileSyncErrorTest {
     /** Informa a falha de conexão sem expor configuração local nem texto da exceção. */
     @Test public void unavailableServiceDoesNotExposeTechnicalConfiguration() {
@@ -18,11 +19,13 @@ public class ProfileSyncErrorTest {
         assertEquals(message, ProfileSyncError.message(new ConnectException("SECRET"), false));
         assertFalse(message.contains("SECRET"));
     }
+    /** Verifica se o tempo esgotado não é apresentado como senha incorreta. */
     @Test public void timeoutDoesNotReportWrongPassword() {
         String message = ProfileSyncError.message(new SocketTimeoutException(), false);
         assertTrue(message.contains("demorou"));
         assertFalse(message.contains("senha"));
     }
+    /** Verifica se uma resposta inválida não é tratada como ausência de internet. */
     @Test public void malformedResponseIsNotReportedAsInternetFailure() {
         String message = ProfileSyncError.message(new JsonSyntaxException("SECRET"), false);
         assertEquals("Não foi possível concluir agora. Tente novamente.", message);
@@ -35,10 +38,12 @@ public class ProfileSyncErrorTest {
         assertEquals(expected, ProfileSyncError.message(new UnknownHostException("SECRET"), false));
         assertEquals(expected, ProfileSyncError.message(new SSLHandshakeException("SECRET"), false));
     }
+    /** Verifica a classificação de falhas de rede encapsuladas em outras exceções. */
     @Test public void wrappedNetworkErrorsKeepTheirClassification() {
         String message = ProfileSyncError.message(new java.io.IOException(new ConnectException()), false);
         assertEquals(ProfileSyncError.message(new ConnectException(), false), message);
     }
+    /** Verifica se o JSON inválido é distinguido das falhas de internet. */
     @Test public void malformedJsonIsNotAnInternetError() {
         String message = ProfileSyncError.message(new com.google.gson.stream.MalformedJsonException("SECRET"), true);
         assertEquals("Não foi possível concluir agora. Tente novamente.", message);

@@ -25,15 +25,20 @@ import java.util.HashSet;
 import java.util.Set;
 import static org.junit.Assert.*;
 
+/** Verifica as correções das telas observadas no celular usando a interface real do aplicativo. */
 @RunWith(AndroidJUnit4.class)
 public class ClientCorrectionsTest {
+    /** Abre a atividade usada pelo cenário de teste. */
     private ActivityScenario<MainActivity> launch(String screen,boolean preview) {
         Context c=InstrumentationRegistry.getInstrumentation().getTargetContext();
         c.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().clear().putInt("theme",2).commit();
         return ActivityScenario.launch(new Intent(c,MainActivity.class).putExtra("screen",screen).putExtra("design_preview",preview));
     }
+    /** Aguarda a interface concluir as operações pendentes antes da verificação. */
     private void idle(){InstrumentationRegistry.getInstrumentation().waitForIdleSync();}
+    /** Obtém a raiz visual usada nas verificações da tela. */
     private View root(MainActivity a){return a.currentScreen().requireView();}
+    /** Verifica a exibição da senha e dos erros dos campos com o teclado aberto. */
     @Test public void passwordVisibilityAndInlineErrorsWorkWithKeyboard() {
         try(ActivityScenario<MainActivity> scenario=launch("2028:4492",false)) {
             scenario.onActivity(a->{
@@ -60,6 +65,7 @@ public class ClientCorrectionsTest {
             });
         }
     }
+    /** Verifica se cada campo de senha controla sua própria visibilidade. */
     @Test public void everyPasswordFieldHasIndependentVisibilityControl() {
         try(ActivityScenario<MainActivity> scenario=launch("2028:4279",true)) {
             scenario.onActivity(a->{
@@ -71,6 +77,7 @@ public class ClientCorrectionsTest {
             });
         }
     }
+    /** Verifica a marcação nativa e a preservação da escolha de consentimento. */
     @Test public void consentShowsNativeCheckAndPersists() {
         try(ActivityScenario<MainActivity> scenario=launch("2650:73471",true)) {
             scenario.onActivity(a->{View option=ClientContent.find(root(a),"Conta / Consentimento de marketing");assertNotNull(option);assertFalse(a.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).getBoolean("marketing",false));assertTrue("Consent action must be clickable",option.performClick());assertTrue("Consent preference must change",a.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).getBoolean("marketing",false));CheckBox check=findCheck(option);assertNotNull(check);assertTrue("Native check must reflect preference",check.isChecked());assertNotNull(check.getButtonDrawable());});
@@ -78,6 +85,7 @@ public class ClientCorrectionsTest {
             scenario.onActivity(a->{CheckBox check=findCheck(root(a));assertNotNull(check);assertTrue(check.isChecked());});
         }
     }
+    /** Verifica se os painéis preservam a tela e se voltar restaura seu conteúdo. */
     @Test public void panelsRetainScreenAndBackRestoresIt() {
         try(ActivityScenario<MainActivity> scenario=launch("2005:4483",true)) {
             Fragment[] base={null};
@@ -86,12 +94,14 @@ public class ClientCorrectionsTest {
             scenario.onActivity(a->assertSame(base[0],a.currentScreen()));
         }
     }
+    /** Verifica se a escolha do raio preserva as opções apresentadas pelo cenário. */
     @Test public void selectedRadiusNeverChangesTheFourOptions() {
         try(ActivityScenario<MainActivity> scenario=launch("2005:3812",true)) {
             scenario.onActivity(a->{a.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().putString("radius","15 km").commit();a.showScreen("2143:10256",true);});idle();
             scenario.onActivity(a->{Set<String> options=new HashSet<>();for(String option:new String[]{"5 km","10 km","15 km","20 km"}){View v=action(root(a),option);assertNotNull(option,v);assertTrue(contains(v,option));options.add(option);}assertEquals(4,options.size());});
         }
     }
+    /** Verifica o recorte circular de fotos retangulares em todos os espaços de perfil. */
     @Test public void nonSquarePhotoRemainsCircularInEveryPlacement() throws Exception {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();File file=new File(context.getFilesDir(),"profile-photo.jpg");
         Bitmap source=Bitmap.createBitmap(600,120,Bitmap.Config.ARGB_8888);source.eraseColor(Color.GREEN);
@@ -103,6 +113,7 @@ public class ClientCorrectionsTest {
             }
         }finally{file.delete();}
     }
+    /** Verifica se a execução de produção não apresenta ofertas ou saldos de exemplo. */
     @Test public void productionDoesNotPublishFigmaOffersOrBalances() {
         Context c=InstrumentationRegistry.getInstrumentation().getTargetContext();
         new com.mottainai.cliente.utils.SessionManager(c).clearClientSession();
@@ -110,12 +121,14 @@ public class ClientCorrectionsTest {
             scenario.onActivity(a->{assertEquals("2028:4492",a.currentScreen().getTag());assertFalse(visibleContains(root(a),"R$ 12,90"));assertFalse(visibleContains(root(a),"Cesta hortifruti"));assertFalse(visibleContains(root(a),"320 pontos"));});
         }
     }
+    /** Verifica a remoção da introdução e o tamanho dos balões ao iniciar uma conversa. */
     @Test public void newChatRemovesIntroductionAndUsesContentSizedBubbles() {
         try(ActivityScenario<MainActivity> scenario=launch("2055:5379",true)) {
             scenario.onActivity(a->{EditText composer=field(root(a),"Mensagem");assertNotNull(composer);composer.setText("oi");composer.onEditorAction(android.view.inputmethod.EditorInfo.IME_ACTION_SEND);});idle();
             scenario.onActivity(a->{View user=root(a).findViewById(R.id.design_chat_user);assertNotNull(user);assertTrue(user.getWidth()<((View)user.getParent()).getWidth()/2);assertFalse(visibleContains(root(a),"Vamos encontrar algo bom?"));assertNotNull(root(a).findViewById(R.id.design_chat_reply));});
         }
     }
+    /** Verifica a posição do histórico e a identificação dos participantes da conversa. */
     @Test public void chatHistoryStaysAboveMessagesAndIdentifiesBothSpeakers() throws Exception {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         File folder=new File(context.getExternalFilesDir(null),"chat-header-review");assertTrue(folder.isDirectory()||folder.mkdirs());
@@ -143,11 +156,13 @@ public class ClientCorrectionsTest {
         }
         for(String command:new String[]{"mkdir -p /data/local/tmp/mottainai-chat-header","cp -r "+folder.getAbsolutePath()+"/. /data/local/tmp/mottainai-chat-header/"})try(java.io.InputStream in=new android.os.ParcelFileDescriptor.AutoCloseInputStream(InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(command))){while(in.read()!=-1){}}
     }
+    /** Verifica o alinhamento dos valores no histórico de pontos. */
     @Test public void pointValuesAlignAtTheTrailingEdge() {
         try(ActivityScenario<MainActivity> scenario=launch("2093:6456",true)) {
             scenario.onActivity(a->{View row=ClientContent.find(root(a),"Registro / Mercado Verde");assertNotNull(row);ViewGroup group=(ViewGroup)row;View points=group.getChildAt(group.getChildCount()-1);assertTrue(points instanceof TextView);assertEquals(row.getWidth()-row.getPaddingRight(),points.getRight());assertEquals(android.view.Gravity.END|android.view.Gravity.CENTER_VERTICAL,((TextView)points).getGravity());});
         }
     }
+    /** Verifica se a rota no Google Maps corresponde à loja selecionada. */
     @Test public void mapsOpensTheSelectedPartnerInGoogleMaps() {
         android.app.Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
         android.content.IntentFilter filter=new android.content.IntentFilter(Intent.ACTION_VIEW);filter.addDataScheme("https");
@@ -157,6 +172,7 @@ public class ClientCorrectionsTest {
             assertEquals(1,monitor.getHits());
         }finally{instrumentation.removeMonitor(monitor);}
     }
+    /** Verifica se as configurações de notificações exigem perfil autenticado. */
     @Test public void notificationSettingsRequireAnAuthenticatedProfile() {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         com.mottainai.cliente.utils.SessionManager session=new com.mottainai.cliente.utils.SessionManager(context);
@@ -165,6 +181,7 @@ public class ClientCorrectionsTest {
             scenario.onActivity(a->assertEquals("2028:4492",a.currentScreen().getTag()));
         }finally{session.clearClientSession();}
     }
+    /** Registra as prévias das telas corrigidas nos temas claro e escuro. */
     @Test public void captureCorrectedPreviewScreensInBothThemes() throws Exception {
         Context c=InstrumentationRegistry.getInstrumentation().getTargetContext();
         File folder=new File(c.getExternalFilesDir(null),"phone-corrections");assertTrue(folder.isDirectory()||folder.mkdirs());
@@ -186,12 +203,20 @@ public class ClientCorrectionsTest {
             try(java.io.InputStream in=new android.os.ParcelFileDescriptor.AutoCloseInputStream(InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(command))){byte[] buffer=new byte[1024];while(in.read(buffer)!=-1){}}
         }
     }
+    /** Localiza o campo identificado no cenário de teste. */
     private EditText field(View view,String name){if(view instanceof EditText&&ClientContent.tag(view).optString("field").equals(name))return (EditText)view;if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++){EditText f=field(((ViewGroup)view).getChildAt(i),name);if(f!=null)return f;}return null;}
+    /** Obtém a ação de navegação ou interação associada ao componente. */
     private View action(View view,String value){if(ClientContent.tag(view).optString("action").trim().equals(value)&&view.isClickable())return view;if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++){View v=action(((ViewGroup)view).getChildAt(i),value);if(v!=null)return v;}return null;}
+    /** Obtém a descrição utilizada para localizar o componente no teste. */
     private View description(View view,String value){if(value.equals(String.valueOf(view.getContentDescription())))return view;if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++){View v=description(((ViewGroup)view).getChildAt(i),value);if(v!=null)return v;}return null;}
+    /** Conta os componentes com a descrição esperada pelo cenário. */
     private int countDescription(View v,String s){int n=s.equals(String.valueOf(v.getContentDescription()))?1:0;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++)n+=countDescription(((ViewGroup)v).getChildAt(i),s);return n;}
+    /** Localiza a opção de seleção para conferir seu estado no teste. */
     private CheckBox findCheck(View v){if(v instanceof CheckBox)return (CheckBox)v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){CheckBox c=findCheck(((ViewGroup)v).getChildAt(i));if(c!=null)return c;}return null;}
+    /** Verifica a presença do conteúdo esperado na hierarquia da tela. */
     private boolean contains(View v,String text){if(v instanceof TextView&&((TextView)v).getText().toString().contains(text))return true;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++)if(contains(((ViewGroup)v).getChildAt(i),text))return true;return false;}
+    /** Verifica a presença do conteúdo esperado na hierarquia da tela. */
     private boolean hasExactText(View v,String text){if(v instanceof TextView&&((TextView)v).getText().toString().equals(text))return true;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++)if(hasExactText(((ViewGroup)v).getChildAt(i),text))return true;return false;}
+    /** Verifica a presença do conteúdo esperado na hierarquia da tela. */
     private boolean visibleContains(View v,String text){if(v.getVisibility()!=View.VISIBLE)return false;if(v instanceof TextView&&((TextView)v).getText().toString().contains(text))return true;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++)if(visibleContains(((ViewGroup)v).getChildAt(i),text))return true;return false;}
 }

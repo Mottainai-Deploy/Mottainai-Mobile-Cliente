@@ -25,9 +25,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import static org.junit.Assert.*;
 
+/** Cria e mede as telas implementadas, incluindo os recursos SVG originais. */
 @RunWith(AndroidJUnit4.class)
 public class DesignLayoutTest {
     private final java.util.List<String> boundsErrors=new java.util.ArrayList<>();
+    /** Registra as telas principais para revisão visual. */
     @Test public void capturePrincipalScreensForReview() throws Exception {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         String[] ids={"2028:4492","2005:3812","2005:3914","2005:4305","2093:6331","2005:4483","2055:5379","2542:29599","2430:27754","2456:28768","2557:30504","2680:78487","2680:78485"};
@@ -63,6 +65,7 @@ public class DesignLayoutTest {
         }
         context.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().putInt("theme",1).commit();
     }
+    /** Verifica a criação das telas em larguras distintas e nos dois temas. */
     @Test public void screensInflateAtNarrowAndWideWidthsInBothThemes() throws Exception {
         Context target=InstrumentationRegistry.getInstrumentation().getTargetContext();
         String json;
@@ -106,6 +109,7 @@ public class DesignLayoutTest {
         if(failure[0]!=null)throw new AssertionError("Native screen inflation failed",failure[0]);
         assertTrue(String.join("\n",boundsErrors),boundsErrors.isEmpty());
     }
+    /** Confere se os componentes respeitam os limites horizontais disponíveis. */
     private void assertHorizontalBounds(View view,String screen) {
         if(!(view instanceof android.view.ViewGroup)||view instanceof com.mottainai.cliente.design.DesignArtLayout)return;
         android.view.ViewGroup group=(android.view.ViewGroup)view;

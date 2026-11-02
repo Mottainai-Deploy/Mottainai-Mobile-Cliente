@@ -31,6 +31,7 @@ import static org.junit.Assert.*;
 /** Exhaustive native renders and text geometry, rather than representative screens only. */
 @RunWith(AndroidJUnit4.class)
 public class DesignVisualReviewTest {
+    /** Renderiza todas as telas e seu conteúdo rolável para revisão. */
     @Test public void renderEveryScreenAndScrolledContent() throws Exception {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         context.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().clear().commit();
@@ -96,16 +97,19 @@ public class DesignVisualReviewTest {
         context.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().putInt("theme",1).commit();
         assertEquals(ids.size()*2,report.length());
     }
+    /** Salva os dados informados e acompanha o resultado da operação. */
     private void save(View view,File file) throws Exception {
         Bitmap image=Bitmap.createBitmap(view.getWidth(),view.getHeight(),Bitmap.Config.ARGB_8888);
         view.draw(new Canvas(image));
         try(FileOutputStream out=new FileOutputStream(file)) {assertTrue(image.compress(Bitmap.CompressFormat.PNG,100,out));}
         image.recycle();
     }
+    /** Localiza os componentes roláveis para a revisão visual. */
     private void findScrolls(View view,List<NestedScrollView> result) {
         if(view instanceof NestedScrollView)result.add((NestedScrollView)view);
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)findScrolls(((ViewGroup)view).getChildAt(i),result);
     }
+    /** Inspeciona o componente para registrar o resultado da revisão visual. */
     private void inspect(View view,JSONArray rows) throws Exception {
         JSONObject row=new JSONObject();row.put("tag",String.valueOf(view.getTag()));row.put("type",view.getClass().getSimpleName());
         int[] position=new int[2];view.getLocationOnScreen(position);

@@ -6,10 +6,16 @@ import com.mottainai.cliente.models.Offer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementação temporária para o futuro endpoint /offers. Retorna o mesmo catálogo fixo
+ * em todas as chamadas para que as telas do Cliente possam ser construídas e demonstradas
+ * antes da existência da API REST voltada ao consumidor.
+ */
 public class MockOfferRepository {
 
     private static final List<Offer> OFFERS = buildOffers();
 
+    /** Prepara as ofertas locais utilizadas pela apresentação de exemplo. */
     private static List<Offer> buildOffers() {
         List<Offer> offers = new ArrayList<>();
         offers.add(new Offer("leite-integral", "Leite integral", "Mercado Verde", 0.4, 40,
@@ -33,10 +39,12 @@ public class MockOfferRepository {
         return offers;
     }
 
+    /** Retorna as ofertas locais disponíveis para apresentação. */
     public List<Offer> getAllOffers() {
         return new ArrayList<>(OFFERS);
     }
 
+    /** Retorna as ofertas locais disponíveis para apresentação. */
     public List<Offer> getNearbyOffers() {
         List<Offer> nearby = new ArrayList<>();
         for (Offer offer : OFFERS) {
@@ -47,6 +55,7 @@ public class MockOfferRepository {
         return nearby;
     }
 
+    /** Localiza a oferta pelo identificador informado. */
     public Offer findById(String id) {
         for (Offer offer : OFFERS) {
             if (offer.getId().equals(id)) {
@@ -56,6 +65,7 @@ public class MockOfferRepository {
         return null;
     }
 
+    /** Seleciona as ofertas locais de acordo com os filtros informados. */
     public List<Offer> filter(String query, String category, boolean withinOneKm) {
         List<Offer> result = new ArrayList<>();
         String normalizedQuery = query == null ? "" : query.trim().toLowerCase();

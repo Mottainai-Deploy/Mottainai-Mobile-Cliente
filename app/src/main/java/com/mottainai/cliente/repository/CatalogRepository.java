@@ -20,14 +20,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/** Representa CatalogRepository, responsável por o acesso e o tratamento dos dados do aplicativo. */
 public class CatalogRepository {
+    /** Define o contrato de Result, responsável por o acesso e o tratamento dos dados do aplicativo. */
     public interface Result<T> {
+        /** Recebe os dados resolvidos pela operação e encaminha seu processamento. */
         void accept(LoadState<T> state);
     }
 
     private final CustomerCatalogService service;
     private final SessionManager session;
 
+    /** Inicializa CatalogRepository com os dados e as dependências recebidos. */
     public CatalogRepository(Context context) {
         session = new SessionManager(context);
         service = BuildConfig.API_BASE_URL.trim().isEmpty() ? null
@@ -35,6 +39,7 @@ public class CatalogRepository {
                 CustomerCatalogService.class);
     }
 
+    /** Obtém a página de lojas conforme os filtros informados. */
     public void stores(int page, String query, Double latitude, Double longitude, Double radiusKm,
                          Result<CatalogPage<CatalogStore>> result) {
         if (session.isDemoMode()) {
@@ -59,6 +64,7 @@ public class CatalogRepository {
         enqueue(service.stores(page, 20, blankToNull(query), latitude, longitude, radiusKm), result);
     }
 
+    /** Obtém os dados da loja identificada na consulta. */
     public void store(String id, Result<CatalogStore> result) {
         if (session.isDemoMode()) {
             for (CatalogStore store : DemoData.stores()) {
@@ -74,6 +80,7 @@ public class CatalogRepository {
         enqueue(service.store(id), result);
     }
 
+    /** Obtém a página de promoções conforme os filtros informados. */
     public void promotions(int page, String storeId, String query,
                            Result<CatalogPage<CatalogPromotion>> result) {
         if (session.isDemoMode()) {
@@ -94,6 +101,7 @@ public class CatalogRepository {
         enqueue(service.promotions(page, 20, blankToNull(storeId), blankToNull(query)), result);
     }
 
+    /** Obtém os dados da promoção identificada na consulta. */
     public void promotion(String id, Result<CatalogPromotion> result) {
         if (session.isDemoMode()) {
             CatalogPromotion promotion = DemoData.promotion(id);
@@ -105,20 +113,24 @@ public class CatalogRepository {
         enqueue(service.promotion(id), result);
     }
 
+    /** Informa que o serviço necessário à consulta não está disponível. */
     private <T> boolean unavailable(Result<T> result) {
         if (service != null) return false;
         result.accept(LoadState.error("Serviço indisponível. Tente mais tarde.", 0));
         return true;
     }
 
+    /** Converte o filtro vazio em ausência de valor para a requisição. */
     private static String blankToNull(String value) {
         return value == null || value.trim().isEmpty() ? null : value.trim();
     }
 
+    /** Normaliza os dados antes de utilizá-los na consulta ou apresentação. */
     private static String normalize(String value) {
         return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
     }
 
+    /** Prepara a página utilizada no carregamento ou na verificação do catálogo. */
     private static <T> CatalogPage<T> page(List<T> items, int requestedPage, int size) {
         CatalogPage<T> page = new CatalogPage<>();
         int number = Math.max(0, requestedPage);
@@ -133,8 +145,10 @@ public class CatalogRepository {
         return page;
     }
 
+    /** Executa a requisição assíncrona e encaminha a resposta ou a falha. */
     private static <T> void enqueue(Call<T> call, Result<T> result) {
         call.enqueue(new Callback<T>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -146,6 +160,7 @@ public class CatalogRepository {
                 }
             }
 
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override
             public void onFailure(Call<T> call, Throwable throwable) {
                 result.accept(LoadState.error(throwable instanceof IOException

@@ -17,9 +17,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de UiIntegration. */
 @RunWith(AndroidJUnit4.class)
 public class UiIntegrationTest {
+    /** Obtém o contexto Android utilizado pelo teste. */
     private Context context(){return InstrumentationRegistry.getInstrumentation().getTargetContext();}
+    /** Verifica a criação dos cartões visuais nos temas claro e escuro. */
     @Test public void figmaCardsInflateInLightAndDarkModes() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{
             for(int mode:new int[]{Configuration.UI_MODE_NIGHT_NO,Configuration.UI_MODE_NIGHT_YES}) {
@@ -37,6 +40,7 @@ public class UiIntegrationTest {
             }
         });
     }
+    /** Verifica se as telas protegidas exigem autenticação e perfil sincronizado. */
     @Test public void protectedFigmaRoutesCannotBypassFirebaseAndSqlSession() {
         new SessionManager(context()).clearClientSession();
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2005:3914"))) {
@@ -48,6 +52,7 @@ public class UiIntegrationTest {
             }
         }
     }
+    /** Verifica a validação entre etapas e a ausência de persistência indevida dos campos pessoais. */
     @Test public void registrationValidatesBeforeChangingStepsAndDoesNotPersistPersonalFields() {
         new SessionManager(context()).clearClientSession();
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2143:9435"))) {
@@ -63,13 +68,17 @@ public class UiIntegrationTest {
             });
         }
     }
+    /** Verifica se a marcação de demonstração não libera as telas protegidas. */
     @Test public void demoFlagDoesNotUnlockProtectedScreens() {
         SessionManager session=new SessionManager(context());session.clearSession();session.enterDemoMode();
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context(),MainActivity.class).putExtra("screen","2005:3812"))) {
             scenario.onActivity(a->assertEquals("2028:4492",a.currentScreen().getArguments().getString("screen")));
         } finally {session.clearClientSession();}
     }
+    /** Localiza o componente associado ao vínculo de dados verificado. */
     private View binding(View v,String key){if(ClientContent.tag(v).optString("binding").equals(key))return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View child=binding(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
+    /** Localiza o campo identificado no cenário de teste. */
     private EditText field(View v,String key){if(v instanceof EditText&&ClientContent.tag(v).optString("field").equals(key))return (EditText)v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){EditText child=field(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
+    /** Obtém a ação de navegação ou interação associada ao componente. */
     private View action(View v,String key){if(ClientContent.tag(v).optString("action").trim().equals(key))return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View child=action(((ViewGroup)v).getChildAt(i),key);if(child!=null)return child;}return null;}
 }

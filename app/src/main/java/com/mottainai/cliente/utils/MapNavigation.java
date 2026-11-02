@@ -8,9 +8,12 @@ import android.widget.Toast;
 
 import com.mottainai.cliente.models.PartnerStore;
 
+/** Representa MapNavigation, responsável por as operações auxiliares deste recurso. */
 public final class MapNavigation {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private MapNavigation() { }
 
+    /** Abre a rota para a loja selecionada no aplicativo de mapas disponível. */
     public static void openRoute(Context context, PartnerStore store) {
         String url = GoogleMapsUrl.forStore(store);
         if (url == null) {

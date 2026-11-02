@@ -5,10 +5,12 @@ import com.mottainai.cliente.models.PartnerStore;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Implementação temporária para o futuro endpoint /stores. Consulte {@link MockOfferRepository}. */
 public class MockStoreRepository {
 
     private static final List<PartnerStore> STORES = buildStores();
 
+    /** Prepara as lojas locais utilizadas pela apresentação de exemplo. */
     private static List<PartnerStore> buildStores() {
         List<PartnerStore> stores = new ArrayList<>();
         stores.add(new PartnerStore("mercado-verde", "Mercado Verde", 0.4, "aberto agora", true, 0.30f, 0.78f));
@@ -18,6 +20,7 @@ public class MockStoreRepository {
         return stores;
     }
 
+    /** Retorna as lojas locais utilizadas na apresentação de proximidade. */
     public List<PartnerStore> getNearbyStores() {
         return new ArrayList<>(STORES);
     }

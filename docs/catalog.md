@@ -11,7 +11,7 @@ O ViewModel mantém as páginas já carregadas, a busca e o filtro de loja duran
 
 ## Roteiro de aceitação
 
-Imagens: DTOs aceitam os campos opcionais propostos `imageUrl` e `items[].imageUrl`; a API ainda precisa publicá-los/aprová-los. Cards e detalhe usam Glide com HTTPS sem credenciais, placeholder em ausência/falha e sem cache offline. Só um produto único pode fornecer sua imagem implicitamente; vários produtos exigem referência explícita de capa. Não é uma integração direta Android → Open Food Facts/Cosmos.
+Imagens: Home, Catálogo e detalhe priorizam a URL HTTPS opcional da API. Sem URL, o Android busca uma foto ilustrativa no Open Food Facts pelo nome do único produto da promoção, sem alterar banco/API. Há créditos com link para a fonte, consultas espaçadas, cache e proteção contra resposta em card reciclado. Sem resultado/falha, mantém placeholder; múltiplos produtos sem capa não recebem foto arbitrária. Veja [implementação e teste no celular](IMAGENS-PRODUTOS.md).
 
 1. Carregar duas páginas e girar a tela; conferir ordem e ausência de duplicação ou recarga da primeira página.
 2. Abrir uma oferta, voltar e conferir busca/páginas anteriores.

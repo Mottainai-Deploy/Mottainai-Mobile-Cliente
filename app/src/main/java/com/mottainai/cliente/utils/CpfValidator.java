@@ -1,8 +1,11 @@
 package com.mottainai.cliente.utils;
 
+/** Valida apenas formato e dígitos verificadores locais; não comprova identidade nem situação cadastral. */
 public final class CpfValidator {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private CpfValidator() { }
 
+    /** Valida o dado recebido de acordo com as regras deste componente. */
     public static boolean isValid(String digits) {
         if (digits == null || !digits.matches("[0-9]{11}")
                 || digits.matches("([0-9])\\1{10}")) return false;

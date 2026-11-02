@@ -18,12 +18,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/** Representa AssistantRepository, responsável por o acesso e o tratamento dos dados do aplicativo. */
 public final class AssistantRepository {
     private final Context context;
     private final AssistantService service;
     private final String ownerUid;
     private Call<?> pending;
 
+    /** Inicializa AssistantRepository com os dados e as dependências recebidos. */
     public AssistantRepository(Context context) {
         this.context = context.getApplicationContext();
         FirebaseAuth auth = FirebaseSupport.authIfConfigured(this.context);
@@ -41,23 +43,28 @@ public final class AssistantRepository {
         service = configured;
     }
 
+    /** Confere se a configuração necessária ao serviço está disponível. */
     public boolean isConfigured() { return service != null; }
 
+    /** Envia a mensagem e acompanha o resultado da consulta à assistente. */
     public void send(ChatRequest request, Consumer<LoadState<ChatResponse>> result) {
         if (!ready(result)) return;
         enqueue(service.send(request, ownerUid), result);
     }
 
+    /** Obtém as mensagens da conversa solicitada. */
     public void history(String sessionId, Consumer<LoadState<ChatHistory>> result) {
         if (!ready(result)) return;
         enqueue(service.history(sessionId, ownerUid), result);
     }
 
+    /** Obtém as conversas disponíveis para a conta atual. */
     public void sessions(Consumer<LoadState<ChatSessions>> result) {
         if (!ready(result)) return;
         enqueue(service.sessions(ownerUid), result);
     }
 
+    /** Verifica se a operação ainda pertence à sessão atual do cliente. */
     private boolean isOwnerActive() {
         FirebaseAuth auth = FirebaseSupport.authIfConfigured(context);
         FirebaseUser user = auth == null ? null : auth.getCurrentUser();
@@ -65,6 +72,7 @@ public final class AssistantRepository {
                 && new SessionManager(context).isLoggedIn();
     }
 
+    /** Confere os requisitos necessários antes de iniciar a operação. */
     private <T> boolean ready(Consumer<LoadState<T>> result) {
         if (service == null) {
             result.accept(LoadState.error("O assistente não está disponível no momento.", 0));
@@ -77,10 +85,12 @@ public final class AssistantRepository {
         return true;
     }
 
+    /** Executa a requisição assíncrona e encaminha a resposta ou a falha. */
     private <T> void enqueue(Call<T> call, Consumer<LoadState<T>> result) {
         cancel();
         pending = call;
         call.enqueue(new Callback<T>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(Call<T> completed, Response<T> response) {
                 if (pending != completed) return;
                 pending = null;
@@ -99,6 +109,7 @@ public final class AssistantRepository {
                 }
             }
 
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(Call<T> completed, Throwable failure) {
                 if (pending != completed || completed.isCanceled()) return;
                 pending = null;
@@ -113,6 +124,7 @@ public final class AssistantRepository {
         });
     }
 
+    /** Cancela a operação pendente e libera os recursos associados. */
     public void cancel() {
         Call<?> call = pending;
         pending = null;

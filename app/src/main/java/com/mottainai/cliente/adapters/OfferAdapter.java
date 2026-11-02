@@ -17,9 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** Representa OfferAdapter, responsável por a apresentação dos itens em uma lista. */
 public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHolder> {
 
+    /** Define o contrato de OnOfferClickListener, responsável por a apresentação dos itens em uma lista. */
     public interface OnOfferClickListener {
+        /** Notifica a seleção da oferta para abrir seus detalhes. */
         void onOfferClick(Offer offer);
     }
 
@@ -27,21 +30,25 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
     private final OnOfferClickListener listener;
     private final boolean compact;
 
+    /** Inicializa OfferAdapter com os dados e as dependências recebidos. */
     public OfferAdapter(OnOfferClickListener listener) {
         this(listener, false);
     }
 
+    /** Inicializa OfferAdapter com os dados e as dependências recebidos. */
     public OfferAdapter(OnOfferClickListener listener, boolean compact) {
         this.listener = listener;
         this.compact = compact;
     }
 
+    /** Substitui as ofertas exibidas pela lista. */
     public void setOffers(List<Offer> newOffers) {
         offers.clear();
         offers.addAll(newOffers);
         notifyDataSetChanged();
     }
 
+    /** Cria o componente visual usado para exibir um item da lista. */
     @NonNull
     @Override
     public OfferViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +57,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
         return new OfferViewHolder(view);
     }
 
+    /** Preenche o componente da lista com os dados do item na posição solicitada. */
     @Override
     public void onBindViewHolder(@NonNull OfferViewHolder holder, int position) {
         Offer offer = offers.get(position);
@@ -61,17 +69,20 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
         });
     }
 
+    /** Limpa os recursos do item antes de reutilizá-lo em outra posição da lista. */
     @Override
     public void onViewRecycled(@NonNull OfferViewHolder holder) {
         ProductImages.clear(holder.itemView.findViewById(R.id.view_offer_thumb));
         super.onViewRecycled(holder);
     }
 
+    /** Retorna a quantidade de itens que a lista pode exibir. */
     @Override
     public int getItemCount() {
         return offers.size();
     }
 
+    /** As duas apresentações vinculam o mesmo modelo da API e as visualizações de metadados compartilhadas. */
     public static void bind(View itemView, Offer offer) {
         ImageView thumb = itemView.findViewById(R.id.view_offer_thumb);
         TextView badgeLabel = itemView.findViewById(R.id.tv_offer_badge_label);
@@ -103,7 +114,9 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.OfferViewHol
         expiry.setText(offer.getExpiryLabel());
     }
 
+    /** Representa OfferViewHolder, responsável por a apresentação dos itens em uma lista. */
     static class OfferViewHolder extends RecyclerView.ViewHolder {
+        /** Inicializa OfferViewHolder com os dados e as dependências recebidos. */
         OfferViewHolder(@NonNull View itemView) {
             super(itemView);
         }

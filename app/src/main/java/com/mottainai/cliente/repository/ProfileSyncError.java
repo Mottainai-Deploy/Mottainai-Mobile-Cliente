@@ -8,9 +8,12 @@ import java.net.UnknownHostException;
 import java.net.UnknownServiceException;
 import javax.net.ssl.SSLException;
 
+/** Nenhum texto de exceção, token, resposta do servidor ou dado pessoal é exposto ao usuário. */
 public final class ProfileSyncError {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private ProfileSyncError() {}
 
+    /** Obtém a mensagem de erro adequada ao resultado recebido. */
     public static String message(Throwable failure, boolean emulatorAddress) {
         Throwable cause = failure;
         for (int depth = 0; cause != null && depth < 8; depth++, cause = cause.getCause()) {

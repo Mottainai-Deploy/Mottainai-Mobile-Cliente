@@ -6,16 +6,23 @@ import com.mottainai.cliente.models.UserProfile;
 
 import java.util.Locale;
 
+/**
+ * Pequeno gerador de respostas por palavras-chave usado no lugar do backend
+ * real da assistente. Suficiente para manter a tela de chat utilizável enquanto o
+ * modelo de linguagem ainda não está conectado.
+ */
 public class AssistantReplyEngine {
 
     private final MockOfferRepository offerRepository;
     private final MockUserRepository userRepository;
 
+    /** Inicializa AssistantReplyEngine com os dados e as dependências recebidos. */
     public AssistantReplyEngine(MockOfferRepository offerRepository, MockUserRepository userRepository) {
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
     }
 
+    /** Produz a resposta da assistente para a mensagem informada. */
     public ChatMessage reply(String userText) {
         String normalized = userText.toLowerCase(Locale.getDefault());
 

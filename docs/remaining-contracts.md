@@ -21,7 +21,7 @@
 3. Crédito/estorno de pontos pelo PDV e CPF, idempotência, tratamento de centavos e nível/status calculado no servidor. Regra confirmada: 1 ponto por real no total gasto; não multiplicar promoções no Android.
 4. Avisos online e em segundo plano, no mesmo raio: até três campanhas de produtos diferentes por loja/dia, elegibilidade e liberação antecipada para clientes com mais pontos. Janela/grupo prioritário e fuso precisam ser publicados. Não adicionar FCM: Firebase permanece somente autenticação.
 5. Avatar Cloudinary: upload autorizado, confirmação, referência no perfil, exclusão e limites. Não há seletor que finja persistência.
-6. Referência de fotos de produto no catálogo. Android já aceita os campos opcionais propostos `imageUrl` e `items[].imageUrl`; falta acordo/publicação pela API.
+6. Referência de fotos de produto no catálogo. Android aceita os campos opcionais `imageUrl` e `items[].imageUrl` para fotos oficiais futuras; essa publicação deixou de ser bloqueio para fotos ilustrativas: o mobile consulta Open Food Facts por nome, conforme [fluxo atual](IMAGENS-PRODUTOS.md).
 7. Consumidor autorizado na IA e URL `MOTTAINAI_ASSISTANT_BASE_URL`. Ter o cliente HTTP pronto não comprova que o serviço aceita o token do Cliente.
 8. Leitura autorizada de nome/contato de negócio no perfil; o contrato protegido atual não permite apresentar hashes como nome.
 

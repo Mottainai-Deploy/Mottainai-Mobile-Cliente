@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mottainai.cliente.R;
 
+/** Coordenadas proporcionais são restritas às ilustrações e anotações do mapa. */
 public class DesignArtLayout extends ViewGroup {
     protected final float designWidth;
     private final float designHeight;
+    /** Inicializa DesignArtLayout com os dados e as dependências recebidos. */
     public DesignArtLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DesignArtLayout);
@@ -21,6 +23,7 @@ public class DesignArtLayout extends ViewGroup {
         setClipToPadding(clipping.getBoolean(1,false));
         clipping.recycle();
     }
+    /** Desenha o componente respeitando sua apresentação e seus limites visuais. */
     @Override protected void dispatchDraw(android.graphics.Canvas canvas) {
         int state=canvas.save();
         if(getClipToOutline()&&getBackground()!=null) {
@@ -40,6 +43,7 @@ public class DesignArtLayout extends ViewGroup {
         }
         super.dispatchDraw(canvas);canvas.restoreToCount(state);
     }
+    /** Calcula as dimensões do componente de acordo com o espaço disponível. */
     @Override protected void onMeasure(int widthSpec, int heightSpec) {
         int width = MeasureSpec.getSize(widthSpec);
         int height = resolveSize(Math.round(width * designHeight / designWidth), heightSpec);
@@ -53,6 +57,7 @@ public class DesignArtLayout extends ViewGroup {
         }
         setMeasuredDimension(width, height);
     }
+    /** Posiciona os componentes filhos dentro dos limites do layout. */
     @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         float scale = (right-left)/designWidth;
         for (int i=0;i<getChildCount();i++) {
@@ -62,12 +67,18 @@ public class DesignArtLayout extends ViewGroup {
             child.layout(x,y,x+child.getMeasuredWidth(),y+child.getMeasuredHeight());
         }
     }
+    /** Cria os parâmetros usados para posicionar os filhos no layout. */
     @Override public LayoutParams generateLayoutParams(AttributeSet attrs) { return new ArtParams(getContext(),attrs); }
+    /** Cria os parâmetros usados para posicionar os filhos no layout. */
     @Override protected LayoutParams generateDefaultLayoutParams() { return new ArtParams(); }
+    /** Confere se os parâmetros recebidos são compatíveis com o layout. */
     @Override protected boolean checkLayoutParams(LayoutParams p) { return p instanceof ArtParams; }
+    /** Representa ArtParams, responsável por a composição e a interação dos componentes visuais. */
     public static class ArtParams extends LayoutParams {
         float x,y,w,h;
+        /** Inicializa ArtParams com os dados e as dependências recebidos. */
         ArtParams() { super(MATCH_PARENT,WRAP_CONTENT); w=364;h=364; }
+        /** Inicializa ArtParams com os dados e as dependências recebidos. */
         ArtParams(Context c, AttributeSet attrs) {
             super(c,attrs);
             TypedArray a=c.obtainStyledAttributes(attrs,R.styleable.DesignArtLayout_Layout);

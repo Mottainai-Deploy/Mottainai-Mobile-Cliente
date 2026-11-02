@@ -5,9 +5,12 @@ import com.mottainai.cliente.models.PartnerStore;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/** Monta um marcador do Google Maps sem iniciar navegação nem escolher meio de transporte. */
 public final class GoogleMapsUrl {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private GoogleMapsUrl() { }
 
+    /** Monta a URL do Google Maps com a posição ou o endereço da loja. */
     public static String forStore(PartnerStore store) {
         if (store == null) return null;
         String destination = store.hasValidLocation()

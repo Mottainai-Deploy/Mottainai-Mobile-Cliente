@@ -22,13 +22,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de GoogleButtonRegression. */
 @RunWith(AndroidJUnit4.class)
 public class GoogleButtonRegressionTest {
+    /** Verifica se o botão Google solicita somente a credencial prevista para essa ação. */
     @Test public void explicitButtonUsesOnlyTheGoogleButtonCredentialOption() {
         GetCredentialRequest request=GoogleSignInHelper.buttonRequest("test.apps.googleusercontent.com");
         assertEquals(1,request.getCredentialOptions().size());
         assertTrue(request.getCredentialOptions().get(0) instanceof GetSignInWithGoogleOption);
     }
+    /** Verifica o alinhamento central do texto do botão Google nos dois temas. */
     @Test public void googleLabelIsCenteredInBothThemes() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{
             Context base=InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -47,6 +50,7 @@ public class GoogleButtonRegressionTest {
             }
         });
     }
+    /** Verifica a posição do carregamento e do erro do Google e a possibilidade de tentar novamente. */
     @Test public void googleProgressAndFailureAppearBeforeTheButtonsAndAllowRetry() {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context,MainActivity.class).putExtra("screen","2028:4492"))) {

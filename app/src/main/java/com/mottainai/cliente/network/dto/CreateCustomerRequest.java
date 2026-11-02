@@ -1,5 +1,6 @@
 package com.mottainai.cliente.network.dto;
 
+/** Representa CreateCustomerRequest, responsável por a comunicação com os serviços externos. */
 public final class CreateCustomerRequest {
     public final String fullName;
     public final String cpf;
@@ -10,6 +11,7 @@ public final class CreateCustomerRequest {
     public final Boolean marketingConsent;
     public final CreateAddressRequest address;
 
+    /** Inicializa CreateCustomerRequest com os dados e as dependências recebidos. */
     public CreateCustomerRequest(String fullName, String cpf, String email, String password,
                                  String phone, String birthDate, Boolean marketingConsent,
                                  CreateAddressRequest address) {

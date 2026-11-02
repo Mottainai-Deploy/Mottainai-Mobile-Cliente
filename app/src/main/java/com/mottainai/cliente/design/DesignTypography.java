@@ -5,8 +5,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import org.json.JSONObject;
 
+/** Aplica os eixos de fonte variável definidos pelos estilos de texto originais do Figma. */
 public final class DesignTypography {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private DesignTypography() {}
+    /** Aplica a configuração visual ou de edição prevista pelo componente. */
     public static void apply(View root) {
         if(root instanceof TextView) {
             try {

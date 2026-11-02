@@ -9,7 +9,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+/** Reúne os cenários de teste de CustomerProfileResponse. */
 public class CustomerProfileResponseTest {
+    /** Verifica a leitura do perfil protegido sem exigir contatos em texto aberto. */
     @Test public void readsProtectedProfileWithoutExpectingPlaintextContactFields() {
         CustomerProfileResponse profile = new Gson().fromJson(
                 "{\"id\":7,\"birthYear\":2000,\"active\":true,\"marketingConsent\":false}",

@@ -9,9 +9,11 @@ import com.mottainai.cliente.network.dto.ChatSessions;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de ChatContract. */
 public class ChatContractTest {
     private final Gson gson = new Gson();
 
+    /** Verifica se o corpo da requisição contém somente os campos do contrato. */
     @Test public void requestUsesOnlyPublishedFields() {
         JsonObject json = gson.toJsonTree(new ChatRequest(" Olá ", "session-1")).getAsJsonObject();
         assertEquals(2, json.size());
@@ -21,6 +23,7 @@ public class ChatContractTest {
         assertFalse(json.has("customer_id"));
     }
 
+    /** Verifica a rejeição de caminhos e caracteres inválidos em identificadores de conversa. */
     @Test public void sessionIdsRejectPathsAndInvalidCharacters() {
         for (String invalid : new String[]{null, "", "../other", "abc/other", "_abc", "abc x",
                 String.join("", java.util.Collections.nCopies(129, "a"))}) {
@@ -29,14 +32,17 @@ public class ChatContractTest {
         assertTrue(ChatRequest.isValidSessionId("customer-session:abc.1_test"));
     }
 
+    /** Verifica a rejeição de mensagens vazias. */
     @Test(expected = IllegalArgumentException.class) public void blankMessageIsRejected() {
         new ChatRequest("   ", "session-1");
     }
 
+    /** Verifica a rejeição de mensagens acima do limite permitido. */
     @Test(expected = IllegalArgumentException.class) public void oversizedMessageIsRejected() {
         new ChatRequest(String.join("", java.util.Collections.nCopies(4097, "a")), "session-1");
     }
 
+    /** Verifica se a resposta pertence à conversa solicitada. */
     @Test public void responseMustBelongToRequestedConversation() {
         ChatResponse response = gson.fromJson(
                 "{\"session_id\":\"session-1\",\"response\":\"Olá\"}", ChatResponse.class);
@@ -46,6 +52,7 @@ public class ChatContractTest {
         assertFalse(response.isValidFor("session-1"));
     }
 
+    /** Verifica os nomes dos campos e a presença da lista de mensagens no histórico. */
     @Test public void historyUsesSnakeCaseAndNeedsMessageArray() {
         ChatHistory history = gson.fromJson(
                 "{\"session_id\":\"session-1\",\"status\":\"active\",\"messages\":[]}", ChatHistory.class);
@@ -55,6 +62,7 @@ public class ChatContractTest {
         assertFalse(history.isValidFor("session-1"));
     }
 
+    /** Verifica os nomes dos campos publicados na lista de conversas. */
     @Test public void sessionListUsesPublishedCamelCase() {
         ChatSessions result = gson.fromJson(
                 "{\"sessions\":[{\"sessionId\":\"session-1\",\"title\":\"Compras\","

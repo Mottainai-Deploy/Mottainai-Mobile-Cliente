@@ -14,12 +14,15 @@ import com.mottainai.cliente.models.Offer;
 import com.mottainai.cliente.network.OpenFoodFactsImages;
 import java.lang.ref.WeakReference;
 
+/** Representa ProductImages, responsável por as operações auxiliares deste recurso. */
 public final class ProductImages {
     private static final String IMAGE_CACHE = "product_image_urls";
     private static final long IMAGE_CACHE_TTL_MILLIS = 14L * 24 * 60 * 60 * 1000;
 
+    /** Impede a criação de instâncias desta classe utilitária. */
     private ProductImages() {}
 
+    /** Inicia o carregamento dos dados ou da imagem para o componente solicitado. */
     public static void load(ImageView view, Offer offer, TextView attribution) {
         Object request = new Object();
         view.setTag(R.id.product_image_request, request);
@@ -50,16 +53,19 @@ public final class ProductImages {
         });
     }
 
+    /** Limpa a imagem e os recursos associados ao componente. */
     public static void clear(ImageView view) {
         view.setTag(R.id.product_image_request, null);
         Glide.with(view).clear(view);
     }
 
+    /** Apresenta a imagem resolvida no componente visual. */
     private static void display(ImageView view, String source) {
         Glide.with(view).load(source).placeholder(R.drawable.ic_leaf)
                 .error(R.drawable.ic_leaf).fallback(R.drawable.ic_leaf).centerInside().into(view);
     }
 
+    /** Consulta a URL de imagem preservada no cache. */
     private static String cachedUrl(Context context, String productName) {
         String entry = context.getSharedPreferences(IMAGE_CACHE, Context.MODE_PRIVATE)
                 .getString(productName, null);
@@ -72,6 +78,7 @@ public final class ProductImages {
         return ProductImageSource.httpsUrl(entry.substring(separator + 1));
     }
 
+    /** Preserva a URL resolvida para evitar consultas repetidas de imagem. */
     private static void cacheUrl(Context context, String productName, String url) {
         String safeUrl = ProductImageSource.httpsUrl(url);
         if (safeUrl == null) return;
@@ -80,6 +87,7 @@ public final class ProductImages {
                         + "|" + safeUrl).apply();
     }
 
+    /** Verifica se o contexto visual deixou de estar disponível para receber a imagem. */
     private static boolean destroyed(Context context) {
         while (context instanceof ContextWrapper) {
             if (context instanceof Activity) return ((Activity) context).isDestroyed();

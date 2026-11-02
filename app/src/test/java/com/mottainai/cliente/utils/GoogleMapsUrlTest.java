@@ -11,7 +11,9 @@ import java.net.URLDecoder;
 
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de GoogleMapsUrl. */
 public class GoogleMapsUrlTest {
+    /** Verifica a prioridade das coordenadas válidas sobre o endereço na rota. */
     @Test public void coordinatesTakePrecedenceOverAddress() throws Exception {
         CatalogStore store = store();
         store.latitude = new BigDecimal("-23.55");
@@ -19,6 +21,7 @@ public class GoogleMapsUrlTest {
         assertEquals("-23.55,-46.63", query(store));
     }
 
+    /** Verifica os dados completos e a codificação do endereço na URL do mapa. */
     @Test public void addressIncludesUnitCityStateAndZipAndEscapesSpecialCharacters() throws Exception {
         CatalogStore store = store();
         store.address.street = "Rua São João & Filhos #1";
@@ -31,6 +34,7 @@ public class GoogleMapsUrlTest {
         assertTrue(uri.getRawQuery().startsWith("api=1&query="));
     }
 
+    /** Verifica destinos distintos para unidades diferentes da mesma rede. */
     @Test public void differentUnitsOfSameChainHaveDifferentDestinations() {
         CatalogStore first = store();
         CatalogStore second = store();
@@ -39,6 +43,7 @@ public class GoogleMapsUrlTest {
                 GoogleMapsUrl.forStore(new PartnerStore(second)));
     }
 
+    /** Verifica o uso do endereço completo quando faltam coordenadas válidas. */
     @Test public void invalidOrIncompleteCoordinatesUseFullAddress() throws Exception {
         CatalogStore store = store();
         store.latitude = new BigDecimal("91");
@@ -49,6 +54,7 @@ public class GoogleMapsUrlTest {
         assertTrue(query(store).contains("São Paulo, SP"));
     }
 
+    /** Verifica se um endereço incompleto não gera busca apenas pelo nome da rede. */
     @Test public void missingOrPartialAddressDoesNotSearchForTheChainName() {
         CatalogStore store = store();
         store.address.state = " ";
@@ -58,6 +64,7 @@ public class GoogleMapsUrlTest {
         assertNull(GoogleMapsUrl.forStore(null));
     }
 
+    /** Verifica a validade de coordenadas zero sem exigir endereço complementar. */
     @Test public void zeroCoordinatesAreValidAndDoNotRequireAddress() throws Exception {
         CatalogStore store = store();
         store.latitude = BigDecimal.ZERO;
@@ -66,6 +73,7 @@ public class GoogleMapsUrlTest {
         assertEquals("0.0,0.0", query(store));
     }
 
+    /** Verifica a indicação explícita de endereço ausente. */
     @Test public void emptyAddressHasAnExplicitPlaceholder() {
         CatalogStore store = store();
         store.address = new CatalogStore.Address();
@@ -74,11 +82,13 @@ public class GoogleMapsUrlTest {
         assertNull(GoogleMapsUrl.forStore(partner));
     }
 
+    /** Extrai o parâmetro da URL que será conferido pelo teste. */
     private String query(CatalogStore store) throws Exception {
         String url = GoogleMapsUrl.forStore(new PartnerStore(store));
         return URLDecoder.decode(url.substring(url.indexOf("&query=") + 7), "UTF-8");
     }
 
+    /** Obtém os dados da loja identificada na consulta. */
     private CatalogStore store() {
         CatalogStore store = new CatalogStore();
         store.id = "1";

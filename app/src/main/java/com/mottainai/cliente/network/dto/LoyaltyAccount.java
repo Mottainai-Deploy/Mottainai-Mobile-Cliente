@@ -1,5 +1,6 @@
 package com.mottainai.cliente.network.dto;
 
+/** Representa LoyaltyAccount, responsável por a comunicação com os serviços externos. */
 public class LoyaltyAccount {
     public String id;
     public String customerId;

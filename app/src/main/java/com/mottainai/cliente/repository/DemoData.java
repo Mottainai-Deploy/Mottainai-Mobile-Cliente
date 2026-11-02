@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Dados locais usados apenas ao navegar na versão de depuração sem serviços de backend. */
 public final class DemoData {
 
+    /** Impede a criação de instâncias desta classe utilitária. */
     private DemoData() { }
 
+    /** Obtém a página de lojas conforme os filtros informados. */
     public static List<CatalogStore> stores() {
         List<CatalogStore> stores = new ArrayList<>();
         stores.add(store("mercado-verde", "Mercado Verde", "Avenida Paulista", "1000",
@@ -27,6 +30,7 @@ public final class DemoData {
         return stores;
     }
 
+    /** Obtém a página de promoções conforme os filtros informados. */
     public static List<CatalogPromotion> promotions() {
         List<CatalogStore> stores = stores();
         List<CatalogPromotion> promotions = new ArrayList<>();
@@ -54,6 +58,7 @@ public final class DemoData {
         return promotions;
     }
 
+    /** Obtém os dados da promoção identificada na consulta. */
     public static CatalogPromotion promotion(String id) {
         for (CatalogPromotion promotion : promotions()) {
             if (promotion.id.equals(id)) return promotion;
@@ -61,6 +66,7 @@ public final class DemoData {
         return null;
     }
 
+    /** Monta os dados de fidelidade utilizados na demonstração. */
     public static LoyaltyAccount loyaltyAccount() {
         LoyaltyAccount account = new LoyaltyAccount();
         account.id = "demo-account";
@@ -69,6 +75,7 @@ public final class DemoData {
         return account;
     }
 
+    /** Obtém os lançamentos de pontos do período solicitado. */
     public static List<LoyaltyTransaction> transactions(LocalDate month) {
         List<LoyaltyTransaction> transactions = new ArrayList<>();
         LocalDate today = LocalDate.now();
@@ -85,6 +92,7 @@ public final class DemoData {
         return transactions;
     }
 
+    /** Monta o perfil utilizado na demonstração. */
     public static CustomerProfileResponse customerProfile() {
         CustomerProfileResponse profile = new CustomerProfileResponse();
         profile.id = 0;
@@ -95,6 +103,7 @@ public final class DemoData {
         return profile;
     }
 
+    /** Obtém os dados da loja identificada na consulta. */
     private static CatalogStore store(String id, String name, String street, String number,
                                       String neighborhood, String city, String state,
                                       String latitude, String longitude) {
@@ -112,6 +121,7 @@ public final class DemoData {
         return store;
     }
 
+    /** Obtém os dados da promoção identificada na consulta. */
     private static CatalogPromotion promotion(String id, String name, String description,
                                                CatalogStore store,
                                                String itemName, String originalPrice,
@@ -136,6 +146,7 @@ public final class DemoData {
         return promotion;
     }
 
+    /** Monta um lançamento de pontos utilizado na demonstração. */
     private static LoyaltyTransaction transaction(String id, String type, int points,
                                                    String description, LocalDateTime createdAt) {
         LoyaltyTransaction transaction = new LoyaltyTransaction();

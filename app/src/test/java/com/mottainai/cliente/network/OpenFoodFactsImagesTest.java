@@ -12,11 +12,13 @@ import okhttp3.MediaType;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de OpenFoodFactsImages. */
 public class OpenFoodFactsImagesTest {
     private static final String RESPONSE = "{\"products\":[{\"code\":\"3017620422003\","
             + "\"product_name\":\"Nutella\",\"brands\":\"Ferrero\","
             + "\"image_front_url\":\"https://images.openfoodfacts.org/product.jpg\"}]}";
 
+    /** Verifica a leitura da foto e da atribuição da fonte esperada. */
     @Test public void readsPhotoAndTrustedAttribution() {
         OpenFoodFactsImages.Photo photo = OpenFoodFactsImages.parse(RESPONSE, "Nutella 400g");
         assertNotNull(photo);
@@ -25,6 +27,7 @@ public class OpenFoodFactsImagesTest {
         assertEquals("Nutella", photo.productName);
     }
 
+    /** Verifica a rejeição de produtos diferentes e imagens com URLs inseguras. */
     @Test public void ignoresUnrelatedProductAndUnsafeImages() {
         assertNull(OpenFoodFactsImages.parse(RESPONSE, "Leite integral"));
         assertNull(OpenFoodFactsImages.parse(RESPONSE.replace("https://", "http://"), "nutella"));
@@ -32,6 +35,7 @@ public class OpenFoodFactsImagesTest {
         assertNull(OpenFoodFactsImages.parse(RESPONSE.replace("3017620422003", "../x"), "nutella"));
     }
 
+    /** Verifica o tratamento de respostas ausentes ou inválidas. */
     @Test public void toleratesMissingAndInvalidResponses() {
         for (String json : new String[]{"{}", "{\"products\":[]}", "not json", "null",
                 "{\"products\":[null,{},42]}", "{\"products\":{}}"}) {
@@ -39,11 +43,13 @@ public class OpenFoodFactsImagesTest {
         }
     }
 
+    /** Verifica a normalização dos nomes sem enviar dados privados na consulta. */
     @Test public void normalizesNamesWithoutSendingPrivateData() {
         assertEquals("cafe em po 500g", OpenFoodFactsImages.normalize(" Café em pó 500g "));
         assertEquals("", OpenFoodFactsImages.normalize(null));
     }
 
+    /** Verifica a reutilização das consultas e do cache sem transmitir autenticação. */
     @Test public void deduplicatesAndCachesWithoutAuthorization() throws Exception {
         AtomicInteger calls = new AtomicInteger();
         AtomicReference<String> auth = new AtomicReference<>();
@@ -71,6 +77,7 @@ public class OpenFoodFactsImagesTest {
         } finally { images.close(); }
     }
 
+    /** Verifica se falhas são preservadas no cache para evitar consultas repetidas em sequência. */
     @Test public void failuresAreCachedInsteadOfRetriedInALoop() throws Exception {
         AtomicInteger calls = new AtomicInteger();
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(chain -> {

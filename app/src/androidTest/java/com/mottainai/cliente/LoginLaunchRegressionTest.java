@@ -13,8 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
+/** Reúne os cenários de teste de LoginLaunchRegression. */
 @RunWith(AndroidJUnit4.class)
 public class LoginLaunchRegressionTest {
+    /** Verifica se a abertura sem sessão apresenta a splash antes da introdução. */
     @Test public void launchWithoutSessionAlwaysShowsSplashBeforeOnboarding() throws Exception {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         new SessionManager(context).clearSession();
@@ -26,6 +28,7 @@ public class LoginLaunchRegressionTest {
             scenario.onActivity(activity->assertEquals("2542:29599",activity.currentScreen().getArguments().getString("screen")));
         }
     }
+    /** Verifica se o login permanece fixo com o teclado fechado. */
     @Test public void loginDoesNotScrollOnTouchWhenKeyboardIsClosed() {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(new Intent(context,MainActivity.class).putExtra("screen","2028:4492"))) {

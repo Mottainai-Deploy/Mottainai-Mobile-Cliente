@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/** Representa AssistantViewModel, responsável por o estado observado pela interface. */
 public final class AssistantViewModel extends AndroidViewModel {
     private final AssistantRepository repository;
     private final AssistantReplyEngine demoEngine;
@@ -29,6 +30,7 @@ public final class AssistantViewModel extends AndroidViewModel {
     private String sessionId = UUID.randomUUID().toString();
     private boolean closed;
 
+    /** Inicializa AssistantViewModel com os dados e as dependências recebidos. */
     public AssistantViewModel(@NonNull Application application) {
         super(application);
         repository = new AssistantRepository(application);
@@ -37,18 +39,27 @@ public final class AssistantViewModel extends AndroidViewModel {
         resetConversation();
     }
 
+    /** Retorna o estado atual observado pelo fluxo. */
     public LiveData<LoadState<List<ChatMessage>>> state() { return state; }
+    /** Obtém as conversas disponíveis para a conta atual. */
     public LiveData<List<ChatSessions.Session>> sessions() { return sessions; }
+    /** Indica se o fluxo utiliza dados de demonstração. */
     public boolean isDemo() { return demoEngine != null; }
+    /** Verifica se o serviço da assistente está disponível para uso. */
     public boolean isAvailable() { return isDemo() || repository.isConfigured(); }
+    /** Informa se o fluxo da conversa já foi encerrado. */
     public boolean isClosed() { return closed; }
+    /** Indica se existe uma operação em andamento que bloqueia novo envio. */
     public boolean isBusy() { return state.getValue() != null && state.getValue().status == LoadState.Status.LOADING; }
+    /** Entrega as conversas disponíveis e consome a seleção pendente. */
     public void consumeSessionChoices() { sessions.setValue(null); }
 
+    /** Obtém uma cópia do estado atual da conversa. */
     private List<ChatMessage> snapshot() {
         return Collections.unmodifiableList(new ArrayList<>(messages));
     }
 
+    /** Envia a mensagem e acompanha o resultado da consulta à assistente. */
     public boolean send(String text) {
         if (isBusy() || !isAvailable() || closed) return false;
         final ChatRequest request;
@@ -75,6 +86,7 @@ public final class AssistantViewModel extends AndroidViewModel {
         return true;
     }
 
+    /** Solicita as mensagens da conversa selecionada. */
     public void loadHistory() {
         if (isBusy() || !isAvailable() || isDemo()) return;
         state.setValue(LoadState.loading(snapshot()));
@@ -101,6 +113,7 @@ public final class AssistantViewModel extends AndroidViewModel {
         });
     }
 
+    /** Solicita a lista de conversas da conta autenticada. */
     public void loadSessions() {
         if (isBusy() || !isAvailable() || isDemo()) return;
         state.setValue(LoadState.loading(snapshot()));
@@ -118,6 +131,7 @@ public final class AssistantViewModel extends AndroidViewModel {
         });
     }
 
+    /** Seleciona a conversa e inicia o carregamento do seu histórico. */
     public void openConversation(String id) {
         if (isBusy() || !ChatRequest.isValidSessionId(id)) return;
         sessionId = id;
@@ -126,12 +140,14 @@ public final class AssistantViewModel extends AndroidViewModel {
         loadHistory();
     }
 
+    /** Limpa a conversa atual e prepara o envio de uma nova mensagem. */
     public void newConversation() {
         if (isBusy()) return;
         sessionId = UUID.randomUUID().toString();
         resetConversation();
     }
 
+    /** Limpa a conversa atual e prepara o envio de uma nova mensagem. */
     private void resetConversation() {
         messages.clear();
         closed = false;
@@ -141,11 +157,13 @@ public final class AssistantViewModel extends AndroidViewModel {
                 : LoadState.error("O endereço do assistente ainda não foi configurado para este aplicativo.", 0, snapshot()));
     }
 
+    /** Atualiza o estado com a falha da operação e libera o carregamento. */
     private void fail(String message, int httpStatus) {
         if (httpStatus == 401) messages.clear();
         state.setValue(LoadState.error(message, httpStatus, snapshot()));
     }
 
+    /** Libera os recursos mantidos pelo estado quando ele deixa de ser utilizado. */
     @Override protected void onCleared() {
         repository.cancel();
         messages.clear();

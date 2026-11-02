@@ -1,5 +1,7 @@
 # Demandas do Mobile Cliente para a equipe da API
 
+> Atualização de 01/11/2026: o raio permitido no Android é de 5 ou 10 km. A foto é enviada diretamente ao Cloudinary e sua URL HTTPS é salva junto ao perfil pela API Cliente; não requer armazenar o arquivo binário nem criar uma rota exclusiva de upload. As seções históricas abaixo precisam ser confrontadas com o contrato atual antes de solicitar novas alterações de backend.
+
 > Alinhamento de 21/10/2026. Documento para encaminhar à pessoa responsável pela API Cliente. O trabalho desta frente é **somente Android Cliente**: não inclui implementar API, PDV, IA, migrations, implantação ou configurar serviços externos. Este documento não declara endpoints novos publicados nem autoriza PR/push.
 
 ## 1. Como trabalhar em conjunto
@@ -146,6 +148,8 @@ Não adicionar FCM por suposição: Firebase foi limitado à autenticação. Se 
 
 ## 7. Avatar e imagens dos produtos
 
+**Atualização de 30/10/2026:** por decisão de produto, o mobile passou a consultar fotos ilustrativas diretamente no Open Food Facts pelo nome recebido. Não é necessário alterar banco/API para esse fallback. O fluxo abaixo por GTIN/URL oficial permanece como evolução futura; não bloqueia o teste das imagens. [Implementação atual](IMAGENS-PRODUTOS.md).
+
 ### Campos opcionais preparados no Android (proposta, ainda não publicados)
 
 - No saldo: `statusName: string | null` e `pointsToNextStatus: integer | null`. São valores calculados pelo servidor; ausência não impede mostrar o saldo e não produz nível local. Confirmar se esses nomes/tipos serão adotados.
@@ -164,7 +168,7 @@ Recomendação para piloto: **Open Food Facts**, consulta por GTIN e referência
 
 A equipe da API deve validar cobertura com GTINs reais, versão suportada, atribuição/licenças e limites; Open Food Facts não é garantia de foto para todo item. Cosmos/Bluesoft é alternativa a avaliar, não uma segunda integração obrigatória. Não enviar dados pessoais a esses provedores.
 
-Publicar campo de imagem, fonte/atribuição quando necessária e comportamento de indisponibilidade. O mobile consome a referência aprovada, sem scraping, foto parecida pelo nome ou segredo de provedor no APK. Cloudinary continua exclusivo para avatar neste escopo.
+Publicar campo de imagem, fonte/atribuição quando necessária e comportamento de indisponibilidade. Para identificação exata, o mobile poderá consumir a referência aprovada. No fallback atual, a pesquisa por nome é explicitamente ilustrativa; não há scraping nem segredo de provedor no APK. Cloudinary continua exclusivo para avatar neste escopo.
 
 ## 8. Assistente existente da IA
 
@@ -221,3 +225,10 @@ Cada entrega deve poder ser integrada isoladamente. O mobile continua com carreg
 - [Cosmos — API](https://api.cosmos.bluesoft.com.br/api) e [licenças por item](https://api.cosmos.bluesoft.com.br/licenses).
 
 Este MD descreve demandas e propostas, não implementa nem afirma que o backend novo já atende a elas. Aprovação de PR/push continua separada e depende de Isabella.
+
+
+## Perfil e foto — integração necessária
+
+Conferência local: API Cliente em bb2f800 e API Operacional em be2847d. O perfil Firebase da Cliente oferece GET/POST/PUT em /api/v1/client/auth/profile; o GET retorna ID, ano de nascimento, status e consentimento, mas não nome, telefone ou foto. A edição envia nome, telefone e consentimento. Não foi encontrado contrato de foto/Cloudinary nas fontes locais das duas APIs. Confirme a versão implantada quando ela estiver acessível.
+
+Para o app editar dados já preenchidos e manter foto por cliente em diferentes dispositivos, a API Cliente precisa devolver nome, telefone e photoUrl do titular autenticado e disponibilizar um fluxo autenticado para atualizar/remover sua foto. Recomenda-se upload de imagem pelo backend ou assinatura temporária de upload ao Cloudinary, seguida de gravação da URL/identificador no perfil SQL do mesmo Firebase UID. A API deve validar titularidade, formato e tamanho, limitar acesso ao recurso e lidar com falhas. A chave secreta do Cloudinary deve permanecer no servidor. Definir requests, responses e erros antes de integrar.

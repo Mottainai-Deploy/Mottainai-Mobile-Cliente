@@ -10,7 +10,9 @@ import com.caverock.androidsvg.SVG;
 import com.mottainai.cliente.R;
 import java.io.InputStream;
 
+/** Ilustração local original do Figma, preservando a geometria SVG e a proporção. */
 public class DesignImageView extends AppCompatImageView {
+    /** Desenha o componente respeitando sua apresentação e seus limites visuais. */
     @Override protected void onDraw(android.graphics.Canvas canvas) {
         int saved=canvas.save();
         if(String.valueOf(getTag()).contains("\"name\": \"Ellipse\"")) {
@@ -20,6 +22,7 @@ public class DesignImageView extends AppCompatImageView {
         }
         super.onDraw(canvas);canvas.restoreToCount(saved);
     }
+    /** Inicializa DesignImageView com os dados e as dependências recebidos. */
     public DesignImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.DesignImageView);

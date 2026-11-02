@@ -16,13 +16,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
+/** Verifica os toques e as transições reais das telas, incluindo validação e persistência local. */
 @RunWith(AndroidJUnit4.class)
 public class DesignFlowTest {
+    /** Abre a atividade usada pelo cenário de teste. */
     private ActivityScenario<MainActivity> launch(String screen) {
         Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         context.getSharedPreferences("cliente_preferences",Context.MODE_PRIVATE).edit().clear().putInt("theme",1).commit();
         return ActivityScenario.launch(new Intent(context,MainActivity.class).putExtra("screen",screen).putExtra("design_preview",true));
     }
+    /** Verifica a apresentação inicial, o login, a navegação e a saída da conta. */
     @Test public void introductionLoginNavigationAndLogout() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2542:29599")) {
             click(scenario,"Continuar",false);expect(scenario,"2542:29639");
@@ -46,6 +49,7 @@ public class DesignFlowTest {
             click(scenario,"Sair",false);expect(scenario,"2028:4492");
         }
     }
+    /** Verifica as etapas de revisão e conclusão do cadastro. */
     @Test public void registrationReviewAndCompletion() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2028:4492")) {
             click(scenario,"Criar conta",false);expect(scenario,"2143:9435");
@@ -58,6 +62,7 @@ public class DesignFlowTest {
             click(scenario,"Criar conta",false);expect(scenario,"2005:3812");
         }
     }
+    /** Verifica as preferências, a busca e o fluxo da conversa. */
     @Test public void preferencesAndSearchAndConversation() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2022:4219")) {
             click(scenario,"Opção / Preferências de comunicação",true);expect(scenario,"2650:73471");
@@ -74,6 +79,7 @@ public class DesignFlowTest {
             click(scenario,"Minhas conversas",false);expect(scenario,"2557:30504");
         }
     }
+    /** Verifica se a preferência de tema permanece após recriar a atividade. */
     @Test public void themeSurvivesRecreation() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2005:4483")) {
             click(scenario,"Escuro",false);
@@ -84,6 +90,7 @@ public class DesignFlowTest {
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         }
     }
+    /** Verifica as tentativas de recuperação e o retorno dos painéis informativos. */
     @Test public void retriesRecoverAndInformationalPanelsReturn() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2416:25538")) {
             click(scenario,"Tentar buscar ofertas",false);expect(scenario,"2005:3812");
@@ -100,6 +107,7 @@ public class DesignFlowTest {
             scenario.onActivity(a->assertNotNull("Composer resumes after checking delivery",find(a.currentScreen().requireView(),"field","Mensagem")));
         }
     }
+    /** Verifica a continuidade após corrigir os campos e alterar o consentimento. */
     @Test public void correctedValidationAndAlternateConsentContinue() throws Exception {
         try(ActivityScenario<MainActivity> scenario=launch("2143:9896")) {
             scenario.onActivity(a->fill(a.currentScreen().requireView(),"senha-local"));
@@ -111,6 +119,7 @@ public class DesignFlowTest {
             click(scenario,"Ofertas por perto",false);expect(scenario,"2055:5739");
         }
     }
+    /** Verifica se fotos da câmera e da galeria passam pela confirmação. */
     @Test public void galleryAndCameraResultsRequirePhotoConfirmation() throws Exception {
         android.app.Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();
         Context context=instrumentation.getTargetContext();
@@ -141,26 +150,33 @@ public class DesignFlowTest {
             new java.io.File(context.getFilesDir(),"profile-photo-pending.jpg").delete();
         }
     }
+    /** Localiza e aciona o componente usado pelo cenário de teste. */
     private void click(ActivityScenario<MainActivity> scenario,String value,boolean name) {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         scenario.onActivity(a->{View view=find(a.currentScreen().requireView(),name?"name":"action",value);assertNotNull("Missing action: "+value,view);assertTrue(value,view.performClick());});
     }
+    /** Confere se a tela ou o resultado esperado foi apresentado. */
     private void expect(ActivityScenario<MainActivity> scenario,String id) {
         String[] actual={null};long until=SystemClock.uptimeMillis()+6000;
         do {InstrumentationRegistry.getInstrumentation().waitForIdleSync();scenario.onActivity(a->{Fragment f=a.currentScreen();actual[0]=f==null?null:f.getTag();});if(id.equals(actual[0]))return;SystemClock.sleep(80);}while(SystemClock.uptimeMillis()<until);
         assertEquals(id,actual[0]);
     }
+    /** Lê os metadados usados para identificar e conectar o componente da tela. */
     private JSONObject tag(View view) {try{return new JSONObject(String.valueOf(view.getTag()));}catch(Exception ignored){return new JSONObject();}}
+    /** Localiza o elemento ou resultado correspondente aos critérios informados. */
     private View find(View root,String key,String value) {
         String candidate=tag(root).optString(key.equals("any_name")?"name":key).trim().replaceAll("\\s+"," ");
         if(candidate.equals(value)&&(key.equals("field")||key.equals("any_name")||root.isClickable()))return root;
         if(root instanceof ViewGroup)for(int i=0;i<((ViewGroup)root).getChildCount();i++){View match=find(((ViewGroup)root).getChildAt(i),key,value);if(match!=null)return match;}
         return null;
     }
+    /** Preenche os campos necessários ao cenário de teste. */
     private void fill(View view,String fallback) {
         if(view instanceof EditText){String label=tag(view).optString("field").toLowerCase(java.util.Locale.ROOT);((EditText)view).setText(label.contains("mail")?"pessoa@exemplo.com":label.contains("telefone")?"11900000000":label.contains("cep")?"01001000":label.contains("cpf")?"12345678909":label.contains("número")?"210":label.contains("nome")?"Pessoa de teste":fallback);}
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)fill(((ViewGroup)view).getChildAt(i),fallback);
     }
+    /** Preenche o campo indicado com o valor informado. */
     private void setField(View root,String name,String value){EditText field=(EditText)find(root,"field",name);assertNotNull(name,field);field.setText(value);}
+    /** Verifica a presença do conteúdo esperado na hierarquia da tela. */
     private boolean contains(View root,String value){if(root instanceof TextView&&((TextView)root).getText().toString().contains(value))return true;if(root instanceof ViewGroup)for(int i=0;i<((ViewGroup)root).getChildCount();i++)if(contains(((ViewGroup)root).getChildAt(i),value))return true;return false;}
 }

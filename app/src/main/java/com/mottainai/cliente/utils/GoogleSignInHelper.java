@@ -15,18 +15,25 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/** Representa GoogleSignInHelper, responsável por as operações auxiliares deste recurso. */
 public final class GoogleSignInHelper {
+    /** Define o contrato de Callback, responsável por as operações auxiliares deste recurso. */
     public interface Callback {
+        /** Recebe o token do Google e encaminha a autenticação para o fluxo da conta. */
         void onToken(String idToken);
+        /** Trata a falha recebida e informa o erro ao fluxo responsável. */
         void onError(String message);
     }
+    /** Impede a criação de instâncias desta classe utilitária. */
     private GoogleSignInHelper() {}
 
+    /** Monta a solicitação de credencial do botão de entrada com Google. */
     static GetCredentialRequest buttonRequest(String webClientId) {
         return new GetCredentialRequest.Builder().addCredentialOption(
                 new GetSignInWithGoogleOption.Builder(webClientId).build()).build();
     }
 
+    /** Abre a seleção da conta Google e encaminha o resultado da autenticação. */
     public static CancellationSignal signIn(Activity activity, Callback callback) {
         CancellationSignal cancellation = new CancellationSignal();
         Handler handler = new Handler(Looper.getMainLooper());
@@ -38,12 +45,14 @@ public final class GoogleSignInHelper {
             }
         };
         Callback once = new Callback() {
+            /** Recebe o token do Google e encaminha a autenticação para o fluxo da conta. */
             public void onToken(String token) {
                 if (completed.compareAndSet(false, true)) {
                     handler.removeCallbacks(timeout);
                     callback.onToken(token);
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             public void onError(String message) {
                 if (completed.compareAndSet(false, true)) {
                     handler.removeCallbacks(timeout);
@@ -63,6 +72,7 @@ public final class GoogleSignInHelper {
                     activity, buttonRequest(activity.getString(clientIdResource)), cancellation,
                     ContextCompat.getMainExecutor(activity),
                     new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                        /** Recebe o resultado da seleção de credenciais do Google. */
                         @Override public void onResult(@NonNull GetCredentialResponse response) {
                             Credential credential = response.getCredential();
                             if (!(credential instanceof CustomCredential)
@@ -78,6 +88,7 @@ public final class GoogleSignInHelper {
                                 once.onError("Não foi possível validar a conta Google. Tente novamente.");
                             }
                         }
+                        /** Trata a falha recebida e informa o erro ao fluxo responsável. */
                         @Override public void onError(@NonNull GetCredentialException error) {
                             if (error instanceof GetCredentialCancellationException)
                                 once.onError("Login com Google cancelado. Você pode tentar novamente.");

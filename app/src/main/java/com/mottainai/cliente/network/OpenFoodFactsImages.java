@@ -21,12 +21,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/** Usa apenas fotos públicas e ilustrativas. Nunca utiliza ApiClient nem envia token Firebase. */
 public final class OpenFoodFactsImages {
+    /** Representa Photo, responsável por a comunicação com os serviços externos. */
     public static final class Photo {
         public final String url;
         public final String productPage;
         public final String productName;
 
+        /** Inicializa Photo com os dados e as dependências recebidos. */
         Photo(String url, String code, String name) {
             this.url = url;
             this.productPage = "https://world.openfoodfacts.org/product/" + code;
@@ -34,15 +37,18 @@ public final class OpenFoodFactsImages {
         }
     }
 
+    /** Representa Cached, responsável por a comunicação com os serviços externos. */
     private static final class Cached {
         final Photo photo;
         final long expires;
+        /** Inicializa Cached com os dados e as dependências recebidos. */
         Cached(Photo photo) {
             this.photo = photo;
             expires = System.nanoTime() + TimeUnit.MINUTES.toNanos(photo == null ? 1 : 360);
         }
     }
 
+    /** Representa Holder, responsável por a comunicação com os serviços externos. */
     private static final class Holder {
         static final OpenFoodFactsImages INSTANCE = new OpenFoodFactsImages(
                 new OkHttpClient.Builder().connectTimeout(4, TimeUnit.SECONDS)
@@ -50,6 +56,7 @@ public final class OpenFoodFactsImages {
                         .followRedirects(false).build(), 7000);
     }
 
+    /** Retorna a instância compartilhada do serviço. */
     public static OpenFoodFactsImages getInstance() { return Holder.INSTANCE; }
 
     private final OkHttpClient client;
@@ -60,11 +67,13 @@ public final class OpenFoodFactsImages {
     private boolean running;
     private long nextRequest;
 
+    /** Inicializa OpenFoodFactsImages com os dados e as dependências recebidos. */
     OpenFoodFactsImages(OkHttpClient client, long intervalMillis) {
         this.client = client;
         this.intervalMillis = intervalMillis;
     }
 
+    /** Localiza o elemento ou resultado correspondente aos critérios informados. */
     public void find(String productName, Consumer<Photo> callback) {
         String query = normalize(productName);
         synchronized (this) {
@@ -87,6 +96,7 @@ public final class OpenFoodFactsImages {
         }
     }
 
+    /** Consulta a próxima fonte disponível para resolver a imagem do produto. */
     private void fetchNext() {
         String query;
         synchronized (this) { query = pending.keySet().iterator().next(); }
@@ -122,12 +132,14 @@ public final class OpenFoodFactsImages {
         for (Consumer<Photo> callback : callbacks) callback.accept(photo);
     }
 
+    /** Normaliza os dados antes de utilizá-los na consulta ou apresentação. */
     static String normalize(String value) {
         if (value == null) return "";
         return Normalizer.normalize(value, Normalizer.Form.NFD).replaceAll("\\p{M}+", "")
                 .toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", " ").trim();
     }
 
+    /** Interpreta a resposta recebida e extrai os dados necessários ao fluxo. */
     static Photo parse(String json, String query) {
         try {
             JsonArray products = JsonParser.parseString(json).getAsJsonObject().getAsJsonArray("products");
@@ -154,10 +166,12 @@ public final class OpenFoodFactsImages {
         return null;
     }
 
+    /** Obtém ou atualiza o texto utilizado pelo componente neste fluxo. */
     private static String text(JsonObject object, String key) {
         JsonElement value = object.get(key);
         return value != null && value.isJsonPrimitive() ? value.getAsString() : "";
     }
 
+    /** Encerra o recurso aberto pela operação de consulta. */
     void close() { worker.shutdownNow(); }
 }

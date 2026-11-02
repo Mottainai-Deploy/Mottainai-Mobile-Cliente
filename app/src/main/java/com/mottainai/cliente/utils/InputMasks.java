@@ -7,9 +7,12 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 
 import java.util.concurrent.CompletableFuture;
 
+/** Representa InputMasks, responsável por as operações auxiliares deste recurso. */
 public final class InputMasks {
+    /** Impede a criação de instâncias desta classe utilitária. */
     private InputMasks() {}
 
+    /** O formatador nativo carrega metadados de telefone fora da thread da interface. Anexe e formate na thread da visualização. */
     public static void applyPhone(EditText field) {
         CompletableFuture.supplyAsync(() -> new PhoneNumberFormattingTextWatcher("BR"))
                 .thenAccept(watcher -> field.post(() -> {
@@ -18,11 +21,15 @@ public final class InputMasks {
                 }));
     }
 
+    /** Aplica a configuração visual ou de edição prevista pelo componente. */
     public static void apply(EditText field, String pattern) {
         field.addTextChangedListener(new TextWatcher() {
             private boolean formatting;
+            /** Recebe o aviso anterior à alteração do texto; mantém o comportamento previsto pelo observador. */
             @Override public void beforeTextChanged(CharSequence value, int start, int count, int after) {}
+            /** Recebe a alteração do campo e atualiza o estado associado ao texto. */
             @Override public void onTextChanged(CharSequence value, int start, int before, int count) {}
+            /** Processa o texto final do campo após a edição do usuário. */
             @Override public void afterTextChanged(Editable value) {
                 if (formatting) return;
                 String original = value.toString();

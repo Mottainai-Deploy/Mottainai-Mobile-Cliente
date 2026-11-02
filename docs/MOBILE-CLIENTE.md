@@ -1,3 +1,5 @@
+> Atualização do frontend: a interface principal agora usa o conjunto completo da PR #25. Consulte [FRONTEND-INTEGRADO.md](FRONTEND-INTEGRADO.md) para navegação, vínculos com ViewModels e limites atuais. As descrições de IDs/layouts antigos abaixo são históricas quando divergirem dessa atualização.
+
 # Mottainai Mobile Cliente — documentação funcional e técnica
 
 > Atualização: **20/10/2026**. Este documento reúne o estado observado no código local, as decisões recentes do projeto e as pendências para entrega. **Implementado no Android não significa publicado na API nem validado ponta a ponta.** A entrega local `fix/firebase-auth-only` não foi enviada nem teve PR aberta.
@@ -318,7 +320,7 @@ Combina saudação/perfil, saldo e seções de ofertas/lojas. As consultas não 
 - O argumento de navegação é `store_id`; a query HTTP é `storeId`.
 - Categoria fica indisponível até existir campo e contrato correspondentes.
 
-O detalhe usa o ID da oferta (`offer_id`) e trata `404`, indisponibilidade e ausência de campos. O Android aceita a proposta de foto opcional `imageUrl` e `items[].imageUrl`, ainda dependente de publicação pela API. Usa apenas HTTPS, placeholder em ausência/falha e nunca inventa URL. Um item único pode fornecer sua foto; múltiplos itens exigem capa explícita. Preço original, promocional e disponibilidade são dados do backend.
+O detalhe usa o ID da oferta (`offer_id`) e trata `404`, indisponibilidade e ausência de campos. O Android aceita a proposta de foto opcional `imageUrl` e `items[].imageUrl`, ainda dependente de publicação pela API. Usa apenas HTTPS, placeholder em ausência/falha e nunca inventa URL. Um item único pode fornecer sua foto; múltiplos itens exigem capa explícita. Sem URL da API, o mobile agora consulta o Open Food Facts pelo nome do produto e identifica a foto como ilustrativa, sem alterar banco/API. Consulte [imagens externas](IMAGENS-PRODUTOS.md) para cache, limites, créditos e testes. Preço original, promocional e disponibilidade são dados do backend.
 
 A regra esperada do feed é apresentar promoções aprovadas, ativas e vigentes, de lojas ativas e com itens disponíveis. Essa elegibilidade precisa ser garantida e testada **no servidor**; filtro visual no Android não protege o catálogo.
 

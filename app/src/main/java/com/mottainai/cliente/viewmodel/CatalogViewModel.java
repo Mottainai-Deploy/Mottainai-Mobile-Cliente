@@ -21,6 +21,7 @@ import com.mottainai.cliente.utils.SessionManager;
 
 import java.util.Objects;
 
+/** Representa CatalogViewModel, responsável por o estado observado pela interface. */
 public class CatalogViewModel extends AndroidViewModel {
     private final CatalogRepository repository;
     private final ForegroundLocationRepository locationRepository;
@@ -43,6 +44,7 @@ public class CatalogViewModel extends AndroidViewModel {
     private Double storeLongitude;
     private OfferRadius storeRadius = OfferRadius.DEFAULT;
 
+    /** Inicializa CatalogViewModel com os dados e as dependências recebidos. */
     public CatalogViewModel(@NonNull Application application) {
         super(application);
         repository = new CatalogRepository(application);
@@ -50,14 +52,20 @@ public class CatalogViewModel extends AndroidViewModel {
         demoMode = new SessionManager(application).isDemoMode();
     }
 
+    /** Obtém a página de promoções conforme os filtros informados. */
     public LiveData<LoadState<CatalogPage<CatalogPromotion>>> promotions() { return promotions; }
+    /** Obtém a página de lojas conforme os filtros informados. */
     public LiveData<LoadState<CatalogPage<CatalogStore>>> stores() { return stores; }
+    /** Retorna o estado observado dos detalhes da promoção. */
     public LiveData<LoadState<CatalogPromotion>> detail() { return detail; }
+    /** Retorna a posição disponível para as consultas próximas. */
     public LiveData<LoadState<Location>> location() { return location; }
+    /** Indica se a obtenção da posição do aparelho está em andamento. */
     public boolean isLocating() {
         return location.getValue() != null && location.getValue().status == LoadState.Status.LOADING;
     }
 
+    /** Solicita a posição atual do aparelho e acompanha seu resultado. */
     public void requestLocation() {
         if (demoMode) {
             loadNearbyStores(0, storeQuery);
@@ -81,6 +89,7 @@ public class CatalogViewModel extends AndroidViewModel {
         });
     }
 
+    /** Cancela a operação pendente e libera os recursos associados. */
     public void cancelLocationRequest() {
         locationRepository.cancel();
         if (isLocating()) {
@@ -88,16 +97,26 @@ public class CatalogViewModel extends AndroidViewModel {
             useStoreLocation(null, null);
         }
     }
+    /** Retorna o filtro de loja aplicado às promoções. */
     public String promotionStoreId() { return promotionStoreId; }
+    /** Retorna o termo de busca aplicado às promoções. */
     public String promotionQuery() { return promotionQuery; }
+    /** Retorna a página atual da consulta de promoções. */
     public int promotionPage() { return promotionPage; }
+    /** Retorna a página atual da consulta de lojas. */
     public int storePage() { return storePage; }
+    /** Solicita a próxima página disponível de promoções. */
     public int nextPromotionPage() { return promotionPages == null ? 0 : promotionPages.number + 1; }
+    /** Solicita a próxima página disponível de lojas. */
     public int nextStorePage() { return storePages == null ? 0 : storePages.number + 1; }
+    /** Retorna a coordenada de referência usada na consulta de lojas. */
     public Double storeLatitude() { return storeLatitude; }
+    /** Retorna a coordenada de referência usada na consulta de lojas. */
     public Double storeLongitude() { return storeLongitude; }
+    /** Retorna o raio aplicado à consulta de lojas. */
     public OfferRadius storeRadius() { return storeRadius; }
 
+    /** Atualiza o raio e refaz a consulta de lojas com a preferência escolhida. */
     public void useStoreRadius(OfferRadius radius) {
         Objects.requireNonNull(radius, "radius");
         if (storeRadius == radius) return;
@@ -105,6 +124,7 @@ public class CatalogViewModel extends AndroidViewModel {
         resetStores();
     }
 
+    /** Atualiza a posição usada nas consultas de lojas próximas. */
     private void useStoreLocation(Double latitude, Double longitude) {
         if (latitude != null && !GeoCoordinates.areValid(latitude, longitude)) return;
         storeLatitude = latitude;
@@ -112,6 +132,7 @@ public class CatalogViewModel extends AndroidViewModel {
         resetStores();
     }
 
+    /** Limpa a paginação e os filtros anteriores da consulta de lojas. */
     private void resetStores() {
         storePages = null;
         storePage = 0;
@@ -120,6 +141,7 @@ public class CatalogViewModel extends AndroidViewModel {
         loadNearbyStores(0, storeQuery);
     }
 
+    /** Carrega as promoções com os filtros e a paginação atuais. */
     public void loadPromotions(int page, String storeId, String query) {
         String normalized = query == null ? "" : query.trim();
         boolean sameFilter = Objects.equals(storeId, promotionStoreId) && normalized.equals(promotionQuery);
@@ -147,6 +169,7 @@ public class CatalogViewModel extends AndroidViewModel {
         });
     }
 
+    /** Carrega as lojas ao redor da posição informada. */
     public void loadNearbyStores(int page, String query) {
         if (!demoMode && (storeLatitude == null || storeLongitude == null)) {
             storePages = null;
@@ -160,6 +183,7 @@ public class CatalogViewModel extends AndroidViewModel {
         loadStores(page, query);
     }
 
+    /** Carrega a página de lojas com os filtros selecionados. */
     private void loadStores(int page, String query) {
         String normalized = query == null ? "" : query.trim();
         LoadState<?> current = stores.getValue();
@@ -186,6 +210,7 @@ public class CatalogViewModel extends AndroidViewModel {
         });
     }
 
+    /** Carrega os detalhes da promoção escolhida. */
     public void loadPromotion(String id) {
         if (id.equals(detailId) && detail.getValue() != null
                 && detail.getValue().status != LoadState.Status.ERROR) return;
@@ -194,6 +219,7 @@ public class CatalogViewModel extends AndroidViewModel {
         repository.promotion(id, detail::setValue);
     }
 
+    /** Libera os recursos mantidos pelo estado quando ele deixa de ser utilizado. */
     @Override protected void onCleared() {
         locationRepository.cancel();
         super.onCleared();

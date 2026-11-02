@@ -30,22 +30,27 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/** Fábrica de clientes REST autenticados. URLs-base vêm da configuração de ambiente e nunca são fixadas no código. */
 public final class ApiClient {
 
+    /** Impede a criação de instâncias desta classe utilitária. */
     private ApiClient() {
     }
 
+    /** Cria e configura a instância solicitada com os dados recebidos. */
     @NonNull
     public static ApiService create(@NonNull Context context, @NonNull String baseUrl) {
         return create(context, baseUrl, ApiService.class);
     }
 
+    /** Cria e configura a instância solicitada com os dados recebidos. */
     @NonNull
     public static <T> T create(@NonNull Context context, @NonNull String baseUrl,
                                @NonNull Class<T> serviceClass) {
         return create(context, baseUrl, serviceClass, true);
     }
 
+    /** Um serviço com autorização independente não pode invalidar a sessão SQL ao receber seu próprio 401. */
     @NonNull
     public static <T> T create(@NonNull Context context, @NonNull String baseUrl,
                                @NonNull Class<T> serviceClass, boolean invalidateAppSessionOnUnauthorized) {
@@ -75,19 +80,23 @@ public final class ApiClient {
                 .create(serviceClass);
     }
 
+    /** Normaliza o endereço base usado na criação do serviço HTTP. */
     private static String normalizeBaseUrl(String baseUrl) {
         String normalized = baseUrl.trim();
         return normalized.endsWith("/") ? normalized : normalized + "/";
     }
 
+    /** Representa FirebaseTokenInterceptor, responsável por a comunicação com os serviços externos. */
     private static final class FirebaseTokenInterceptor implements Interceptor {
 
         private final Context context;
 
+        /** Inicializa FirebaseTokenInterceptor com os dados e as dependências recebidos. */
         private FirebaseTokenInterceptor(Context context) {
             this.context = context;
         }
 
+        /** Prepara a requisição HTTP com a autenticação apropriada à conta. */
         @Override
         @NonNull
         public Response intercept(@NonNull Chain chain) throws IOException {
@@ -118,12 +127,14 @@ public final class ApiClient {
         }
     }
 
+    /** Representa FirebaseTokenAuthenticator, responsável por a comunicação com os serviços externos. */
     private static final class FirebaseTokenAuthenticator implements Authenticator {
 
         private final Context context;
         private final SessionManager sessionManager;
         private final boolean invalidateAppSessionOnUnauthorized;
 
+        /** Inicializa FirebaseTokenAuthenticator com os dados e as dependências recebidos. */
         private FirebaseTokenAuthenticator(Context context, SessionManager sessionManager,
                                            boolean invalidateAppSessionOnUnauthorized) {
             this.context = context;
@@ -131,6 +142,7 @@ public final class ApiClient {
             this.invalidateAppSessionOnUnauthorized = invalidateAppSessionOnUnauthorized;
         }
 
+        /** Trata o desafio de autenticação recebido na resposta HTTP. */
         @Override
         public Request authenticate(okhttp3.Route route, Response response) {
             FirebaseAuth auth = FirebaseSupport.authIfConfigured(context);
@@ -172,6 +184,7 @@ public final class ApiClient {
             }
         }
 
+        /** Limpa a sessão que não pode continuar autenticada. */
         private void expireSession(String expectedUid, boolean signOut) {
             if (!invalidateAppSessionOnUnauthorized) return;
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -187,6 +200,7 @@ public final class ApiClient {
             });
         }
 
+        /** Conta as tentativas associadas à resposta para limitar a repetição da autenticação. */
         private static int responseCount(Response response) {
             int count = 0;
             while (response != null) {

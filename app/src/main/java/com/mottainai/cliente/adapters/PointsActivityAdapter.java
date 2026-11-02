@@ -16,16 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** Representa PointsActivityAdapter, responsável por a apresentação dos itens em uma lista. */
 public class PointsActivityAdapter extends RecyclerView.Adapter<PointsActivityAdapter.EntryViewHolder> {
 
     private final List<PointsActivityEntry> entries = new ArrayList<>();
 
+    /** Substitui os lançamentos apresentados no histórico de pontos. */
     public void setEntries(List<PointsActivityEntry> newEntries) {
         entries.clear();
         entries.addAll(newEntries);
         notifyDataSetChanged();
     }
 
+    /** Cria o componente visual usado para exibir um item da lista. */
     @NonNull
     @Override
     public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +37,7 @@ public class PointsActivityAdapter extends RecyclerView.Adapter<PointsActivityAd
         return new EntryViewHolder(view);
     }
 
+    /** Preenche o componente da lista com os dados do item na posição solicitada. */
     @Override
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
         PointsActivityEntry entry = entries.get(position);
@@ -49,16 +53,19 @@ public class PointsActivityAdapter extends RecyclerView.Adapter<PointsActivityAd
                 ContextCompat.getColor(holder.itemView.getContext(), entry.getColorRes())));
     }
 
+    /** Retorna a quantidade de itens que a lista pode exibir. */
     @Override
     public int getItemCount() {
         return entries.size();
     }
 
+    /** Representa EntryViewHolder, responsável por a apresentação dos itens em uma lista. */
     static class EntryViewHolder extends RecyclerView.ViewHolder {
         final View row;
         final TextView label;
         final TextView points;
 
+        /** Inicializa EntryViewHolder com os dados e as dependências recebidos. */
         EntryViewHolder(@NonNull View itemView) {
             super(itemView);
             row = itemView.findViewById(R.id.layout_activity_row);

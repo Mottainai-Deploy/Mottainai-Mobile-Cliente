@@ -32,25 +32,34 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
+/** Representa AuthRepository, responsável por o acesso e o tratamento dos dados do aplicativo. */
 public final class AuthRepository {
     private static final String PROFILE_CACHE = "customer_profile_cache";
+    /** Define o contrato de Result, responsável por o acesso e o tratamento dos dados do aplicativo. */
     public interface Result<T> {
+        /** Recebe o resultado bem-sucedido e dá continuidade à operação solicitada. */
         void success(T value);
+        /** Trata a falha recebida e informa o erro ao fluxo responsável. */
         void error(String message);
+        /** Informa o andamento da operação para atualizar a indicação de carregamento. */
         default void progress(String message) {}
     }
 
+    /** Representa LoginResult, responsável por o acesso e o tratamento dos dados do aplicativo. */
     public static final class LoginResult {
         public final boolean profileRequired;
         public final String email;
 
+        /** Inicializa LoginResult com os dados e as dependências recebidos. */
         private LoginResult(boolean profileRequired, String email) {
             this.profileRequired = profileRequired;
             this.email = email;
         }
     }
 
+    /** Define o contrato de ViaCepService, responsável por o acesso e o tratamento dos dados do aplicativo. */
     private interface ViaCepService {
+        /** Localiza o elemento ou resultado correspondente aos critérios informados. */
         @GET("ws/{cep}/json/")
         Call<ViaCepAddress> find(@Path("cep") String cep);
     }
@@ -62,6 +71,7 @@ public final class AuthRepository {
     private final SharedPreferences profileCache;
     private final Context appContext;
 
+    /** Inicializa AuthRepository com os dados e as dependências recebidos. */
     public AuthRepository(Context context) {
         appContext = context.getApplicationContext();
         session = new SessionManager(context);
@@ -75,6 +85,7 @@ public final class AuthRepository {
                 .build().create(ViaCepService.class);
     }
 
+    /** Inicia a autenticação com e-mail e senha e o fluxo de consulta do perfil. */
     public void login(String email, String password, Result<LoginResult> result) {
         if (!ready(result)) return;
         result.progress("Entrando…");
@@ -88,6 +99,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Inicia a autenticação usando a credencial recebida do Google. */
     public void loginWithGoogle(String idToken, Result<LoginResult> result) {
         if (!ready(result)) return;
         result.progress("Entrando com Google…");
@@ -103,6 +115,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Recupera os dados disponíveis para concluir o perfil da conta autenticada. */
     @Nullable
     public LoginResult pendingProfile() {
         FirebaseUser user = firebaseAuth == null ? null : firebaseAuth.getCurrentUser();
@@ -111,6 +124,7 @@ public final class AuthRepository {
                 ? new LoginResult(false, user.getEmail()) : null;
     }
 
+    /** Encerra a autenticação e limpa os dados de sessão associados à conta. */
     public void signOut() {
         FirebaseUser user = firebaseAuth == null ? null : firebaseAuth.getCurrentUser();
         if (user != null) clearCachedProfile(user.getUid());
@@ -118,10 +132,12 @@ public final class AuthRepository {
         if (firebaseAuth != null) firebaseAuth.signOut();
     }
 
+    /** Solicita novamente a sincronização do perfil da conta já autenticada. */
     public void retryProfileSync(Result<LoginResult> result) {
         if (ready(result)) loadCurrentProfile(result);
     }
 
+    /** Solicita o envio das instruções para recuperação da senha. */
     public void resetPassword(String email, Result<Void> result) {
         if (firebaseAuth == null) {
             result.error("O acesso à sua conta está indisponível no momento.");
@@ -138,6 +154,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Executa o cadastro e acompanha o resultado da criação do perfil. */
     public void register(CreateCustomerRequest request, Result<Void> result) {
         if (!ready(result)) return;
         FirebaseUser current = firebaseAuth.getCurrentUser();
@@ -158,6 +175,7 @@ public final class AuthRepository {
                 });
     }
 
+    /** Consulta o perfil vinculado ao usuário autenticado. */
     public void loadProfile(Result<CustomerProfileResponse> result) {
         if (session.isDemoMode()) {
             result.success(DemoData.customerProfile());
@@ -173,6 +191,7 @@ public final class AuthRepository {
         }
         String uid = firebaseAuth.getCurrentUser().getUid();
         api.profile(uid).enqueue(new Callback<CustomerProfileResponse>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
                 CustomerProfileResponse body = response.body();
@@ -191,6 +210,7 @@ public final class AuthRepository {
                             : profileFailure(status, response.code()));
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
                 result.error(syncError(throwable));
@@ -198,6 +218,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Envia as alterações dos dados do perfil para persistência. */
     public void updateProfile(UpdateFirebaseCustomerProfileRequest request,
                               Result<CustomerProfileResponse> result) {
         if (session.isDemoMode()) {
@@ -214,6 +235,7 @@ public final class AuthRepository {
         }
         String uid = firebaseAuth.getCurrentUser().getUid();
         api.updateProfile(request, uid).enqueue(new Callback<CustomerProfileResponse>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
                 if (!isCurrentUser(uid)) {
@@ -237,6 +259,7 @@ public final class AuthRepository {
                     }
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
                 result.error(syncError(throwable));
@@ -244,8 +267,10 @@ public final class AuthRepository {
         });
     }
 
+    /** Consulta o CEP e encaminha os dados do endereço ao formulário. */
     public void lookupCep(String cep, Result<ViaCepAddress> result) {
         viaCep.find(cep).enqueue(new Callback<ViaCepAddress>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<ViaCepAddress> call,
                                              @NonNull Response<ViaCepAddress> response) {
                 ViaCepAddress body = response.body();
@@ -256,6 +281,7 @@ public final class AuthRepository {
                     result.success(body);
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<ViaCepAddress> call,
                                             @NonNull Throwable throwable) {
                 result.error("Não foi possível consultar o CEP. Preencha o endereço manualmente.");
@@ -263,6 +289,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Confere os requisitos necessários antes de iniciar a operação. */
     private boolean ready(Result<?> result) {
         if (firebaseAuth == null) {
             result.error("O acesso à sua conta está indisponível no momento.");
@@ -275,6 +302,7 @@ public final class AuthRepository {
         return true;
     }
 
+    /** Consulta o perfil vinculado ao usuário autenticado. */
     private void loadCurrentProfile(Result<LoginResult> result) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null) {
@@ -284,6 +312,7 @@ public final class AuthRepository {
         String uid = user.getUid();
         result.progress("Carregando seu perfil…");
         api.profile(uid).enqueue(new Callback<CustomerProfileResponse>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
                 CustomerProfileResponse profile = response.body();
@@ -301,6 +330,7 @@ public final class AuthRepository {
                     result.error(profileFailure(status, response.code()));
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
                 result.error(syncError(throwable));
@@ -308,6 +338,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Confere o perfil SQL após a autenticação e decide como continuar o cadastro. */
     private void ensureSqlProfile(CreateCustomerRequest request, Result<Void> result, boolean createIfMissing) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null || !request.email.trim().equalsIgnoreCase(user.getEmail())) {
@@ -317,6 +348,7 @@ public final class AuthRepository {
         String uid = user.getUid();
         result.progress("Verificando seu perfil…");
         api.profile(uid).enqueue(new Callback<CustomerProfileResponse>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
                 if (!isCurrentUser(uid)) {
@@ -335,6 +367,7 @@ public final class AuthRepository {
                     result.error(profileFailure(status, response.code()));
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
                 result.error(syncError(throwable));
@@ -342,6 +375,7 @@ public final class AuthRepository {
         });
     }
 
+    /** Envia os dados para criar o perfil SQL vinculado à conta Firebase. */
     private void createSqlProfile(CreateCustomerRequest request, Result<Void> result) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null || !request.email.trim().equalsIgnoreCase(user.getEmail())) {
@@ -354,6 +388,7 @@ public final class AuthRepository {
                 request.fullName, request.cpf, request.phone, request.birthDate,
                 request.marketingConsent, request.address);
         api.createProfile(payload, uid).enqueue(new Callback<CustomerProfileResponse>() {
+            /** Trata a resposta da requisição e encaminha o resultado ao fluxo que a solicitou. */
             @Override public void onResponse(@NonNull Call<CustomerProfileResponse> call,
                                              @NonNull Response<CustomerProfileResponse> response) {
                 CustomerProfileResponse profile = response.body();
@@ -379,6 +414,7 @@ public final class AuthRepository {
                     result.error("Não foi possível concluir seu cadastro. Confira os dados e tente novamente.");
                 }
             }
+            /** Trata a falha recebida e informa o erro ao fluxo responsável. */
             @Override public void onFailure(@NonNull Call<CustomerProfileResponse> call,
                                             @NonNull Throwable throwable) {
                     result.error("Não foi possível confirmar seu cadastro. Tente novamente.");
@@ -386,17 +422,20 @@ public final class AuthRepository {
         });
     }
 
+    /** Confere se a resposta ainda pertence ao usuário autenticado. */
     private boolean isCurrentUser(String uid) {
         FirebaseUser current = firebaseAuth.getCurrentUser();
         return current != null && current.getUid().equals(uid);
     }
 
+    /** Complementa os dados do perfil com o e-mail disponível na autenticação. */
     private void populateLoginEmail(CustomerProfileResponse profile) {
         FirebaseUser current = firebaseAuth.getCurrentUser();
         if (current == null) return;
         profile.email = current.getEmail();
     }
 
+    /** Completa a apresentação do perfil com os dados preservados para a conta. */
     private void hydrateCachedProfile(String uid, CustomerProfileResponse profile) {
         if (profile.fullName == null || profile.fullName.trim().isEmpty()) {
             profile.fullName = profileCache.getString(uid + ".fullName", null);
@@ -409,6 +448,7 @@ public final class AuthRepository {
         }
     }
 
+    /** Atualiza o cache dos dados do perfil da conta atual. */
     private void cacheProfile(String uid, CustomerProfileResponse profile) {
         profileCache.edit().putString(uid + ".fullName", profile.fullName)
                 .putString(uid + ".phone", profile.phone).apply();
@@ -417,10 +457,12 @@ public final class AuthRepository {
         }
     }
 
+    /** Remove os dados de perfil preservados para a conta. */
     private void clearCachedProfile(String uid) {
         profileCache.edit().remove(uid + ".fullName").remove(uid + ".phone").apply();
     }
 
+    /** Encaminha a falha da consulta de perfil ao tratamento de sincronização. */
     private String profileFailure(ProfileSyncStatus status, int httpStatus) {
         if (status == ProfileSyncStatus.INACTIVE) {
             session.clearClientSession();
@@ -435,6 +477,7 @@ public final class AuthRepository {
         return "Não foi possível confirmar seu perfil. Tente novamente.";
     }
 
+    /** Traduz a falha de sincronização do perfil para a mensagem apresentada ao usuário. */
     private String syncError(Throwable failure) {
         String host = null;
         try { host = java.net.URI.create(BuildConfig.API_BASE_URL.trim()).getHost(); }
@@ -442,6 +485,7 @@ public final class AuthRepository {
         return ProfileSyncError.message(failure, "10.0.2.2".equals(host));
     }
 
+    /** Traduz a falha de autenticação Firebase para a mensagem do formulário. */
     private static String firebaseError(Exception exception, String fallback) {
         if (exception instanceof FirebaseNetworkException) return "Sem conexão. Verifique sua internet.";
         if (!(exception instanceof FirebaseAuthException)) return fallback;
