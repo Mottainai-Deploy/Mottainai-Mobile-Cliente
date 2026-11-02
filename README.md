@@ -18,7 +18,6 @@
 [![Retrofit](https://img.shields.io/badge/Retrofit-2.11.0-48B983?style=flat-square&logo=square&logoColor=white)](gradle/libs.versions.toml)
 [![OkHttp](https://img.shields.io/badge/OkHttp-4.12.0-3E4348?style=flat-square&logo=square&logoColor=white)](gradle/libs.versions.toml)
 [![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/ci.yml)
-[![Status](https://img.shields.io/badge/status-MVP%20em%20homologação-orange?style=flat-square)](#11-status-riscos-e-limitações)
 
 <br/>
 
@@ -31,8 +30,6 @@
 [Configuração](#8-configuração-e-execução) •
 [Testes e CI](#9-testes-e-integração-contínua) •
 [Segurança](#10-segurança-e-privacidade) •
-[Status](#11-status-riscos-e-limitações)
-
 </div>
 
 ---
@@ -287,19 +284,19 @@ flowchart LR
 
 ### Módulos
 
-| Módulo | O que faz | Fonte de dados | Estado na `main` |
-|---|---|---|---|
-| **Onboarding** | Introdução e roteamento inicial | Local (`onboarding_done`) | Implementado |
-| **Login** | E-mail/senha e Google (Credential Manager), recuperação de senha, retomada de sincronização | Firebase Auth + `GET /profile` | Implementado |
-| **Cadastro** | Etapas com máscaras de CPF/CEP/nascimento/telefone, validação de dígitos do CPF, CEP via ViaCEP | Firebase Auth + `POST /profile` | Implementado |
-| **Acesso à localização** | Exige permissão e GPS ligado antes dos serviços reais; sem *background location* | `LocationManager` | Implementado |
-| **Home** | Saudação, saldo, mapa e cards de ofertas | Catálogo + fidelidade + perfil | Implementado |
-| **Catálogo / Detalhe** | Promoções paginadas, busca, filtro por loja, rota no Google Maps | `customer-catalog/promotions` | Implementado |
-| **Lojas** | Lista + mapa com pins, raio 5/10/15/20 km (padrão 5) | `customer-catalog/stores?latitude&longitude&radiusKm` | Implementado; raio **não** persistido |
-| **Pontos / Impacto** | Saldo, extrato em janelas mensais, status de fidelidade | `client/loyalty/*` | Implementado; métricas ambientais removidas |
-| **Perfil** | Leitura/edição, sair da conta, escolha de raio na sessão | `GET/PUT /profile` | Parcial (nome protegido indisponível no contrato) |
-| **Assistente** | Envio, histórico e sessões de chat | `/chat`, `/chat/history/{id}`, `/chat/sessions` | Cliente HTTP implementado; autorização do consumidor **não homologada** |
-| **Modo demonstração** | Navegação com `DemoData` e respostas locais do assistente | Local, só em `debug` | Implementado |
+| Módulo | O que faz | Fonte de dados  |
+|---|---|--- |
+| **Onboarding** | Introdução e roteamento inicial | Local (`onboarding_done`)  |
+| **Login** | E-mail/senha e Google (Credential Manager), recuperação de senha, retomada de sincronização | Firebase Auth + `GET /profile`  |
+| **Cadastro** | Etapas com máscaras de CPF/CEP/nascimento/telefone, validação de dígitos do CPF, CEP via ViaCEP | Firebase Auth + `POST /profile`  |
+| **Acesso à localização** | Exige permissão e GPS ligado antes dos serviços reais; sem *background location* | `LocationManager`  |
+| **Home** | Saudação, saldo, mapa e cards de ofertas | Catálogo + fidelidade + perfil  |
+| **Catálogo / Detalhe** | Promoções paginadas, busca, filtro por loja, rota no Google Maps | `customer-catalog/promotions`  |
+| **Lojas** | Lista + mapa com pins, raio 5/10/15/20 km (padrão 5) | `customer-catalog/stores?latitude&longitude&radiusKm`  |
+| **Pontos / Impacto** | Saldo, extrato em janelas mensais, status de fidelidade | `client/loyalty/*`  |
+| **Perfil** | Leitura/edição, sair da conta, escolha de raio na sessão | `GET/PUT /profile`  |
+| **Assistente** | Envio, histórico e sessões de chat | `/chat`, `/chat/history/{id}`, `/chat/sessions`  |
+| **Modo demonstração** | Navegação com `DemoData` e respostas locais do assistente | Local, só em `debug`  |
 
 ### Sequência de cadastro e sincronização de perfil
 
@@ -369,22 +366,6 @@ sequenceDiagram
 | Google Maps SDK | Mapa de lojas (`PartnerMapView`) | Sem chave, a tela informa falta de configuração e mantém a lista |
 | App/URL do Google Maps | "Como chegar" | `GoogleMapsUrl` / `MapNavigation` |
 
-<details>
-<summary><b>Contratos pendentes no back-end (segundo <code>docs/remaining-contracts.md</code> e <code>docs/DEMANDAS-API-CLIENTE.md</code>)</b></summary>
-
-<br/>
-
-- Promoções geográficas ordenadas por distância/percentual **antes** da paginação.
-- Persistência da preferência de raio no perfil.
-- Upload/remoção de avatar.
-- Autorização do consumidor (token Firebase do Cliente) no serviço de IA.
-- Leitura autorizada de nome/contato no perfil protegido.
-- Regras de elegibilidade e cota para avisos por proximidade (geofencing/push).
-
-Estas pendências vêm da documentação do repositório; o estado real das APIs **não foi verificado** nesta análise.
-
-</details>
-
 ---
 
 ## 8. Configuração e execução
@@ -438,7 +419,6 @@ Para testes instrumentados (exige emulador/aparelho conectado):
 ```
 
 > [!WARNING]
-> O projeto original compilou e passou nos 81 testes JVM em 27/10/2026. A revisão de PRs em 28/10 não repetiu o build Android, pois alterou somente CI/documentação. Os testes instrumentados e a homologação com serviços reais continuam pendentes.
 
 ---
 
@@ -475,19 +455,6 @@ flowchart LR
 > [!WARNING]
 > **Falha histórica confirmada no job 3 após o merge da #20.** A execução [40491941564](https://github.com/Mottainai-One/Mottainai-Mobile-Cliente/actions/runs/40491941564) reprovou o merge automático ao validar os dez últimos commits da `main`. A correção da **PR #18**, a integrar antes deste README, valida somente os commits recebidos no evento e exclui mensagens de merge; mensagens inválidas dos commits da feature continuam sendo rejeitadas. Os sete testes de regressão passaram localmente em 28/10/2026. Não há numeração "4" entre os jobs.
 
-### Reconciliação das PRs
-
-| PRs | Situação e ação |
-|---|---|
-| #20 | Mergeada; contém a implementação integrada que serve de base ao app |
-| #3, #4 e #6–#17 | Encerradas sem merge em 28/10/2026, com autorização; alterações incorporadas ou substituídas pela #20, branches preservadas |
-| #18 | Correção do validador de commits, reconciliada para revisão contra `main`; integrar primeiro, após os checks e a revisão exigida |
-| #22 | Este README, para integrar depois da #18; homologação do app não é substituída pela revisão documental |
-
-O preview local de avatar e os contratos antigos de perfil não foram reintroduzidos. Upload de avatar pelo serviço definido continua pendente. A paleta atual substitui o tema verde da PR #13.
-
----
-
 ## 10. Segurança e privacidade
 
 | Controle | Situação | Evidência |
@@ -504,54 +471,6 @@ O preview local de avatar e os contratos antigos de perfil não foram reintroduz
 
 > [!CAUTION]
 > A **chave do Maps é embutida no APK** (via `BuildConfig` e Manifest), como é inerente ao SDK. Ela precisa estar restrita no Google Cloud ao pacote `com.mottainai.cliente` e ao SHA-1 do certificado. A validação do ID token (assinatura, emissor, audience, projeto) é responsabilidade da API e **não é verificável** a partir deste repositório.
-
----
-
-## 11. Status, riscos e limitações
-
-| Item | Status |
-|---|:---:|
-| Autenticação Firebase + sincronização de perfil SQL | ![done](https://img.shields.io/badge/-implementado-success?style=flat-square) |
-| Catálogo, lojas, mapa e rota | ![done](https://img.shields.io/badge/-implementado-success?style=flat-square) |
-| Saldo e extrato de pontos | ![done](https://img.shields.io/badge/-implementado-success?style=flat-square) |
-| Perfil (nome protegido) | ![partial](https://img.shields.io/badge/-parcial-yellow?style=flat-square) |
-| Assistente com conta real | ![pending](https://img.shields.io/badge/-pendente%20de%20autorização-orange?style=flat-square) |
-| Ofertas geográficas no servidor / raio persistido | ![pending](https://img.shields.io/badge/-pendente-orange?style=flat-square) |
-| Push (FCM), geofencing, avatar | ![pending](https://img.shields.io/badge/-não%20iniciado-lightgrey?style=flat-square) |
-| Compra / pagamento / resgate | ![out](https://img.shields.io/badge/-fora%20do%20escopo-lightgrey?style=flat-square) |
-| Testes instrumentados em aparelho | ![pending](https://img.shields.io/badge/-não%20executado-orange?style=flat-square) |
-
-### Riscos e pontos de atenção
-
-1. **Release não está pronto para distribuição.** `isMinifyEnabled = false`, sem `signingConfig` e `versionCode = 1`. Por inferência, ainda não há pipeline de release.
-2. **Dependência forte de contratos externos.** O feed de ofertas por proximidade, o nome no perfil e o chat autorizado dependem de mudanças na API e na IA que não estão neste repositório.
-3. **Gate de localização obrigatório.** `ClientAccessGuard` bloqueia os serviços reais sem permissão e GPS ligado, conforme a regra definida para o Cliente. A tela orienta conceder a permissão e ativar a localização.
-4. **Código de demonstração no APK de release.** `DemoData` e `Mock*` são compilados também no release, mesmo inacessíveis em tempo de execução. Mover para o source set `debug` reduziria superfície e tamanho.
-5. **Correção do CI depende da integração da PR #18.** A falha histórica e o comportamento corrigido estão descritos na seção 9.
-6. **Commit de integração muito grande.** `6aa54ef` altera 298 arquivos (+37.995 linhas), o que dificulta a revisão e o rastreio de regressões.
-
-### Divergências entre documentação e código
-
-| Fonte | Afirma | Código na `main` |
-|---|---|---|
-| `README.md` (original) | "integração do chat não faz parte deste MVP" | Existe cliente HTTP completo do assistente (`AssistantActivity`, `AssistantService`, `AssistantRepository`); `CHANGELOG.md` e `docs/PLANO-MOBILE-CLIENTE.md` o tratam como implementado e aguardando homologação |
-| `README.md` (original) | Cadastro/login "por e-mail e senha" | Também há login Google (`GoogleSignInHelper`, Credential Manager); o próprio README menciona Google mais abaixo |
-| `README.md` (original) | "impacto ambiental não faz parte" | Existe `ImpactFragment` ("Meu impacto"), mas mostra só dados de fidelidade (`CHANGELOG`: métricas ambientais removidas) |
-| `docs/delivery-status.md` (18/10) | PRs #11–#18 abertas, "não houve merge" | Registro histórico: a #20 integrou a versão atual; as PRs legadas foram encerradas e a #18 foi reconciliada como correção de CI. Isso não equivale a merges individuais de cada PR antiga |
-| `Constants.java` | `NOTIFICATION_CHANNEL_GENERAL_ID` | Nenhum uso e nenhuma permissão `POST_NOTIFICATIONS`; push não implementado |
-| `README.md` (original) | Caminho Windows `C:\Users\<usuario>\.gradle\gradle.properties` | Vale para qualquer SO: `~/.gradle/gradle.properties` |
-
-### Roadmap (derivado da documentação)
-
-- [x] Autenticação Firebase + perfil SQL
-- [x] Catálogo, lojas com raio e mapa
-- [x] Pontos e extrato
-- [x] Cliente do assistente e modo demonstração isolado em debug
-- [ ] Homologação em emulador/aparelho com serviços reais
-- [ ] Ofertas geográficas paginadas no servidor e raio persistido no perfil
-- [ ] Autorização do consumidor na IA
-- [ ] Avatar, push (FCM) e avisos por proximidade
-- [ ] Configuração de release (minify, assinatura, versionamento)
 
 ---
 
